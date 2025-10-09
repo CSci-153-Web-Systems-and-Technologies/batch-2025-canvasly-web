@@ -1,6 +1,13 @@
+//"use client";
+
 import Link from "next/link";
-import { Button } from "./ui/button";
 import { createClient } from "@/lib/supabase/server";
+import React from "react";
+//import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Bell } from "lucide-react";
+import { Button } from "./ui/button";
+
+import { CurrentUserAvatar } from "./current-user-avatar";
 import { LogoutButton } from "./logout-button";
 
 export async function AuthButton() {
@@ -12,10 +19,26 @@ export async function AuthButton() {
   const user = data?.claims;
 
   return user ? (
-    <div className="flex items-center gap-4">
-      Hey, {user.email}!
-      <LogoutButton />
-    </div>
+    <>
+      {/* <div className="flex items-center gap-4">
+        Hey, {user.email}!
+        <LogoutButton />
+      </div> */}
+      <nav className="p-4 flex items-center ">
+        {/* <Hamburger onClickHandler={toggleSidebar} /> */}
+        <div className="flex items-center gap-4">
+          <Button>Post your artwork</Button>
+          <Button
+            variant="ghost"
+            className="bg-color-background rounded-3xl p-2 hover:bg-[#ededed]"
+          >
+            <Bell color="#628b35" />
+          </Button>
+          <CurrentUserAvatar />
+          <LogoutButton />
+        </div>
+      </nav>
+    </>
   ) : (
     <div className="flex gap-2">
       <Button asChild size="sm" variant={"outline"}>
