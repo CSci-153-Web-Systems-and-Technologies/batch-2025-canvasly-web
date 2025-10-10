@@ -4,11 +4,13 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import React from "react";
 //import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell } from "lucide-react";
+import { Bell, UserRound, Upload } from "lucide-react";
 import { Button } from "./ui/button";
 
-import { CurrentUserAvatar } from "./current-user-avatar";
+//import { CurrentUserAvatar } from "./current-user-avatar";
 import { LogoutButton } from "./logout-button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import AppSideBar from "./app-side-bar";
 
 export async function AuthButton() {
   const supabase = await createClient();
@@ -24,20 +26,35 @@ export async function AuthButton() {
         Hey, {user.email}!
         <LogoutButton />
       </div> */}
-      <nav className="p-4 flex items-center ">
+      <div className="p-4 flex items-center relative pr-9 sm:pr-12 md:pr-0 md:p-4">
         {/* <Hamburger onClickHandler={toggleSidebar} /> */}
-        <div className="flex items-center gap-4">
-          <Button>Post your artwork</Button>
+        <div className="flex items-center gap-1 sm:gap-4">
+          <Button className="sm:hidden p-2">
+            <Upload />
+          </Button>
+          <Button className="hidden sm:block">Post your artwork</Button>
           <Button
             variant="ghost"
             className="bg-color-background rounded-3xl p-2 hover:bg-[#ededed]"
           >
             <Bell color="#628b35" />
           </Button>
-          <CurrentUserAvatar />
-          <LogoutButton />
+          <Link href="/protected">
+            <Avatar>
+              <AvatarImage alt="@user" />
+              <AvatarFallback>
+                <UserRound color="#666666" />
+              </AvatarFallback>
+            </Avatar>
+          </Link>
+          <div className="hidden md:block">
+            <LogoutButton />
+          </div>
+          <div className="flex md:hidden absolute right-0 top-4">
+            <AppSideBar />
+          </div>
         </div>
-      </nav>
+      </div>
     </>
   ) : (
     <div className="flex gap-2">
