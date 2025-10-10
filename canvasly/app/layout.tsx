@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+//import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+//import AppSideBar from "@/components/app-side-bar";
+import Navbar from "@/components/navbar";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -27,16 +30,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
-        <main>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main>
+            {/* <Navbar /> */}
             <div>{children}</div>
-          </ThemeProvider>
-        </main>
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );
