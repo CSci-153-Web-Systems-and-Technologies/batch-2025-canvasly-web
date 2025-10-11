@@ -33,7 +33,7 @@ const Navbar = () => {
       </div>
     </nav>
     */
-    <nav className="w-full flex flex-col justify-center px-4 md:mt-4 h-16 border-b border-b-foreground/10 md:border-none">
+    <nav className="w-full flex flex-col justify-center px-4 md:mt-4 h-16 border-b-2 border-b-foreground/10 md:border-none">
       <div className="w-full flex justify-between items-center text-sm sm:gap-2">
         {/* <div className="flex gap-5 items-center font-semibold"></div>*/}
         <Link className="md:hidden" href={"/"}>
@@ -67,7 +67,7 @@ const Navbar = () => {
           </Button> */}
         </div>
       </div>
-      <div className="w-full border-b border-b-foreground/10 h-16 px-4 text-sm hidden md:block">
+      <div className="w-full border-b-2 border-b-foreground/10 h-16 px-4 text-sm hidden md:block">
         <div className="flex items-center flex-row">
           {navItems.map((item) => (
             <Link href={item.href} key={item.name}>
