@@ -3,7 +3,7 @@
 //import { DeployButton } from "@/components/deploy-button";
 //import { EnvVarWarning } from "@/components/env-var-warning";
 //import { AuthButton } from "@/components/auth-button";
-import { Hero } from "@/components/hero";
+import { HeroHome } from "@/components/hero-home";
 import Navbar from "@/components/navbar";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { ConnectSupabaseSteps } from "@/components/tutorial/connect-supabase-steps";
@@ -17,12 +17,12 @@ export default function Home() {
   //const { toggleSidebar } = useSidebar();
 
   return (
-    <main className="min-h-screen flex flex-col justify-center">
-      <div className="flex-1 w-full flex flex-col gap-20 items-center">
+    <div className="min-h-screen flex flex-col justify-center">
+      <div className="flex-1 w-full flex flex-col items-center ju">
         <Navbar />
-        <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
-          <Hero />
-          <main className="flex-1 flex flex-col gap-6 px-4">
+        <div className="flex-1 flex flex-col gap-20 md:my-5 w-full">
+          <HeroHome />
+          <main className="flex-1 flex flex-col gap-6 px-4 mx-auto">
             <h2 className="font-medium text-xl mb-4">Next steps</h2>
             {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
           </main>
@@ -43,6 +43,6 @@ export default function Home() {
           <ThemeSwitcher />
         </footer>
       </div>
-    </main>
+    </div>
   );
 }

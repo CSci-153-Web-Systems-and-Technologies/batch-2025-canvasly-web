@@ -35,7 +35,7 @@ const AppSideBar = () => {
           </Button>
           {navItems.map((item) => (
             <Link href={item.href} key={item.name}>
-              <Button className="p-2" variant="link">
+              <Button className="px-2 py-0 h-7" variant="link">
                 {item.name}
               </Button>
             </Link>
