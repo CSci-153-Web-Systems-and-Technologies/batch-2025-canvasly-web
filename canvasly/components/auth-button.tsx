@@ -39,7 +39,7 @@ export async function AuthButton() {
           >
             <Bell color="#628b35" />
           </Button>
-          <Link href="/protected">
+          <Link href={`/users/${user?.id}`}>
             <Avatar>
               <AvatarImage alt="@user" />
               <AvatarFallback>
