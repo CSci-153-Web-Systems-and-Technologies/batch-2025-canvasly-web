@@ -48,7 +48,7 @@ export async function AuthButton() {
             </Avatar>
           </Link>
           <div className="hidden md:block">
-            <LogoutButton />
+            <LogoutButton variant="outline" compoenentClassName="" />
           </div>
           <div className="flex md:hidden absolute right-0 top-4">
             <AppSideBar />

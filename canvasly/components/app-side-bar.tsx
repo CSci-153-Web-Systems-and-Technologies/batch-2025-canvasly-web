@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { LogoutButton } from "./logout-button";
 
 const AppSideBar = () => {
   const [menuOpen, setMenuOpen] = useState(true);
@@ -24,7 +25,7 @@ const AppSideBar = () => {
           <Menu color="#666666" />
         </Button>
       ) : (
-        <div className="flex flex-col gap-2 border-r md:hidden w-40 relative bg-white border">
+        <div className="flex flex-col border-r md:hidden w-52 relative bg-white border">
           <Button
             variant="ghost"
             className="md:hidden bg-color-background rounded-3xl p-2 hover:bg-[#ededed] flex absolute right-0"
@@ -39,6 +40,9 @@ const AppSideBar = () => {
               </Button>
             </Link>
           ))}
+          <div className="mt-5">
+            <LogoutButton variant="link" compoenentClassName="p-2" />
+          </div>
         </div>
       )}
     </div>
