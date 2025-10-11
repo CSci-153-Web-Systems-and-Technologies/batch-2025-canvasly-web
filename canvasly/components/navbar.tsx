@@ -33,7 +33,7 @@ const Navbar = () => {
       </div>
     </nav>
     */
-    <nav className="w-full flex flex-col justify-center px-4 md:mt-4 h-16 border-b-2 border-b-foreground/10 md:border-none">
+    <nav className="w-full flex flex-col justify-center px-4 md:mt-4 h-16 border-b-2 border-b-foreground/10 md:border-none md:mb-6">
       <div className="w-full flex justify-between items-center text-sm sm:gap-2">
         {/* <div className="flex gap-5 items-center font-semibold"></div>*/}
         <Link className="md:hidden" href={"/"}>

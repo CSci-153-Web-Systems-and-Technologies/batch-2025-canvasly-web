@@ -11,7 +11,7 @@ import { LogoutButton } from "./logout-button";
 const AppSideBar = () => {
   const [menuOpen, setMenuOpen] = useState(true);
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen((prev) => !prev);
   };
 
   return (
