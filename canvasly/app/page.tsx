@@ -9,6 +9,8 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import { ConnectSupabaseSteps } from "@/components/tutorial/connect-supabase-steps";
 import { SignUpUserSteps } from "@/components/tutorial/sign-up-user-steps";
 import { hasEnvVars } from "@/lib/utils";
+import HomeView from "@/sections/HomeView";
+
 //import Link from "next/link";
 //import SearchBar from "@/components/SearchBar";
 //import { useSidebar } from "@/components/ui/sidebar";
@@ -22,9 +24,10 @@ export default function Home() {
         <Navbar />
         <div className="flex-1 flex flex-col gap-20  w-full">
           <HeroHome />
-          <main className="flex-1 flex flex-col gap-6 px-4 mx-auto">
-            <h2 className="font-medium text-xl mb-4">Next steps</h2>
-            {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
+          <main className="flex-1 flex flex-col gap-6 px-4 mx-auto w-full max-w-7xl">
+            <HomeView />
+            {/* <h2 className="font-medium text-xl mb-4">Next steps</h2>
+            {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />} */}
           </main>
         </div>
 
