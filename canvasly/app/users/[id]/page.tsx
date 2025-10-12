@@ -1,8 +1,8 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserRound, Pencil } from "lucide-react";
+import { UserRound } from "lucide-react";
 import { AuthUser } from "@/components/auth-username-container";
-import { Button } from "@/components/ui/button";
+import EditProfileDialog from "@/components/edit-profile-dialog";
 
 const ProfilePage = () => {
   return (
@@ -21,17 +21,7 @@ const ProfilePage = () => {
           <div className="flex flex-col w-full">
             <div className="flex flex-row items-center justify-between w-full">
               <AuthUser classNameString="text-md md:text-3xl flex" />
-              <div className="hidden sm:flex">
-                <Button
-                  variant="outline"
-                  className=" rounded-full md:text-xl md:p-6"
-                >
-                  Edit profile
-                </Button>
-              </div>
-              <Button variant="outline" className=" sm:hidden rounded-full">
-                <Pencil color="#666666" />
-              </Button>
+              <EditProfileDialog />
             </div>
             <div className="text-xs md:text-xl flex text-[#818181]">
               description
