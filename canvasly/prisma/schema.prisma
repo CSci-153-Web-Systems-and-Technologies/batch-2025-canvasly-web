@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String  @id
+  username      String? @unique
+  email_address String?
+  image_url     String?
+  description   String?
+  posts         Post[]
+}
+
+model Post {
+  id             Int     @id @default(autoincrement())
+  image_post_url String
+  price          Float?
+  art_type       String
+  title          String
+  description    String?
+  published      Boolean @default(false)
+  authorId       String
+  author         User    @relation(fields: [authorId], references: [id])
+}
+
+/**
+ * // This is your Prisma schema file,
+ * // learn more about it in the docs: https://pris.ly/d/prisma-schema
+ * // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+ * // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+ * generator client {
+ * provider = "prisma-client-js"
+ * output   = "../app/generated/prisma"
+ * }
+ * datasource db {
+ * provider  = "postgresql"
+ * url       = env("DATABASE_URL")
+ * directUrl = env("DIRECT_URL")
+ * schemas   = ["public", "auth"]
+ * }
+ * model User {
+ * id            String  @id @db.Uuid
+ * username      String? @unique
+ * email_address String?
+ * image_url     String?
+ * description   String?
+ * posts         Post[]
+ * // Relation to Supabase Auth user
+ * authUser AuthUser @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+ * @@schema("public")
+ * }
+ * model Post {
+ * id        Int     @id @default(autoincrement())
+ * title     String
+ * content   String?
+ * published Boolean @default(false)
+ * authorId  String  @db.Uuid
+ * author    User    @relation(fields: [authorId], references: [id])
+ * @@schema("public")
+ * }
+ * model AuthUser {
+ * id                   String    @id @db.Uuid
+ * email                String?
+ * encrypted_password   String?   @map("encrypted_password")
+ * raw_app_meta_data    Json?
+ * raw_user_meta_data   Json?
+ * created_at           DateTime  @default(now())
+ * updated_at           DateTime  @default(now())
+ * last_sign_in_at      DateTime?
+ * confirmation_sent_at DateTime?
+ * confirmation_token   String?
+ * email_confirmed_at   DateTime?
+ * // Relation back to app user
+ * user User?
+ * @@map("users") // this maps to auth.users
+ * @@schema("auth") // this declares its schema
+ * }
+ */
