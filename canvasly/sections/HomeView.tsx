@@ -4,7 +4,7 @@ import React from "react";
 const HomeView = () => {
   return (
     <div className="w-full flex justify-between  gap-4">
-      <div className="bg-red-200 w-full items-start justify-center flex ">
+      <div className=" w-full items-start justify-center flex bg-background max-w-5xl  rounded-xl">
         <Posts />
       </div>
 

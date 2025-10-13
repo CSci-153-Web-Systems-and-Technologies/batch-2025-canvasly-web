@@ -26,7 +26,7 @@ export const createPost = async (post: PostInput) => {
     }
 
     console.log("✅POSTS.TS Authenticated user ID:", user.id);
-    /*
+
     if (post.image_post_url) {
       console.log("📤POSTS.TS Uploading image to Cloudinary...");
       const res = await uploadFile({
@@ -43,7 +43,7 @@ export const createPost = async (post: PostInput) => {
       post.cld_id = public_id;
       post.image_post_url = secure_url;
     }
-*/
+
     const newPost = await db.post.create({
       data: {
         title: post.title,
