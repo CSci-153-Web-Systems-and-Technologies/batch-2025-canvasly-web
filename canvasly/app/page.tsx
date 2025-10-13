@@ -5,10 +5,10 @@
 //import { AuthButton } from "@/components/auth-button";
 import { HeroHome } from "@/components/hero-home";
 import Navbar from "@/components/navbar";
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { ConnectSupabaseSteps } from "@/components/tutorial/connect-supabase-steps";
-import { SignUpUserSteps } from "@/components/tutorial/sign-up-user-steps";
-import { hasEnvVars } from "@/lib/utils";
+//import { ThemeSwitcher } from "@/components/theme-switcher";
+//import { ConnectSupabaseSteps } from "@/components/tutorial/connect-supabase-steps";
+//import { SignUpUserSteps } from "@/components/tutorial/sign-up-user-steps";
+//import { hasEnvVars } from "@/lib/utils";
 import HomeView from "@/sections/HomeView";
 
 //import Link from "next/link";
@@ -43,7 +43,6 @@ export default function Home() {
               Supabase
             </a>
           </p>
-          <ThemeSwitcher />
         </footer>
       </div>
     </div>
