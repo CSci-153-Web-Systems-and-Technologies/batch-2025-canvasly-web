@@ -1,4 +1,4 @@
-import { v2 as cloudinary, ConfigOptions } from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 
 // Create a type for the cloudinary instance
 type CloudinaryType = typeof cloudinary;
