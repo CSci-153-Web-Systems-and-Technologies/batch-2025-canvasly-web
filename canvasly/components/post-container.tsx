@@ -43,6 +43,7 @@ const PostContainer = ({ data }) => {
               alt={data?.title || "Post image"}
               src={data?.image_post_url}
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-contain"
             />
           </div>
