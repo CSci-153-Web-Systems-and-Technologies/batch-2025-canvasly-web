@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { CreateUserInput } from "@/lib/types/supa-base-webhook";
 
 export const createUser = async (user: CreateUserInput) => {
-  const { id, image_url, username, description, email_address } = user;
+  const { id, image_url, username, description, email } = user;
 
   try {
     const userExists = await db.user.findUnique({
@@ -22,11 +22,11 @@ export const createUser = async (user: CreateUserInput) => {
         image_url,
         username,
         description,
-        email_address,
+        email,
       },
     });
 
-    console.log("User created successfully in DB:", email_address);
+    console.log("User created successfully in DB:", email);
   } catch (e) {
     console.log(e);
     return {
@@ -36,7 +36,7 @@ export const createUser = async (user: CreateUserInput) => {
 };
 
 export const updateUser = async (user: CreateUserInput) => {
-  const { id, image_url, username, description, email_address } = user;
+  const { id, image_url, username, description, email } = user;
   try {
     await db.user.update({
       where: { id },
@@ -44,11 +44,11 @@ export const updateUser = async (user: CreateUserInput) => {
         image_url,
         username,
         description,
-        email_address,
+        email,
       },
     });
 
-    console.log("User updated successfully in DB:", email_address);
+    console.log("User updated successfully in DB:", email);
   } catch (e) {
     console.log(e);
     return {
@@ -81,7 +81,7 @@ export const getUserById = async (id: string) => {
         username: true,
         image_url: true,
         description: true,
-        email_address: true,
+        email: true,
       },
     });
   } catch (e) {
