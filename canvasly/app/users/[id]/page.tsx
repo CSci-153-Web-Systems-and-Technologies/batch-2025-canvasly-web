@@ -35,7 +35,7 @@ const ProfilePage = () => {
             Artworks
           </h2>
         </div>
-        <div className="w-full h-8 bg-red-200 ">{`mga artworks (remove bg-red and h-8)`}</div>
+        <div className="w-full h-8 bg-red-200 ">{`mga artworks (remove bg-red and h-8 in className)`}</div>
       </div>
     </div>
   );
