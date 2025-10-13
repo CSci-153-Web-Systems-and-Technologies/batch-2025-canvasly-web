@@ -13,7 +13,7 @@ export type CreateUserInput = {
   image_url?: string | null;
   username?: string | null;
   description?: string | null;
-  email_address?: string | null;
+  email?: string | null;
 };
 
 export type SupabaseEventType =
