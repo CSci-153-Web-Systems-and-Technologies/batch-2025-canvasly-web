@@ -105,7 +105,7 @@ const PostGenerator = () => {
       showError("Add art type to your post");
       return;
     } else if (price !== null && price < 0) {
-      showError("No negative numbers");
+      showError("No negative numbers!");
       return;
     }
 
