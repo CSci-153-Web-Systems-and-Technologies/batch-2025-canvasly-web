@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
+  //output   = "../app/generated/prisma"
 }
 
 datasource db {
@@ -15,25 +15,63 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// nag change sa schema   3:10:10
 model User {
-  id            String  @id
-  username      String? @unique
-  email_address String?
-  image_url     String?
-  description   String?
-  posts         Post[]
+  // ✅ This ID will now mirror the UUID from the auth.users table
+  id String @id @default(uuid()) // <-- This default is now handled by the trigger
+
+  username    String?   @unique
+  email       String? // Renamed for consistency
+  image_url   String?
+  description String?
+  posts       Post[]
+  Like        Like[]
+  Comment     Comment[]
+
+  // Good practice to explicitly map to your public table name
+  @@map("users")
 }
 
 model Post {
-  id             Int     @id @default(autoincrement())
-  image_post_url String
-  price          Float?
-  art_type       String
-  title          String
-  description    String?
-  published      Boolean @default(false)
-  authorId       String
-  author         User    @relation(fields: [authorId], references: [id])
+  id               Int       @id @default(autoincrement())
+  image_post_url   String
+  price            Float?
+  art_type         String
+  title            String
+  post_description String?
+  cld_id           String?
+  createdAt        DateTime  @default(now())
+  likes            Like[]
+  comments         Comment[]
+  trends           Trend[]
+  authorId         String
+  author           User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  comment   String?
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  createdAt DateTime @default(now())
+}
+
+model Trend {
+  id     Int    @id @default(autoincrement())
+  name   String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
 }
 
 /**
