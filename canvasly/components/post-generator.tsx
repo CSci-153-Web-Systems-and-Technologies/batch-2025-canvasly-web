@@ -9,15 +9,7 @@ import { Separator } from "./ui/separator";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-interface PostInput {
-  title: string;
-  image_post_url: string;
-  post_description?: string | null;
-  art_type: string;
-  price?: number | null;
-  cld_id?: string | null;
-}
+import { PostInput } from "@/lib/constants";
 
 const PostGenerator = () => {
   const [isClient, setIsClient] = useState(false);
@@ -105,10 +97,16 @@ const PostGenerator = () => {
   const submitPost = () => {
     if (!selectedFile) {
       showError("Cant make an empty post");
+      return;
     } else if (!title || title === "") {
       showError("Add title to your post");
+      return;
     } else if (!art_type || art_type === "") {
       showError("Add art type to your post");
+      return;
+    } else if (price !== null && price < 0) {
+      showError("No negative numbers");
+      return;
     }
 
     execute({
@@ -122,7 +120,7 @@ const PostGenerator = () => {
 
   return (
     <>
-      <div className="w-full flex flex-col bg-[#E0DFDB] items-center justify-center p-4 sm:p-16 gap-8">
+      <div className="w-full flex flex-col bg-[#dedede] items-center justify-center p-4 sm:p-16 gap-8">
         <div className="flex flex-col items-center justify-center w-full gap-1 text-lg text-center">
           {isClient && fileType && selectedFile && (
             <div className="relative flex items-center h-[250px] w-[250px] sm:h-[400px] sm:w-[400px] md:h-[500px] md:w-[500px] mb-8">
