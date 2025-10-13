@@ -9,15 +9,7 @@ import { Separator } from "./ui/separator";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-interface PostInput {
-  title: string;
-  image_post_url: string;
-  post_description?: string | null;
-  art_type: string;
-  price?: number | null;
-  cld_id?: string | null;
-}
+import { PostInput } from "@/lib/constants";
 
 const PostGenerator = () => {
   const [isClient, setIsClient] = useState(false);
