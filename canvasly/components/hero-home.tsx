@@ -18,6 +18,7 @@ export function HeroHome() {
           src="/hero-page-art2.png"
           alt="hero page art"
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover "
           priority
         />
