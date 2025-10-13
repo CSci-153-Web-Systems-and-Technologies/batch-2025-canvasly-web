@@ -3,15 +3,7 @@
 import { db } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
 import { uploadFile } from "./uploadFile";
-
-interface PostInput {
-  title: string;
-  image_post_url: string;
-  post_description?: string | null;
-  art_type: string;
-  price?: number | null;
-  cld_id?: string | null;
-}
+import { PostInput } from "@/lib/constants";
 
 export const createPost = async (post: PostInput) => {
   try {
@@ -34,7 +26,7 @@ export const createPost = async (post: PostInput) => {
     }
 
     console.log("✅POSTS.TS Authenticated user ID:", user.id);
-    /*
+
     if (post.image_post_url) {
       console.log("📤POSTS.TS Uploading image to Cloudinary...");
       const res = await uploadFile({
@@ -51,7 +43,7 @@ export const createPost = async (post: PostInput) => {
       post.cld_id = public_id;
       post.image_post_url = secure_url;
     }
-*/
+
     const newPost = await db.post.create({
       data: {
         title: post.title,
@@ -74,6 +66,60 @@ export const createPost = async (post: PostInput) => {
   } catch (err) {
     console.error("❌ createPost error:", err);
     throw err;
+  }
+};
+
+export const getMyFeedPosts = async (lastCursor) => {
+  try {
+    const take = 5;
+    const posts = await db.post.findMany({
+      include: {
+        author: true,
+      },
+      take: take,
+      ...(lastCursor && {
+        skip: 1,
+        cursor: {
+          id: lastCursor,
+        },
+      }),
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (posts.length === 0) {
+      return {
+        data: [],
+        metadata: {
+          lastCursor: null,
+          hasMore: false,
+        },
+      };
+    }
+
+    const lastPostInResults = posts[posts.length - 1];
+    const cursor = lastPostInResults.id;
+    const morePosts = await db.post.findMany({
+      skip: 1,
+      take: take,
+      cursor: {
+        id: cursor,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return {
+      data: posts,
+      metaData: {
+        lastCursor: cursor,
+        hasMore: morePosts.length > 0,
+      },
+    };
+  } catch (e) {
+    console.log(e);
+    throw new Error("Failed to fetch the posts");
   }
 };
 
