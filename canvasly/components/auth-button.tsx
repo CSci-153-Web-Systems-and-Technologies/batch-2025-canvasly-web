@@ -15,10 +15,16 @@ import AppSideBar from "./app-side-bar";
 export async function AuthButton() {
   const supabase = await createClient();
 
-  // You can also use getUser() which will be slower.
+  {
+    /* // You can also use getUser() which will be slower.
   const { data } = await supabase.auth.getClaims();
 
-  const user = data?.claims;
+  const user = data?.claims; */
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return user ? (
     <>
@@ -32,14 +38,16 @@ export async function AuthButton() {
           <Button className="sm:hidden p-2">
             <Upload />
           </Button>
-          <Button className="hidden sm:block">Post your artwork</Button>
+          <Link href={`/create`}>
+            <Button className="hidden sm:block">Post your artwork</Button>
+          </Link>
           <Button
             variant="ghost"
             className="bg-color-background rounded-3xl p-2 hover:bg-[#ededed]"
           >
             <Bell color="#628b35" />
           </Button>
-          <Link href="/protected">
+          <Link href={`/users/${user?.id}`}>
             <Avatar>
               <AvatarImage alt="@user" />
               <AvatarFallback>
@@ -48,7 +56,7 @@ export async function AuthButton() {
             </Avatar>
           </Link>
           <div className="hidden md:block">
-            <LogoutButton />
+            <LogoutButton variant="outline" compoenentClassName="" />
           </div>
           <div className="flex md:hidden absolute right-0 top-4">
             <AppSideBar />
