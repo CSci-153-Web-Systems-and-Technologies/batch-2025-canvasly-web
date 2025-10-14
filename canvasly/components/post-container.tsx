@@ -35,7 +35,7 @@ const PostContainer = ({ data }) => {
           <Ellipsis color="#333333" />
         </Button>
       </div>
-      <div className="flex justify-center w-full ">
+      <div className="flex justify-center w-full">
         {getFileTypeFromUrl(data?.image_post_url) === "image" && (
           <div className="relative w-full h-[360px] sm:h-[490px] md:h-[570px] lg:h-[700px] rounded-lg overflow-hidden bg-[#dedede]">
             <Image
