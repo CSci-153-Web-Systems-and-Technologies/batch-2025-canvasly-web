@@ -64,9 +64,9 @@ const PostGenerator = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // limit to 8MB
-    if (file && file.size > 8_000_000) {
-      alert("File size exceeds 8 MB");
+    // limit to 4MB
+    if (file && file.size > 4_000_000) {
+      alert("File size exceeds 4 MB");
       return;
     }
 
@@ -150,7 +150,7 @@ const PostGenerator = () => {
             Add image
           </Button>
           <p>JPEG / PNG</p>
-          <p>You can upload up to 8 MB only</p>
+          <p>You can upload up to 4 MB only</p>
         </div>
         <div className="w-full max-w-3xl mx-auto gap-4 flex flex-col items-center justify-center">
           <div className="w-full gap-2 flex flex-col">

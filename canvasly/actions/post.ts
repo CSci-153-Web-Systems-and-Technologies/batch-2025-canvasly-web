@@ -75,6 +75,8 @@ export const getMyFeedPosts = async (lastCursor) => {
     const posts = await db.post.findMany({
       include: {
         author: true,
+        likes: true,
+        comments: true,
       },
       take: take,
       ...(lastCursor && {
@@ -123,6 +125,113 @@ export const getMyFeedPosts = async (lastCursor) => {
   }
 };
 
+export const updatePostLike = async (params) => {
+  const { postId, actionType: type } = params;
+
+  console.log("POST.TS TAN AWA TYPE", postId, type);
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError) {
+      console.error(
+        "❌ updatePostLike POSTS.TS Supabase userError:",
+        userError.message
+      );
+      throw new Error("Failed to get authenticated user");
+    }
+
+    if (!user?.id) {
+      console.error("⚠️updatePostLike POSTS.TS No authenticated user found");
+      throw new Error("User not authenticated");
+    }
+
+    console.log("✅updatePostLike POSTS.TS Authenticated user ID:", user.id);
+
+    const userId = user?.id;
+
+    const post = await db.post.findMany({
+      where: {
+        id: postId,
+      },
+      include: {
+        likes: true,
+      },
+    });
+
+    if (!post) {
+      return {
+        error: "updatePostLike POSTS.TS Post not Found!",
+      };
+    }
+
+    const firstPost = post[0];
+    let like;
+
+    if (firstPost) {
+      // Now access .likes on the single post object
+      like = firstPost.likes.find((like) => like?.authorId === userId);
+    }
+
+    if (like) {
+      if (type === "like") {
+        return {
+          data: post,
+        };
+      } else {
+        await db.like.delete({
+          where: {
+            id: like.id,
+          },
+        });
+
+        console.log("like deleted!");
+      }
+    } else {
+      if (type === "unlike") {
+        return {
+          data: post,
+        };
+      } else {
+        await db.like.create({
+          data: {
+            post: {
+              connect: {
+                id: postId,
+              },
+            },
+            author: {
+              connect: {
+                id: userId,
+              },
+            },
+          },
+        });
+        console.log("like created!");
+      }
+    }
+
+    const updatedPost = await db.post.findUnique({
+      where: {
+        id: postId,
+      },
+      include: {
+        likes: true,
+      },
+    });
+
+    console.log("POSTS.TS ", updatedPost);
+    return {
+      data: updatedPost,
+    };
+  } catch (e) {
+    console.log(e);
+    throw new Error("POSTS.TS Failed to update the post likes");
+  }
+};
 /*
 "use server";
 
