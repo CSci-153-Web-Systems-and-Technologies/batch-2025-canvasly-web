@@ -35,9 +35,13 @@ export async function AuthButton() {
       <div className="p-4 flex items-center relative pr-9 sm:pr-12 md:pr-0 md:p-4">
         {/* <Hamburger onClickHandler={toggleSidebar} /> */}
         <div className="flex items-center gap-1 sm:gap-4">
-          <Button className="sm:hidden p-2">
-            <Upload />
-          </Button>
+          <div className="sm:hidden">
+            <Link href={`/create`}>
+              <Button className="p-2">
+                <Upload />
+              </Button>
+            </Link>
+          </div>
           <Link href={`/create`}>
             <Button className="hidden sm:block">Post your artwork</Button>
           </Link>
