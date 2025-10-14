@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import { getFileTypeFromUrl } from "@/utils";
 import HeartIcon from "./ui/heart-icon";
+import HeartContainer from "./heart-container";
 
 const PostContainer = ({ data, queryId }) => {
   console.log("POST CONTAINER", data);
@@ -63,7 +64,12 @@ const PostContainer = ({ data, queryId }) => {
         )}
       </div>
       <div className="flex flex-row justify-between items-center w-full">
-        <HeartIcon postId={data?.id} likes={data?.likes} queryId={queryId} />
+        <HeartContainer
+          postId={data?.id}
+          likes={data?.likes}
+          queryId={queryId}
+        />
+
         <div className="flex flex-riw justify-center gap-1 md:gap-4 text-base md:text-xl text-[#666666]">
           <p>{data?.art_type}</p>
           {(data?.price || data?.price > 0) && (
