@@ -7,6 +7,7 @@ import Image from "next/image";
 import { getFileTypeFromUrl } from "@/utils";
 //import HeartIcon from "./ui/heart-icon";
 import HeartContainer from "./heart-container";
+import CommentSection from "./comment-section";
 
 const PostContainer = ({ data, queryId }) => {
   console.log("POST CONTAINER", data);
@@ -19,7 +20,7 @@ const PostContainer = ({ data, queryId }) => {
       <div className="flex flex-row justify-between items-center  w-full">
         <div className="flex flex-row items-center gap-2">
           <Avatar>
-            <AvatarImage alt="@user" />
+            <AvatarImage src={data?.authorId?.image_url} alt="@user" />
             <AvatarFallback>
               <UserRound color="#666666" />
             </AvatarFallback>
@@ -31,11 +32,7 @@ const PostContainer = ({ data, queryId }) => {
             </span>
           </div>
         </div>
-        <Button
-          src={data?.author?.image_post_url}
-          variant="ghost"
-          className="rounded-full p-2.5"
-        >
+        <Button variant="ghost" className="rounded-full p-2.5">
           <Ellipsis color="#333333" />
         </Button>
       </div>
@@ -87,7 +84,11 @@ const PostContainer = ({ data, queryId }) => {
         <p>{data?.post_description}</p>
       </div>
       <div className="flex justify-center w-full">
-        <p>comments</p>
+        <CommentSection
+          comments={data?.comments}
+          postId={data?.id}
+          queryId={data?.queryId}
+        />
       </div>
     </div>
   );
