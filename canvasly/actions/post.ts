@@ -168,6 +168,7 @@ export const updatePostLike = async (params) => {
       };
     }
 
+    // First, check if the array has at least one item
     const firstPost = post[0];
     let like;
 
@@ -188,7 +189,7 @@ export const updatePostLike = async (params) => {
           },
         });
 
-        console.log("like deleted!");
+        console.log("✅ like deleted!");
       }
     } else {
       if (type === "unlike") {
@@ -210,7 +211,7 @@ export const updatePostLike = async (params) => {
             },
           },
         });
-        console.log("like created!");
+        console.log("✅ like created!");
       }
     }
 
@@ -223,13 +224,13 @@ export const updatePostLike = async (params) => {
       },
     });
 
-    console.log("POSTS.TS ", updatedPost);
+    console.log("✅ POSTS.TS ", updatedPost);
     return {
       data: updatedPost,
     };
   } catch (e) {
     console.log(e);
-    throw new Error("POSTS.TS Failed to update the post likes");
+    throw new Error("❌ POSTS.TS Failed to update the post likes");
   }
 };
 /*
