@@ -5,8 +5,12 @@ import { Button } from "./ui/button";
 import dayjs from "dayjs";
 import Image from "next/image";
 import { getFileTypeFromUrl } from "@/utils";
+//import HeartIcon from "./ui/heart-icon";
+import HeartContainer from "./heart-container";
 
-const PostContainer = ({ data }) => {
+const PostContainer = ({ data, queryId }) => {
+  console.log("POST CONTAINER", data);
+
   const nameShown =
     data?.author?.username || data?.author?.email || "Anonymous";
 
@@ -59,8 +63,13 @@ const PostContainer = ({ data }) => {
           </div>
         )}
       </div>
-      <div className="flex flex-row justify-between w-full">
-        <span className="text-base md:text-xl">{`(like button)`}</span>
+      <div className="flex flex-row justify-between items-center w-full">
+        <HeartContainer
+          postId={data?.id}
+          likes={data?.likes}
+          queryId={queryId}
+        />
+
         <div className="flex flex-riw justify-center gap-1 md:gap-4 text-base md:text-xl text-[#666666]">
           <p>{data?.art_type}</p>
           {(data?.price || data?.price > 0) && (

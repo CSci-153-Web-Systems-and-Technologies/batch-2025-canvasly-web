@@ -8,7 +8,7 @@ import { useInView } from "react-intersection-observer";
 import PostContainer from "./post-container";
 import { Separator } from "./ui/separator";
 
-const Posts = () => {
+const Posts = ({ id = "all" }) => {
   const { ref, inView } = useInView();
 
   const checkLastViewRef = (index, page) => {
@@ -29,7 +29,7 @@ const Posts = () => {
     isFetching,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["posts"],
+    queryKey: ["posts", id],
     queryFn: ({ pageParam = "" }) => getMyFeedPosts(pageParam),
     getNextPageParam: (lastPage) => {
       return lastPage?.metaData?.lastCursor;
@@ -67,7 +67,7 @@ const Posts = () => {
                 ref={ref}
                 className="w-full  p-10 flex items-center flex-col justify-center"
               >
-                <PostContainer data={post} />
+                <PostContainer data={post} queryId={id} />
                 <Separator />
               </div>
             ) : (
