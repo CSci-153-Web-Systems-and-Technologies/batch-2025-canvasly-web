@@ -76,7 +76,11 @@ export const getMyFeedPosts = async (lastCursor) => {
       include: {
         author: true,
         likes: true,
-        comments: true,
+        comments: {
+          include: {
+            author: true,
+          },
+        },
       },
       take: take,
       ...(lastCursor && {
@@ -233,6 +237,64 @@ export const updatePostLike = async (params) => {
     throw new Error("❌ POSTS.TS Failed to update the post likes");
   }
 };
+
+export const addComment = async ({
+  comment,
+  postId,
+}: {
+  comment: string;
+  postId: number;
+}) => {
+  try {
+    console.log(`⚠️ POSTS.TS ${comment},${postId}`);
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError) {
+      console.error(
+        "❌ updatePostLike POSTS.TS Supabase userError:",
+        userError.message
+      );
+      throw new Error("Failed to get authenticated user");
+    }
+
+    if (!user?.id) {
+      console.error("⚠️updatePostLike POSTS.TS No authenticated user found");
+      throw new Error("User not authenticated");
+    }
+
+    console.log("✅updatePostLike POSTS.TS Authenticated user ID:", user.id);
+
+    const userId = user?.id;
+
+    const newComment = await db.comment.create({
+      data: {
+        comment,
+        post: {
+          connect: {
+            id: postId,
+          },
+        },
+        author: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+    console.log("✅ POSTS.TS created comment!", newComment);
+    return {
+      data: newComment,
+    };
+  } catch (e) {
+    console.log(e);
+    throw new Error("❌POSTS.TS Failed to add comment");
+  }
+};
+
 /*
 "use server";
 
