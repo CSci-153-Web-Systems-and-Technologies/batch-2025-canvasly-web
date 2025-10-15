@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import dayjs from "dayjs";
 import Image from "next/image";
 import { getFileTypeFromUrl } from "@/utils";
-import HeartIcon from "./ui/heart-icon";
+//import HeartIcon from "./ui/heart-icon";
 import HeartContainer from "./heart-container";
 
 const PostContainer = ({ data, queryId }) => {
