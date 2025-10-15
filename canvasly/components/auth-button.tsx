@@ -4,13 +4,16 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import React from "react";
 //import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell, UserRound, Upload } from "lucide-react";
+import { Bell, Upload } from "lucide-react";
 import { Button } from "./ui/button";
 
 //import { CurrentUserAvatar } from "./current-user-avatar";
 import { LogoutButton } from "./logout-button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import AppSideBar from "./app-side-bar";
+import CurrentUserAvatarProfile from "./current-user-avatar-profile";
+
+//import { User } from "@/app/generated/prisma";
 
 export async function AuthButton() {
   const supabase = await createClient();
@@ -49,13 +52,9 @@ export async function AuthButton() {
           >
             <Bell color="#628b35" />
           </Button>
+
           <Link href={`/users/${user?.id}`}>
-            <Avatar>
-              <AvatarImage alt="@user" />
-              <AvatarFallback>
-                <UserRound color="#666666" />
-              </AvatarFallback>
-            </Avatar>
+            <CurrentUserAvatarProfile />
           </Link>
           <div className="hidden md:block">
             <LogoutButton variant="outline" compoenentClassName="" />
