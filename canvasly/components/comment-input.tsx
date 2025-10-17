@@ -52,7 +52,7 @@ const CommentInput = ({ setExpanded, postId, queryId }) => {
     };
 
     fetchImageURL();
-  }, [userId, image_url, username]);
+  }, [userId, image_url, username, supabase]);
 
   const { isPending, mutate } = useMutation({
     mutationFn: (variables: { comment: string; postId: number }) =>

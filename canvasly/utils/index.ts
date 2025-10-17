@@ -30,3 +30,31 @@ export const updateQueryCacheLikes = (
     return postsLikes.filter((like) => like.authorId !== userId);
   }
 };
+
+export const checkPostForTrends = (post_description) => {
+  if (post_description === null) {
+    return null;
+  } else if (post_description === undefined) {
+    return null;
+  }
+
+  const firstSplit = post_description
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word.startsWith("#"))
+    .map((word) => word.toLocaleLowerCase());
+
+  let res = firstSplit;
+
+  firstSplit.map((word) => {
+    const secondSplit = word.split("#");
+    if (secondSplit.length > 1) {
+      res = [...res, ...secondSplit.slice(1, secondSplit.length)].filter(
+        (el) => el !== word
+      );
+    }
+  });
+
+  res = [...new Set(res)];
+  return res;
+};
