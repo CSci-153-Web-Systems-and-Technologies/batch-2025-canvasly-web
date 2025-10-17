@@ -19,20 +19,23 @@ const HeartIcon = ({ postId, likes, queryId }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-
-      if (error) {
-        console.error("HEART-ICON.TSX Error fetching user:", error);
-      } else {
-        setUserId(data.user.id);
-        setUser(data.user);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+        setUser(user);
       }
     };
-
     fetchUser();
+  }, [supabase.auth]);
 
-    setIsLiked(likes?.some((like) => like?.authorId == userId));
-  }, [supabase.auth, user, likes, userId]);
+  useEffect(() => {
+    // We need to check for userId because it's set asynchronously
+    if (userId) {
+      setIsLiked(likes?.some((like) => like?.authorId === userId));
+    }
+  }, [likes, userId]);
 
   const { mutate } = useMutation({
     mutationFn: (params) => updatePostLike(params),

@@ -83,6 +83,7 @@ const PostContainer = ({ data, queryId }) => {
       <div className="w-full text-sm md:text-base">
         <p>{data?.post_description}</p>
       </div>
+
       <div className="flex justify-center w-full">
         <CommentSection
           comments={data?.comments}
