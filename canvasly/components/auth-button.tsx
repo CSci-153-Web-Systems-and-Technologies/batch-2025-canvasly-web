@@ -4,23 +4,24 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import React from "react";
 //import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell, UserRound, Upload } from "lucide-react";
+import { Bell, Upload } from "lucide-react";
 import { Button } from "./ui/button";
 
 //import { CurrentUserAvatar } from "./current-user-avatar";
 import { LogoutButton } from "./logout-button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import AppSideBar from "./app-side-bar";
+import CurrentUserAvatarProfile from "./current-user-avatar-profile";
+
+//import { User } from "@/app/generated/prisma";
 
 export async function AuthButton() {
   const supabase = await createClient();
 
-  {
-    /* // You can also use getUser() which will be slower.
+  /* // You can also use getUser() which will be slower.
   const { data } = await supabase.auth.getClaims();
 
   const user = data?.claims; */
-  }
 
   const {
     data: { user },
@@ -35,9 +36,13 @@ export async function AuthButton() {
       <div className="p-4 flex items-center relative pr-9 sm:pr-12 md:pr-0 md:p-4">
         {/* <Hamburger onClickHandler={toggleSidebar} /> */}
         <div className="flex items-center gap-1 sm:gap-4">
-          <Button className="sm:hidden p-2">
-            <Upload />
-          </Button>
+          <div className="sm:hidden">
+            <Link href={`/create`}>
+              <Button className="p-2">
+                <Upload />
+              </Button>
+            </Link>
+          </div>
           <Link href={`/create`}>
             <Button className="hidden sm:block">Post your artwork</Button>
           </Link>
@@ -47,13 +52,9 @@ export async function AuthButton() {
           >
             <Bell color="#628b35" />
           </Button>
+
           <Link href={`/users/${user?.id}`}>
-            <Avatar>
-              <AvatarImage alt="@user" />
-              <AvatarFallback>
-                <UserRound color="#666666" />
-              </AvatarFallback>
-            </Avatar>
+            <CurrentUserAvatarProfile />
           </Link>
           <div className="hidden md:block">
             <LogoutButton variant="outline" compoenentClassName="" />

@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     if (eventType === "user.created") {
       const { id, username, image_url, description, email_addresses } =
         evt.data;
-      const email_address = email_addresses?.[0]?.email_address ?? null;
+      const email = email_addresses?.[0]?.email_address ?? null;
 
       try {
         await createUser({
@@ -55,9 +55,9 @@ export async function POST(req: Request) {
           username,
           image_url,
           description,
-          email_address,
+          email,
         });
-        console.log("User created successfully in DB:", email_address);
+        console.log("User created successfully in DB:", email);
       } catch (e) {
         throw new Error("Error creating user in DB" + e);
       }
