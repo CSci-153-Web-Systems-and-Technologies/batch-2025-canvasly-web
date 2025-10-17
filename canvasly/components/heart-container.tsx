@@ -22,7 +22,7 @@ export default function HeartContainer({ postId, likes, queryId }) {
     };
 
     checkUser();
-  }, []); // The empty array ensures this runs only once on component mount
+  }, [supabase]); // The empty array ensures this runs only once on component mount
 
   if (loading) {
     return <p>Loading user information...</p>;

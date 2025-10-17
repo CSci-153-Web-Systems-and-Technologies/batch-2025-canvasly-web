@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
 import { uploadFile } from "./uploadFile";
 import { PostInput } from "@/lib/constants";
+import { checkPostForTrends } from "@/utils";
 
 export const createPost = async (post: PostInput) => {
   try {
@@ -60,6 +61,11 @@ export const createPost = async (post: PostInput) => {
         author: true,
       },
     });
+
+    const trends = checkPostForTrends(post.post_description);
+    if (trends.length > 0) {
+      createTrends(trends, newPost.id);
+    }
 
     console.log("✅ Prisma created new post:", newPost);
     return { data: newPost };
@@ -292,6 +298,46 @@ export const addComment = async ({
   } catch (e) {
     console.log(e);
     throw new Error("❌POSTS.TS Failed to add comment");
+  }
+};
+
+export const createTrends = async (trends, postId) => {
+  try {
+    const newTrends = await db.trend.createMany({
+      data: trends.map((trend) => ({
+        name: trend,
+        postId: postId,
+      })),
+    });
+
+    return {
+      data: newTrends,
+    };
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const getPopularTrebds = async () => {
+  try {
+    const trends = await db.trend.groupBy({
+      by: ["name"],
+      _count: {
+        name: true,
+      },
+      orderBy: {
+        _count: {
+          name: "desc",
+        },
+      },
+      take: 5,
+    });
+
+    return {
+      data: trends,
+    };
+  } catch (e) {
+    throw e;
   }
 };
 

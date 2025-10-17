@@ -16,7 +16,7 @@ const PostContainer = ({ data, queryId }) => {
     data?.author?.username || data?.author?.email || "Anonymous";
 
   return (
-    <div className="w-[335px] sm:w-[490px] md:w-[570px] lg:w-[700px] h-full flex flex-col justify-center gap-2">
+    <div className="w-[335px] sm:w-[490px] md:w-[420px] lg:w-[620px] xl:w-[700px] h-full flex flex-col justify-center gap-2">
       <div className="flex flex-row justify-between items-center  w-full">
         <div className="flex flex-row items-center gap-2">
           <Avatar>
@@ -38,7 +38,7 @@ const PostContainer = ({ data, queryId }) => {
       </div>
       <div className="flex justify-center w-full">
         {getFileTypeFromUrl(data?.image_post_url) === "image" && (
-          <div className="relative w-full h-[360px] sm:h-[490px] md:h-[570px] lg:h-[700px] rounded-lg overflow-hidden bg-[#dedede]">
+          <div className="relative w-full h-[360px] sm:h-[490px] md:h-[420px] lg:h-[620px] xl:h-[700px] rounded-lg overflow-hidden bg-[#dedede]">
             <Image
               // A more descriptive alt tag is better for accessibility
               alt={data?.title || "Post image"}
@@ -51,7 +51,7 @@ const PostContainer = ({ data, queryId }) => {
         )}
 
         {getFileTypeFromUrl(data?.image_post_url) === "video" && (
-          <div className="relative w-full h-[360px] sm:h-[490px] md:h-[570px] lg:h-[700px] rounded-lg overflow-hidden bg-[#dedede]">
+          <div className="relative w-full h-[360px] sm:h-[490px] md:h-[420px] lg:h-[620px] xl:h-[700px] rounded-lg overflow-hidden bg-[#dedede]">
             <video
               src={data?.image_post_url}
               controls

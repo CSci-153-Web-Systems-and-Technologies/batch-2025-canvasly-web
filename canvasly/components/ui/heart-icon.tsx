@@ -30,11 +30,9 @@ const HeartIcon = ({ postId, likes, queryId }) => {
     };
 
     fetchUser();
-  }, [supabase.auth]);
 
-  useEffect(() => {
     setIsLiked(likes?.some((like) => like?.authorId == userId));
-  }, [user, likes]);
+  }, [supabase.auth, user, likes, userId]);
 
   const { mutate } = useMutation({
     mutationFn: (params) => updatePostLike(params),

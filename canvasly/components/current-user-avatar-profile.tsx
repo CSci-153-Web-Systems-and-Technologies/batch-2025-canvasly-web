@@ -45,7 +45,7 @@ const CurrentUserAvatarProfile = () => {
       }
     };
     fetchImageURL();
-  }, [image_url, user]);
+  }, [user, userId, supabase]);
 
   if (!user) {
     return <p>You are not logged in.</p>;
