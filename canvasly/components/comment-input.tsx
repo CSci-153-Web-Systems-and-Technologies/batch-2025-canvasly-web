@@ -20,19 +20,19 @@ const CommentInput = ({ setExpanded, postId, queryId }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-
-      if (error) {
-        console.error("COMMENT-INPUT.TSX Error fetching user:", error);
-      } else {
-        setUserId(data?.user?.id);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
       }
     };
-
     fetchUser();
+  }, [supabase]);
 
-    const fetchImageURL = async () => {
-      if (userId) {
+  useEffect(() => {
+    if (userId) {
+      const fetchUserProfile = async () => {
         const { data, error } = await supabase
           .from("users")
           .select("image_url,username")
@@ -40,19 +40,15 @@ const CommentInput = ({ setExpanded, postId, queryId }) => {
           .single();
 
         if (error) {
-          console.error(
-            "COMMENT-INPUT.TSX Error fetching image_url from users:",
-            error
-          );
-        } else {
-          set_image_url(data?.image_url);
-          setUserName(data?.username);
+          console.error("Error fetching user profile:", error);
+        } else if (data) {
+          set_image_url(data.image_url);
+          setUserName(data.username);
         }
-      }
-    };
-
-    fetchImageURL();
-  }, [userId, image_url, username]);
+      };
+      fetchUserProfile();
+    }
+  }, [userId, supabase]);
 
   const { isPending, mutate } = useMutation({
     mutationFn: (variables: { comment: string; postId: number }) =>

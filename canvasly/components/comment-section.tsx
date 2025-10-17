@@ -1,11 +1,35 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import CommentInput from "./comment-input";
 import Comment from "./comment";
 import { ChevronDown } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 const CommentSection = ({ comments, postId, queryId }) => {
-  const [expanded, setExpanded] = React.useState(false);
+  const supabase = createClient();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      // This function gets the current user from the session
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+      setLoading(false);
+    };
+
+    checkUser();
+  }, [supabase]); // The empty array ensures this runs only once on component mount
+
+  if (loading) {
+    return <p>Loading user information...</p>;
+  }
 
   console.log(`⚠️ COMMENT-SECTION.TSX ${postId}`);
 
@@ -38,11 +62,13 @@ const CommentSection = ({ comments, postId, queryId }) => {
         </div>
       )}
 
-      <CommentInput
-        setExpanded={setExpanded}
-        postId={postId}
-        queryId={queryId}
-      />
+      {user && (
+        <CommentInput
+          setExpanded={setExpanded}
+          postId={postId}
+          queryId={queryId}
+        />
+      )}
     </div>
   );
 };
