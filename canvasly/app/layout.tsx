@@ -30,17 +30,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
         <QueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <main>
-              <div>{children}</div>
-            </main>
-            <Toaster />
-          </ThemeProvider>
+          <main>
+            <div>{children}</div>
+          </main>
+          <Toaster />
         </QueryProvider>
       </body>
     </html>

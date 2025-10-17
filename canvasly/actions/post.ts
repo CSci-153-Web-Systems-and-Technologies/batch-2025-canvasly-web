@@ -3,15 +3,8 @@
 import { db } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
 import { uploadFile } from "./uploadFile";
-
-interface PostInput {
-  title: string;
-  image_post_url: string;
-  post_description?: string | null;
-  art_type: string;
-  price?: number | null;
-  cld_id?: string | null;
-}
+import { PostInput } from "@/lib/constants";
+import { checkPostForTrends } from "@/utils";
 
 export const createPost = async (post: PostInput) => {
   try {
@@ -34,7 +27,7 @@ export const createPost = async (post: PostInput) => {
     }
 
     console.log("✅POSTS.TS Authenticated user ID:", user.id);
-    /*
+
     if (post.image_post_url) {
       console.log("📤POSTS.TS Uploading image to Cloudinary...");
       const res = await uploadFile({
@@ -51,7 +44,7 @@ export const createPost = async (post: PostInput) => {
       post.cld_id = public_id;
       post.image_post_url = secure_url;
     }
-*/
+
     const newPost = await db.post.create({
       data: {
         title: post.title,
@@ -69,11 +62,282 @@ export const createPost = async (post: PostInput) => {
       },
     });
 
+    const trends = checkPostForTrends(post.post_description);
+    if (trends.length > 0) {
+      createTrends(trends, newPost.id);
+    }
+
     console.log("✅ Prisma created new post:", newPost);
     return { data: newPost };
   } catch (err) {
     console.error("❌ createPost error:", err);
     throw err;
+  }
+};
+
+export const getMyFeedPosts = async (lastCursor) => {
+  try {
+    const take = 5;
+    const posts = await db.post.findMany({
+      include: {
+        author: true,
+        likes: true,
+        comments: {
+          include: {
+            author: true,
+          },
+        },
+      },
+      take: take,
+      ...(lastCursor && {
+        skip: 1,
+        cursor: {
+          id: lastCursor,
+        },
+      }),
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (posts.length === 0) {
+      return {
+        data: [],
+        metadata: {
+          lastCursor: null,
+          hasMore: false,
+        },
+      };
+    }
+
+    const lastPostInResults = posts[posts.length - 1];
+    const cursor = lastPostInResults.id;
+    const morePosts = await db.post.findMany({
+      skip: 1,
+      take: take,
+      cursor: {
+        id: cursor,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return {
+      data: posts,
+      metaData: {
+        lastCursor: cursor,
+        hasMore: morePosts.length > 0,
+      },
+    };
+  } catch (e) {
+    console.log(e);
+    throw new Error("Failed to fetch the posts");
+  }
+};
+
+export const updatePostLike = async (params) => {
+  const { postId, actionType: type } = params;
+
+  console.log("POST.TS TAN AWA TYPE", postId, type);
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError) {
+      console.error(
+        "❌ updatePostLike POSTS.TS Supabase userError:",
+        userError.message
+      );
+      throw new Error("Failed to get authenticated user");
+    }
+
+    if (!user?.id) {
+      console.error("⚠️updatePostLike POSTS.TS No authenticated user found");
+      throw new Error("User not authenticated");
+    }
+
+    console.log("✅updatePostLike POSTS.TS Authenticated user ID:", user.id);
+
+    const userId = user?.id;
+
+    const post = await db.post.findMany({
+      where: {
+        id: postId,
+      },
+      include: {
+        likes: true,
+      },
+    });
+
+    if (!post) {
+      return {
+        error: "updatePostLike POSTS.TS Post not Found!",
+      };
+    }
+
+    // First, check if the array has at least one item
+    const firstPost = post[0];
+    let like;
+
+    if (firstPost) {
+      // Now access .likes on the single post object
+      like = firstPost.likes.find((like) => like?.authorId === userId);
+    }
+
+    if (like) {
+      if (type === "like") {
+        return {
+          data: post,
+        };
+      } else {
+        await db.like.delete({
+          where: {
+            id: like.id,
+          },
+        });
+
+        console.log("✅ like deleted!");
+      }
+    } else {
+      if (type === "unlike") {
+        return {
+          data: post,
+        };
+      } else {
+        await db.like.create({
+          data: {
+            post: {
+              connect: {
+                id: postId,
+              },
+            },
+            author: {
+              connect: {
+                id: userId,
+              },
+            },
+          },
+        });
+        console.log("✅ like created!");
+      }
+    }
+
+    const updatedPost = await db.post.findUnique({
+      where: {
+        id: postId,
+      },
+      include: {
+        likes: true,
+      },
+    });
+
+    console.log("✅ POSTS.TS ", updatedPost);
+    return {
+      data: updatedPost,
+    };
+  } catch (e) {
+    console.log(e);
+    throw new Error("❌ POSTS.TS Failed to update the post likes");
+  }
+};
+
+export const addComment = async ({
+  comment,
+  postId,
+}: {
+  comment: string;
+  postId: number;
+}) => {
+  try {
+    console.log(`⚠️ POSTS.TS ${comment},${postId}`);
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError) {
+      console.error(
+        "❌ updatePostLike POSTS.TS Supabase userError:",
+        userError.message
+      );
+      throw new Error("Failed to get authenticated user");
+    }
+
+    if (!user?.id) {
+      console.error("⚠️updatePostLike POSTS.TS No authenticated user found");
+      throw new Error("User not authenticated");
+    }
+
+    console.log("✅updatePostLike POSTS.TS Authenticated user ID:", user.id);
+
+    const userId = user?.id;
+
+    const newComment = await db.comment.create({
+      data: {
+        comment,
+        post: {
+          connect: {
+            id: postId,
+          },
+        },
+        author: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+    console.log("✅ POSTS.TS created comment!", newComment);
+    return {
+      data: newComment,
+    };
+  } catch (e) {
+    console.log(e);
+    throw new Error("❌POSTS.TS Failed to add comment");
+  }
+};
+
+export const createTrends = async (trends, postId) => {
+  try {
+    const newTrends = await db.trend.createMany({
+      data: trends.map((trend) => ({
+        name: trend,
+        postId: postId,
+      })),
+    });
+
+    return {
+      data: newTrends,
+    };
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const getPopularTrebds = async () => {
+  try {
+    const trends = await db.trend.groupBy({
+      by: ["name"],
+      _count: {
+        name: true,
+      },
+      orderBy: {
+        _count: {
+          name: "desc",
+        },
+      },
+      take: 5,
+    });
+
+    return {
+      data: trends,
+    };
+  } catch (e) {
+    throw e;
   }
 };
 
