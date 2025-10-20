@@ -25,7 +25,7 @@ const CommentSection = ({ comments, postId, queryId }) => {
     };
 
     checkUser();
-  }, [supabase]); // The empty array ensures this runs only once on component mount
+  }, []); // The empty array ensures this runs only once on component mount
 
   if (loading) {
     return <p>Loading user information...</p>;

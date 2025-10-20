@@ -28,10 +28,7 @@ const HeartIcon = ({ postId, likes, queryId }) => {
       }
     };
     fetchUser();
-  }, [supabase.auth]);
 
-  useEffect(() => {
-    // We need to check for userId because it's set asynchronously
     if (userId) {
       setIsLiked(likes?.some((like) => like?.authorId === userId));
     }

@@ -27,6 +27,16 @@ export async function AuthButton() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const { data, error } = await supabase
+    .from("users")
+    .select("username")
+    .eq("id", user?.id)
+    .single();
+
+  if (error) {
+    console.log(data);
+  }
+
   return user ? (
     <>
       {/* <div className="flex items-center gap-4">
@@ -53,8 +63,17 @@ export async function AuthButton() {
             <Bell color="#628b35" />
           </Button>
 
-          <Link href={`/users/${user?.id}`}>
-            <CurrentUserAvatarProfile />
+          <Link
+            href={
+              data?.username
+                ? `/users/${user?.id}?person=${data?.username}`
+                : `/users/${user?.id}`
+            }
+          >
+            <CurrentUserAvatarProfile
+              classNameAvatar={""}
+              classNameUseRound={""}
+            />
           </Link>
           <div className="hidden md:block">
             <LogoutButton variant="outline" compoenentClassName="" />

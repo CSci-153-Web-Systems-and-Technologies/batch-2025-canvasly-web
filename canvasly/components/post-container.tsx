@@ -8,6 +8,7 @@ import { getFileTypeFromUrl } from "@/utils";
 //import HeartIcon from "./ui/heart-icon";
 import HeartContainer from "./heart-container";
 import CommentSection from "./comment-section";
+import CurrentUserAvatarProfile from "./current-user-avatar-profile";
 
 const PostContainer = ({ data, queryId }) => {
   console.log("POST CONTAINER", data);
@@ -20,7 +21,11 @@ const PostContainer = ({ data, queryId }) => {
       <div className="flex flex-row justify-between items-center  w-full">
         <div className="flex flex-row items-center gap-2">
           <Avatar>
-            <AvatarImage src={data?.authorId?.image_url} alt="@user" />
+            <AvatarImage
+              className="object-cover"
+              src={data?.author?.image_url}
+              alt="@user"
+            />
             <AvatarFallback>
               <UserRound color="#666666" />
             </AvatarFallback>
