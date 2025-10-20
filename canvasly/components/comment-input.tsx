@@ -28,7 +28,7 @@ const CommentInput = ({ setExpanded, postId, queryId }) => {
       }
     };
     fetchUser();
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
     if (userId) {
@@ -48,7 +48,7 @@ const CommentInput = ({ setExpanded, postId, queryId }) => {
       };
       fetchUserProfile();
     }
-  }, [userId, supabase]);
+  }, [userId]);
 
   const { isPending, mutate } = useMutation({
     mutationFn: (variables: { comment: string; postId: number }) =>
@@ -114,7 +114,7 @@ const CommentInput = ({ setExpanded, postId, queryId }) => {
 
   return (
     <div className="flex items-center gap-4 w-full">
-      <CurrentUserAvatarProfile />
+      <CurrentUserAvatarProfile classNameAvatar={""} classNameUseRound={""} />
 
       <Input
         placeholder="comment"

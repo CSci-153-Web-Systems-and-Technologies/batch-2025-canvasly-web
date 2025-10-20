@@ -6,7 +6,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserRound } from "lucide-react";
 import { User } from "@supabase/supabase-js";
 
-const CurrentUserAvatarProfile = () => {
+const CurrentUserAvatarProfile = ({
+  classNameAvatar,
+  classNameUseRound,
+}: {
+  classNameAvatar: string;
+  classNameUseRound: string;
+}) => {
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
@@ -45,7 +51,7 @@ const CurrentUserAvatarProfile = () => {
       }
     };
     fetchImageURL();
-  }, [user, userId, supabase]);
+  }, [userId, user]);
 
   if (!user) {
     return <p>You are not logged in.</p>;
@@ -53,22 +59,22 @@ const CurrentUserAvatarProfile = () => {
 
   if (user && image_url) {
     return (
-      <div>
-        <Avatar>
-          <AvatarImage src={image_url ?? null} alt="@user" />
+      <div className={classNameAvatar}>
+        <Avatar className={classNameAvatar}>
+          <AvatarImage className="object-cover" src={image_url} alt="@user" />
           <AvatarFallback>
-            <UserRound color="#666666" />
+            <UserRound color="#666666" className={classNameUseRound} />
           </AvatarFallback>
         </Avatar>
       </div>
     );
-  } else if (user) {
+  } else if (user && !image_url) {
     return (
-      <div>
-        <Avatar>
+      <div className={classNameAvatar}>
+        <Avatar className={classNameAvatar}>
           <AvatarImage alt="@user" />
           <AvatarFallback>
-            <UserRound color="#666666" />
+            <UserRound color="#666666" className={classNameUseRound} />
           </AvatarFallback>
         </Avatar>
       </div>
