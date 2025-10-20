@@ -4,12 +4,19 @@ import { UserRound } from "lucide-react";
 import dayjs from "dayjs";
 
 const Comment = ({ data }) => {
-  const [hasUser, setHasUser] = useState(false);
+  // Determine the name to show directly from props. No state needed!
+  // If username exists, use it. Otherwise, use the email.
+  const displayName =
+    data?.author?.username || data?.author?.email || "Anonymous";
 
   return (
-    <div className="flex flex-row w-full gap-2 p-1">
+    <div className="flex flex-row w-full gap-2 p-1 relative">
       <Avatar>
-        <AvatarImage src={data?.author?.image_url ?? null} alt="@poster" />
+        <AvatarImage
+          className="object-cover"
+          src={data?.author?.image_url ?? ""}
+          alt="@poster"
+        />
         <AvatarFallback>
           <UserRound color="#666666" />
         </AvatarFallback>
@@ -17,12 +24,9 @@ const Comment = ({ data }) => {
 
       <div className="flex flex-col w-full gap-1 bg-[#efefef] rounded-xl p-3">
         <div className="flex flex-row justify-between items-center w-full font-semibold md:font-bold text-sm md:text-base">
-          {data.author.username && setHasUser(false)}
-          {hasUser ? (
-            <span>{`${data?.author?.username}`}</span>
-          ) : (
-            <span>{`${data?.author?.email}`}</span>
-          )}
+          {/* Use the derived displayName variable here */}
+          <span>{displayName}</span>
+
           <span className="text-xs font-normal md:font-semibold text-[#666666]">
             {dayjs(data?.createdAt).format("DD MMM YYYY")}
           </span>
