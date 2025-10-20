@@ -24,3 +24,21 @@ export const uploadFile = async ({
     };
   }
 };
+
+export const deleteFile = async (public_id: string) => {
+  try {
+    // FIX: Removed the redundant ".v2" from the call.
+    // The 'cld' object is the v2 instance, so we access uploader directly.
+    const result = await cld.uploader.destroy(public_id);
+    console.log("DELETEFILE.TS: Asset deleted successfully:", result);
+    return { success: true, result };
+  } catch (error) {
+    console.error("DELETEFILE.TS: Failed to delete asset:", error);
+    // It's often better to throw the error to let the calling function know.
+    // However, returning an error object is also a valid pattern.
+    return {
+      success: false,
+      error: "Failed to delete file",
+    };
+  }
+};

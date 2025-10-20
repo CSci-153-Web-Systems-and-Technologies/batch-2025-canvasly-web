@@ -7,6 +7,12 @@ export const navItems = [
   { name: "Request", href: "/" },
 ];
 
+export const pageTabs = [
+  { name: "Profile" },
+  { name: "Followers" },
+  { name: "Followings" },
+];
+
 export interface PostInput {
   title: string;
   image_post_url: string;
