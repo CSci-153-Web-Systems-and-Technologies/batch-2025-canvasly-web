@@ -173,6 +173,29 @@ export const getAllFollowersAndFollowingsInfo = async (id) => {
   }
 };
 
+export const getFollowSuggestions = async ({ userAuth }) => {
+  try {
+    const following = await db.follow.findMany({
+      where: {
+        followerId: userAuth?.id,
+      },
+    });
+
+    const followingIds = following.map((follow) => follow.followingId);
+
+    const suggestions = await db.user.findMany({
+      where: {
+        AND: [{ id: { not: userAuth?.id } }, { id: { notIn: followingIds } }],
+      },
+    });
+
+    return suggestions;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
 /*
 
 export const updateUserProfile = async (params) => {
