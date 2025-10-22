@@ -15,7 +15,7 @@ const CurrentUserAvatarProfile = ({
 }) => {
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
+  //const [userId, setUserId] = useState<string | null>(null);
   const [image_url, set_image_url] = useState<string | null>(null);
 
   useEffect(() => {
