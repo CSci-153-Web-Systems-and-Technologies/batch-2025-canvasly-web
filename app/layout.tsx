@@ -11,8 +11,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Canvasly",
-  description: "A web-based marketplace",
+  title: "Canvasly - Discover Art",
+  description: "A web-based online community and art marketplace",
 };
 
 const geistSans = Geist({
