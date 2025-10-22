@@ -22,7 +22,7 @@ const Comment = ({ data }) => {
         </AvatarFallback>
       </Avatar>
 
-      <div className="flex flex-col w-full gap-1 bg-[#efefef] rounded-xl p-3">
+      <div className="flex flex-col w-full gap-1 bg-[#f5f5f5] rounded-xl p-3">
         <div className="flex flex-row justify-between items-center w-full font-semibold md:font-bold text-sm md:text-base">
           {/* Use the derived displayName variable here */}
           <span>{displayName}</span>
