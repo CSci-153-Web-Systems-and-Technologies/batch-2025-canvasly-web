@@ -77,7 +77,7 @@ const ProfilePage = (params) => {
               </span>
               {data?.data?.id === userAuth?.id && (
                 <EditProfileDialog
-                  useId={data?.data?.id}
+                  userId={data?.data?.id}
                   isLoading={isLoading}
                   data={data}
                   isError={isError}
