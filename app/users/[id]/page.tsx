@@ -59,7 +59,7 @@ const ProfilePage = (params) => {
   return (
     <div className="w-full flex flex-col ">
       <div className="w-full flex flex-col ">
-        <div className="flex flex-col md:items-center  w-full p-4 sm:p-8 bg-[#f7f7f7]">
+        <div className="flex flex-col md:items-center  w-full p-4 sm:p-8 bg-[#f5f5f5]">
           <div className="flex flex-row gap-2 sm:gap-4 max-w-7xl w-full">
             <Avatar className="h-20 w-20 reltive">
               <AvatarImage
