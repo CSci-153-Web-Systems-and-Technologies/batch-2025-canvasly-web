@@ -8,7 +8,7 @@ import { getFileTypeFromUrl } from "@/utils";
 //import HeartIcon from "./ui/heart-icon";
 import HeartContainer from "./heart-container";
 import CommentSection from "./comment-section";
-import CurrentUserAvatarProfile from "./current-user-avatar-profile";
+import Link from "next/link";
 
 const PostContainer = ({ data, queryId }) => {
   console.log("POST CONTAINER", data);
@@ -19,17 +19,23 @@ const PostContainer = ({ data, queryId }) => {
   return (
     <div className="w-[335px] sm:w-[490px] md:w-[420px] lg:w-[620px] xl:w-[700px] h-full flex flex-col justify-center gap-2">
       <div className="flex flex-row justify-between items-center  w-full">
-        <div className="flex flex-row items-center gap-2">
-          <Avatar>
-            <AvatarImage
-              className="object-cover"
-              src={data?.author?.image_url}
-              alt="@user"
-            />
-            <AvatarFallback>
-              <UserRound color="#666666" />
-            </AvatarFallback>
-          </Avatar>
+        <div className="flex flex-row justify-center gap-2">
+          <Link
+            passHref
+            href={`/users/${data?.author?.id}?person=${data?.author?.username}`}
+          >
+            <Avatar>
+              <AvatarImage
+                className="object-cover"
+                src={data?.author?.image_url}
+                alt="@user"
+              />
+              <AvatarFallback>
+                <UserRound color="#666666" />
+              </AvatarFallback>
+            </Avatar>
+          </Link>
+
           <div className="flex flex-col">
             <span>{nameShown}</span>
             <span className="text-xs font-semibold text-[#666666]">

@@ -6,6 +6,8 @@ import { uploadFile } from "./uploadFile";
 import { PostInput } from "@/lib/constants";
 import { checkPostForTrends } from "@/utils";
 
+const PAGE_SIZE = 4;
+
 export const createPost = async (post: PostInput) => {
   try {
     console.log("🟢POSTS.TS createPost called with:", post);
@@ -74,8 +76,6 @@ export const createPost = async (post: PostInput) => {
     throw err;
   }
 };
-
-const PAGE_SIZE = 5; // You had 5, this is fine.
 
 export const getMyArtwork = async ({ cursor = 0, userId }) => {
   // `cursor` is now the numeric offset (0, 5, 10, ...)

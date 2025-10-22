@@ -3,6 +3,7 @@
 //import { DeployButton } from "@/components/deploy-button";
 //import { EnvVarWarning } from "@/components/env-var-warning";
 //import { AuthButton } from "@/components/auth-button";
+import FollowSuggestions from "@/components/follow-suggestions";
 import { HeroHome } from "@/components/hero-home";
 import Navbar from "@/components/navbar";
 import PopularTrends from "@/components/popular-trends";
@@ -33,7 +34,7 @@ export default function Home() {
             <div className="items-start justify-center hidden md:flex w-full max-w-sm">
               <div className="sticky top-4 flex flex-col w-full items-center gap-4">
                 <PopularTrends />
-                <span>Follow Suggestionss</span>
+                <FollowSuggestions />
               </div>
             </div>
           </main>
