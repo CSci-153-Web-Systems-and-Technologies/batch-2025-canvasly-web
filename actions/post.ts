@@ -75,6 +75,63 @@ export const createPost = async (post: PostInput) => {
   }
 };
 
+const PAGE_SIZE = 5; // You had 5, this is fine.
+
+export const getMyArtwork = async ({ cursor = 0, userId }) => {
+  // `cursor` is now the numeric offset (0, 5, 10, ...)
+  // `userId` is the ID of the profile being viewed
+
+  try {
+    const posts = await db.post.findMany({
+      // 2. This is the 15.7 GB Egress Fix
+      // Add the WHERE clause to filter by user
+      where: {
+        authorId: userId, // Make sure `authorId` matches your Prisma schema
+      },
+
+      // 3. This is the Egress Optimization
+      // Use `_count` instead of `include` to get numbers, not all data.
+      select: {
+        id: true,
+        title: true,
+        image_post_url: true, // or whatever your image field is
+        createdAt: true,
+        authorId: true,
+        // This is much, much smaller than including all like/comment records
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
+      },
+
+      // 4. This is the Prisma Error Fix
+      // Use `skip` (offset) for pagination, not cursor
+      take: PAGE_SIZE,
+      skip: cursor, // `cursor` is the offset (0, 5, 10...)
+
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    // 5. Set the next cursor for infinite scroll
+    const nextCursor = posts.length === PAGE_SIZE ? cursor + PAGE_SIZE : null;
+
+    return {
+      data: posts,
+      metaData: {
+        lastCursor: nextCursor,
+      },
+    };
+  } catch (e) {
+    console.log(e);
+    // Return a valid shape on error so the app doesn't crash
+    return { data: [], metaData: { lastCursor: null } };
+  }
+};
+
 export const getMyFeedPosts = async (lastCursor) => {
   try {
     const take = 5;
