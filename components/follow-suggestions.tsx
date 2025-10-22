@@ -4,7 +4,8 @@ import { createClient } from "@/lib/client";
 import React, { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { useQuery } from "@tanstack/react-query";
-import { getFollowSuggestions } from "@/actions/user";
+// 1. Import your action for fetching follow info
+import { getFollowSuggestions, getFollowInfo } from "@/actions/user";
 import { Skeleton } from "./ui/skeleton";
 import UserBox from "./user-box";
 
@@ -23,14 +24,28 @@ const FollowSuggestions = () => {
         console.error("Error fetching user:", userError);
         return;
       }
-      setUserAuth(user); // Set the user for the UI
+      setUserAuth(user);
     };
 
     fetchAllData();
-  }, [supabase]); // The dependency array only needs `supabase`
+  }, [supabase]);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["users", "followSuggestions"],
+  // 2. ADD THIS QUERY: Fetch the real follow info
+  // This is the data UserBox needs for its optimistic update.
+  const { data: followInfo } = useQuery({
+    queryKey: ["user", userAuth?.id, "followInfo"],
+    queryFn: () => getFollowInfo(userAuth.id), // Assumes getFollowInfo takes a user ID
+    enabled: !!userAuth, // Only run when we have the user
+  });
+
+  // 3. FIX THIS QUERY
+  const {
+    data: suggestions, // Renamed to suggestions for clarity
+    isLoading,
+    isError,
+  } = useQuery({
+    // FIX A: Key must match UserBox. Use userAuth.id so it refetches on user change.
+    queryKey: ["user", "followSuggestions", userAuth?.id],
     queryFn: () => getFollowSuggestions({ userAuth }),
     enabled: !!userAuth,
     staleTime: 1000 * 60 * 20,
@@ -41,51 +56,48 @@ const FollowSuggestions = () => {
   }
 
   return (
-    <div className="p-4 relative w-full h-full rounded-lg bg-white flex flex-col gap-7">
-      <div className="flex flex-col gap-2 w-full h-full">
-        <h1 className="text-2xl">Follow Suggestions</h1>
-      </div>
+    userAuth && (
+      <div className="p-4 relative w-full h-full rounded-lg bg-white flex flex-col gap-7">
+        <div className="flex flex-col gap-2 w-full h-full">
+          <h1 className="text-2xl">Follow Suggestions</h1>
+        </div>
 
-      <div className="flex flex-col gap-4 w-full">
-        {
-          // 1. Handle loading state
-          userAuth && isLoading ? (
+        <div className="flex flex-col gap-4 w-full">
+          {isLoading ? (
             Array(5)
               .fill(0)
               .map((_, i) => (
                 <div className="flex w-full gap-1" key={i}>
-                  <div className="flex w-full items-center space-x-3">
-                    <Skeleton className="h-9 w-9 rounded-full" />
-                    <div className="space-y-1 w-full">
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-4/5" />
+                  <div className="flex w-full gap-1" key={i}>
+                    <div className="flex w-full items-center space-x-3">
+                      <Skeleton className="h-9 w-9 rounded-full" />
+                      <div className="space-y-1 w-full">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-4/5" />
+                      </div>
                     </div>
                   </div>
                 </div>
               ))
-          ) : // 2. Handle error state
-          userAuth && isError ? (
+          ) : isError ? (
             <p>Error loading suggestions.</p>
-          ) : // 3. Handle success with data
-          userAuth && data?.length > 0 ? (
-            data?.map((user) => (
+          ) : suggestions?.length > 0 ? (
+            suggestions.map((user) => (
               <UserBox
                 currentUser={userAuth}
                 key={user?.id}
-                loggedInUserData={userAuth}
-                data={{ follower: user }}
+                // 4. FIX B: Pass the real followInfo data here
+                loggedInUserData={followInfo}
+                data={{ follower: user }} // This data structure is correct for UserBox
                 type="follower"
-              /> // Pass user data as a prop
+              />
             ))
           ) : (
-            userAuth && (
-              // 4. Handle success with no data
-              <p>No suggestions</p>
-            )
-          )
-        }
+            <p>No suggestions</p>
+          )}
+        </div>
       </div>
-    </div>
+    )
   );
 };
 

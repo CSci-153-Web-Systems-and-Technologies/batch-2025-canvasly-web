@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { CreateUserInput } from "@/lib/types/supa-base-webhook";
 import { deleteFile, uploadFile } from "./uploadFile";
+import { createClient } from "@/lib/server";
 
 export const createUser = async (user: CreateUserInput) => {
   const { id, image_url, username, description, email } = user;
@@ -193,6 +194,91 @@ export const getFollowSuggestions = async ({ userAuth }) => {
   } catch (e) {
     console.log(e);
     throw e;
+  }
+};
+
+export const updateFollow = async (params) => {
+  try {
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      console.log("NO USER USER.TS ");
+      return;
+    }
+
+    const { id, type } = params;
+
+    if (type === "follow") {
+      await db.follow.create({
+        data: {
+          follower: {
+            connect: {
+              id: user?.id,
+            },
+          },
+          following: {
+            connect: {
+              id,
+            },
+          },
+        },
+      });
+      console.log("user followed");
+    } else if (type === "unfollow") {
+      await db.follow.deleteMany({
+        where: {
+          followerId: user?.id,
+          followingId: id,
+        },
+      });
+
+      console.log("user unfollowed");
+    }
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
+// ... your other actions like getFollowSuggestions ...
+
+// ADD THIS NEW FUNCTION
+export const getFollowInfo = async (userId: string) => {
+  if (!userId) {
+    return { following: [], followers: [] };
+  }
+
+  try {
+    // Fetches the list of people the user follows
+    const following = await db.follow.findMany({
+      where: {
+        followerId: userId,
+      },
+      // Include the profile data of the person being followed
+      include: {
+        following: true,
+      },
+    });
+
+    // Fetches the list of people who follow the user
+    const followers = await db.follow.findMany({
+      where: {
+        followingId: userId,
+      },
+      // Include the profile data of the follower
+      include: {
+        follower: true,
+      },
+    });
+
+    return { following, followers };
+  } catch (error) {
+    console.error("Error fetching follow info:", error);
+    return { following: [], followers: [] };
   }
 };
 
