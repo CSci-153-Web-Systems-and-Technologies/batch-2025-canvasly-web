@@ -17,6 +17,7 @@ import FollowInfo from "@/components/follow-info";
 //import PostGenerator from "@/components/post-generator";
 //import Posts from "@/components/posts";
 import ProfileArtworks from "@/components/profile-artworks";
+import FollowButton from "@/components/follow-button";
 
 export const genereateMetadata = (params) => {
   return {
@@ -80,18 +81,26 @@ const ProfilePage = (params) => {
                     <span>username loading</span>
                   )}
                 </span>
-                {data?.data?.id === userAuth?.id && (
-                  <EditProfileDialog
-                    userId={data?.data?.id}
-                    isLoading={isLoading}
-                    data={data}
-                    isError={isError}
-                  />
-                )}
+
+                {data?.data?.id &&
+                  userAuth?.id &&
+                  data?.data?.id === userAuth?.id && (
+                    <EditProfileDialog
+                      userId={data?.data?.id}
+                      isLoading={isLoading}
+                      data={data}
+                      isError={isError}
+                    />
+                  )}
+                {data?.data?.id &&
+                  userAuth?.id &&
+                  data?.data?.id !== userAuth?.id && (
+                    <FollowButton id={data?.data?.id} />
+                  )}
               </div>
-              {data?.data?.id === userAuth?.id && (
-                <FollowInfo userId={data?.data?.id} />
-              )}
+
+              <FollowInfo userId={data?.data?.id} />
+
               <div className="text-xs md:text-xl flex text-[#818181] py-8">
                 {!isLoading ? (
                   <span>{data?.data?.description}</span>
@@ -155,6 +164,12 @@ const ProfilePage = (params) => {
 };
 
 export default ProfilePage;
+
+/*
+
+
+
+*/
 
 /*
 
