@@ -19,39 +19,36 @@ const CurrentUserAvatarProfile = ({
   const [image_url, set_image_url] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
+    const fetchAllData = async () => {
+      // 1. Get the user first
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
 
-      if (error) {
-        console.error(
-          "CURRENT-USER-AVATAR-PROFILE.TSX Error fetching user:",
-          error
-        );
-      } else {
-        setUserId(data.user.id);
-        setUser(data.user);
+      if (userError || !user) {
+        console.error("Error fetching user:", userError);
+        return; // Stop if there's an error or no user
+      }
+
+      setUser(user); // Set the user for the UI
+
+      // 2. NOW that we have the user, get the image URL
+      const { data: profileData, error: profileError } = await supabase
+        .from("users")
+        .select("image_url")
+        .eq("id", user.id) // Use user.id directly
+        .single();
+
+      if (profileError) {
+        console.error("Error fetching user profile:", profileError.message);
+      } else if (profileData) {
+        set_image_url(profileData.image_url);
       }
     };
 
-    fetchUser();
-
-    const fetchImageURL = async () => {
-      if (user) {
-        const { data, error } = await supabase
-          .from("users")
-          .select("image_url") // You only need the image_url here
-          .eq("id", userId)
-          .single();
-
-        if (error) {
-          console.error("Error fetching user profile:", error.message);
-        } else {
-          set_image_url(data.image_url);
-        }
-      }
-    };
-    fetchImageURL();
-  }, [userId, user]);
+    fetchAllData();
+  }, [supabase]); // The dependency array only needs `supabase`
 
   if (!user) {
     return <p>You are not logged in.</p>;
