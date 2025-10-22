@@ -43,7 +43,7 @@ const PostContainer = ({ data, queryId }) => {
       </div>
       <div className="flex justify-center w-full">
         {getFileTypeFromUrl(data?.image_post_url) === "image" && (
-          <div className="relative w-full h-[360px] sm:h-[490px] md:h-[420px] lg:h-[620px] xl:h-[700px] rounded-lg overflow-hidden bg-[#dedede]">
+          <div className="relative w-full h-[360px] sm:h-[490px] md:h-[420px] lg:h-[620px] xl:h-[700px] rounded-lg overflow-hidden bg-[#f5f5f5]">
             <Image
               // A more descriptive alt tag is better for accessibility
               alt={data?.title || "Post image"}
@@ -56,7 +56,7 @@ const PostContainer = ({ data, queryId }) => {
         )}
 
         {getFileTypeFromUrl(data?.image_post_url) === "video" && (
-          <div className="relative w-full h-[360px] sm:h-[490px] md:h-[420px] lg:h-[620px] xl:h-[700px] rounded-lg overflow-hidden bg-[#dedede]">
+          <div className="relative w-full h-[360px] sm:h-[490px] md:h-[420px] lg:h-[620px] xl:h-[700px] rounded-lg overflow-hidden bg-[#f5f5f5]">
             <video
               src={data?.image_post_url}
               controls

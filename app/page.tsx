@@ -23,7 +23,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col justify-center">
       <div className="flex-1 w-full flex flex-col items-center">
         <Navbar />
-        <div className="flex-1 flex flex-col gap-10 md:gap-20 w-full bg-[#dedede]">
+        <div className="flex-1 flex flex-col gap-10 md:gap-20 w-full bg-[#f5f5f5]">
           <HeroHome />
           <main className="flex-1 flex justify-between gap-4 mx-auto w-full max-w-7xl md:px-4">
             <div className="w-full max-w-5xl">

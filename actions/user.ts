@@ -143,6 +143,36 @@ export const updateUserProfile = async (params) => {
   }
 };
 
+export const getAllFollowersAndFollowingsInfo = async (id) => {
+  try {
+    const followers = await db.follow.findMany({
+      where: {
+        followingId: id,
+      },
+      include: {
+        follower: true,
+      },
+    });
+
+    const following = await db.follow.findMany({
+      where: {
+        followerId: id,
+      },
+      include: {
+        following: true,
+      },
+    });
+
+    return {
+      followers,
+      following,
+    };
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
 /*
 
 export const updateUserProfile = async (params) => {
