@@ -37,7 +37,9 @@ const PostContainer = ({ data, queryId }) => {
           </Link>
 
           <div className="flex flex-col">
-            <span>{nameShown}</span>
+            <span className="font-semibold text-sm md:text-base">
+              {nameShown}
+            </span>
             <span className="text-xs font-semibold text-[#666666]">
               {dayjs(data?.createdAt).format("DD MMM YYYY")}
             </span>
