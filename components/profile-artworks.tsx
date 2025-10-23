@@ -73,7 +73,7 @@ const ProfileArtworks = ({ id }) => {
               <div
                 key={post?.id}
                 ref={ref}
-                className="w-full  p-10 flex items-center flex-col justify-center"
+                className="w-full flex items-center flex-col justify-center"
               >
                 <ArtworkContainer data={post} queryId={id} />
               </div>

@@ -68,7 +68,7 @@ const Posts = ({ id = "all" }) => {
                 className="w-full  p-10 flex items-center flex-col justify-center"
               >
                 <PostContainer data={post} queryId={id} />
-                <Separator />
+                <Separator className="mt-10" />
               </div>
             ) : (
               <div

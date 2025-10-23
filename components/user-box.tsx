@@ -8,6 +8,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import { updateFollow } from "@/actions/user";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const UserBox = ({ currentUser, data, type, loggedInUserData }) => {
   // 2. REMOVED: const [followed, setFollowed] = useState(false);
@@ -106,21 +107,26 @@ const UserBox = ({ currentUser, data, type, loggedInUserData }) => {
 
   return (
     <div className="flex flex-row items-center justify-between w-full">
-      <div className="flex flex-row items-center gap-3">
-        <div>
-          <Avatar>
-            <AvatarImage
-              className="h-9 w-9 rounded-full object-cover"
-              src={data?.[type]?.image_url}
-              alt="@user"
-            />
-            <AvatarFallback>
-              <UserRound color="#666666" className="h-9 w-9 rounded-full" />
-            </AvatarFallback>
-          </Avatar>
+      <Link
+        passHref
+        href={`/users/${data?.[type]?.id}?person=${data?.[type]?.username}`}
+      >
+        <div className="flex flex-row items-center gap-3">
+          <div>
+            <Avatar>
+              <AvatarImage
+                className="h-9 w-9 rounded-full object-cover"
+                src={data?.[type]?.image_url}
+                alt="@user"
+              />
+              <AvatarFallback>
+                <UserRound color="#666666" className="h-9 w-9 rounded-full" />
+              </AvatarFallback>
+            </Avatar>
+          </div>
+          <span className="text-black text-base">{data?.[type]?.username}</span>
         </div>
-        <span className="text-black text-base">{data?.[type]?.username}</span>
-      </div>
+      </Link>
 
       {/* 6. FIXED: Use the 'isFollowed' derived variable */}
       {!isFollowed ? (
