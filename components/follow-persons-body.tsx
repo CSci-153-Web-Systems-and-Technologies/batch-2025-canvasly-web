@@ -59,7 +59,9 @@ const FollowPersonsBody = ({ type, id }) => {
     <div className="w-full h-14">
       <div className="w-full my-2">
         {userData?.[type]?.length === 0 ? (
-          <p>{`No ${type}`}</p>
+          <div className="bg-[#f5f5f5] p-5 rounded-lg">
+            <p>{`No ${type}`}</p>
+          </div>
         ) : (
           <div>
             {userData?.[type]?.map((person) => (

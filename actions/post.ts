@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 import { uploadFile } from "./uploadFile";
 import { PostInput } from "@/lib/constants";
 import { checkPostForTrends } from "@/utils";
+import { getAllFollowersAndFollowingsInfo } from "./user";
+//import { useEffect } from "react";
 
 const PAGE_SIZE = 4;
 
@@ -170,6 +172,90 @@ export const getMyFeedPosts = async (lastCursor) => {
     const lastPostInResults = posts[posts.length - 1];
     const cursor = lastPostInResults.id;
     const morePosts = await db.post.findMany({
+      skip: 1,
+      take: take,
+      cursor: {
+        id: cursor,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return {
+      data: posts,
+      metaData: {
+        lastCursor: cursor,
+        hasMore: morePosts.length > 0,
+      },
+    };
+  } catch (e) {
+    console.log(e);
+    throw new Error("Failed to fetch the posts");
+  }
+};
+
+export const getMyFeedPostsFollowing = async (lastCursor) => {
+  try {
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const { following } = await getAllFollowersAndFollowingsInfo(user?.id);
+
+    const followingIds = following
+      .map((f) => f.followingId)
+      .filter((id): id is string => Boolean(id));
+
+    const take = 5;
+
+    //const where = { author: { id: userIds } };
+
+    const where = {
+      authorId: {
+        in: followingIds,
+        not: user?.id,
+      },
+    };
+
+    const posts = await db.post.findMany({
+      include: {
+        author: true,
+        likes: true,
+        comments: {
+          include: {
+            author: true,
+          },
+        },
+      },
+      where,
+      take: take,
+      ...(lastCursor && {
+        skip: 1,
+        cursor: {
+          id: lastCursor,
+        },
+      }),
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (posts.length === 0) {
+      return {
+        data: [],
+        metadata: {
+          lastCursor: null,
+          hasMore: false,
+        },
+      };
+    }
+
+    const lastPostInResults = posts[posts.length - 1];
+    const cursor = lastPostInResults.id;
+    const morePosts = await db.post.findMany({
+      where,
       skip: 1,
       take: take,
       cursor: {
