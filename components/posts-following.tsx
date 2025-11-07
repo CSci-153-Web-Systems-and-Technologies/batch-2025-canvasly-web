@@ -7,6 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useInView } from "react-intersection-observer";
 import PostContainer from "./post-container";
 import { Separator } from "./ui/separator";
+import { Skeleton } from "./ui/skeleton";
 
 const PostsFollowing = ({ id = "all" }) => {
   const { ref, inView } = useInView();
@@ -45,14 +46,31 @@ const PostsFollowing = ({ id = "all" }) => {
   console.log(data);
 
   if (isError) {
-    return <p>Something went wrong! POSTS.TSX</p>;
+    return (
+      <div className="p-5 rounded-lg">
+        <p>Something went wrong! POSTS.TSX</p>
+      </div>
+    );
   }
 
   if (isLoading) {
     return (
-      <div className="w-full items-center justify-center flex flex-row gap-3">
-        <Spinner />
-        <p>Loading...</p>
+      <div className="w-full  p-10 flex items-center flex-col justify-center">
+        <div className="w-[335px] sm:w-[490px] md:w-[420px] lg:w-[620px] xl:w-[700px] h-64 md:h-96 justify-between flex flex-col  gap-2">
+          <div className="flex w-full items-center space-x-3">
+            <Skeleton className="h-9 w-9 rounded-full" />
+            <div className="space-y-1 w-full">
+              <Skeleton className="h-4 w-44" />
+              <Skeleton className="h-4 w-36" />
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-between">
+            <Skeleton className="h-4 w-20 sm:w-24 md:w-24 lg:w-32" />
+            <Skeleton className=" h-4 w-20 sm:w-24 md:w-24 lg:w-32" />
+            <Skeleton className="h-4 w-20 sm:w-24 md:w-24 lg:w-32" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -83,9 +101,22 @@ const PostsFollowing = ({ id = "all" }) => {
         )}
 
         {(isLoading || isFetching || isFetchingNextPage) && (
-          <div className="w-full items-center justify-center flex flex-row gap-3">
-            <Spinner />
-            <p>Loading...</p>
+          <div className="w-full  p-10 flex items-center flex-col justify-center">
+            <div className="w-[335px] sm:w-[490px] md:w-[420px] lg:w-[620px] xl:w-[700px] h-64 md:h-96 justify-between flex flex-col  gap-2">
+              <div className="flex w-full items-center space-x-3">
+                <Skeleton className="h-9 w-9 rounded-full" />
+                <div className="space-y-1 w-full">
+                  <Skeleton className="h-4 w-44" />
+                  <Skeleton className="h-4 w-36" />
+                </div>
+              </div>
+
+              <div className="flex flex-row justify-between">
+                <Skeleton className="h-4 w-20 sm:w-24 md:w-24 lg:w-32" />
+                <Skeleton className=" h-4 w-20 sm:w-24 md:w-24 lg:w-32" />
+                <Skeleton className="h-4 w-20 sm:w-24 md:w-24 lg:w-32" />
+              </div>
+            </div>
           </div>
         )}
       </div>
