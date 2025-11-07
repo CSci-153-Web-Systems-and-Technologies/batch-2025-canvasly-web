@@ -6,6 +6,7 @@ import { getMyArtwork } from "@/actions/post";
 import { Spinner } from "@/components/ui/spinner";
 import { useInView } from "react-intersection-observer";
 import ArtworkContainer from "./artwork-container";
+import { Skeleton } from "./ui/skeleton";
 
 const ProfileArtworks = ({ id }) => {
   const { ref, inView } = useInView();
@@ -58,9 +59,11 @@ const ProfileArtworks = ({ id }) => {
 
   if (isLoading) {
     return (
-      <div className="w-full items-center justify-center flex flex-row gap-3">
-        <Spinner />
-        <p>Loading...</p>
+      <div className="w-full flex h-full flex-col">
+        <div className="w-[160px] sm:w-[140px] md:w-[160px] lg:w-[210px] xl:w-[280px] h-full flex flex-col justify-center gap-3">
+          <Skeleton className="relative w-full h-[160px] sm:h-[140px] md:h-[160px] lg:h-[210px] xl:h-[280px] rounded-lg overflow-hidden bg-[#dedede]" />
+          <Skeleton className="w-1/2 h-6" />
+        </div>
       </div>
     );
   }
@@ -89,9 +92,11 @@ const ProfileArtworks = ({ id }) => {
         )}
 
         {(isLoading || isFetching || isFetchingNextPage) && (
-          <div className="w-full items-center justify-center flex flex-row gap-3">
-            <Spinner />
-            <p>Loading...</p>
+          <div className="w-full flex h-full items-center flex-col justify-center">
+            <div className="w-[160px] sm:w-[140px] md:w-[160px] lg:w-[210px] xl:w-[280px] h-full flex flex-col justify-center gap-3">
+              <Skeleton className="relative w-full h-[160px] sm:h-[140px] md:h-[160px] lg:h-[210px] xl:h-[280px] rounded-lg overflow-hidden bg-[#dedede]" />
+              <Skeleton className="w-1/2 h-6" />
+            </div>
           </div>
         )}
       </div>
