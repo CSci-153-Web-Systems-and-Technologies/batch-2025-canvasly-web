@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserRound } from "lucide-react";
 import { User } from "@supabase/supabase-js";
+import { Skeleton } from "./ui/skeleton";
 
 const CurrentUserAvatarProfile = ({
   classNameAvatar,
@@ -51,7 +52,11 @@ const CurrentUserAvatarProfile = ({
   }, [supabase]); // The dependency array only needs `supabase`
 
   if (!user) {
-    return <p>You are not logged in.</p>;
+    return (
+      <div className="flex items-center">
+        <Skeleton className="h-9 w-9 rounded-full" />
+      </div>
+    );
   }
 
   if (user && image_url) {
