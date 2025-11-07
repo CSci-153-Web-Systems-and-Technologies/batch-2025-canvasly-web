@@ -7,12 +7,26 @@ import Comment from "./comment";
 import { ChevronDown } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { animateScroll } from "react-scroll";
+import { Skeleton } from "./ui/skeleton";
 
 const CommentSection = ({ comments, postId, queryId }) => {
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
+  const [parent] = useAutoAnimate();
+
+  useEffect(() => {
+    if (expanded) {
+      animateScroll.scrollToBottom({
+        containerId: "comments-container",
+        smooth: true,
+        duration: 300,
+      });
+    }
+  });
 
   useEffect(() => {
     const checkUser = async () => {
@@ -28,7 +42,13 @@ const CommentSection = ({ comments, postId, queryId }) => {
   }, []); // The empty array ensures this runs only once on component mount
 
   if (loading) {
-    return <p>Loading user information...</p>;
+    return (
+      <div className="flex flex-row justify-between w-full">
+        <Skeleton className="h-4 w-20 sm:w-24 md:w-24 lg:w-32" />
+        <Skeleton className=" h-4 w-20 sm:w-24 md:w-24 lg:w-32" />
+        <Skeleton className="h-4 w-20 sm:w-24 md:w-24 lg:w-32" />
+      </div>
+    );
   }
 
   console.log(`⚠️ COMMENT-SECTION.TSX ${postId}`);
@@ -51,7 +71,11 @@ const CommentSection = ({ comments, postId, queryId }) => {
         </div>
       )}
       {comments?.length > 0 && (
-        <div className="flex flex-col gap-2">
+        <div
+          ref={parent}
+          id="comments-container"
+          className="flex flex-col gap-2"
+        >
           {!expanded ? (
             <Comment data={comments[comments.length - 1]} />
           ) : (
