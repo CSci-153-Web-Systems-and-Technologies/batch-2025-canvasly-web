@@ -3,7 +3,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { getMyFeedPosts } from "@/actions/post";
-import { Spinner } from "@/components/ui/spinner";
+//import { Spinner } from "@/components/ui/spinner";
 import { useInView } from "react-intersection-observer";
 import PostContainer from "./post-container";
 import { Separator } from "./ui/separator";

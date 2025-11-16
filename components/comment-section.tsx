@@ -8,8 +8,9 @@ import { ChevronDown } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { animateScroll } from "react-scroll";
+//import { animateScroll } from "react-scroll";
 import { Skeleton } from "./ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CommentSection = ({ comments, postId, queryId }) => {
   const supabase = createClient();
@@ -17,16 +18,6 @@ const CommentSection = ({ comments, postId, queryId }) => {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
   const [parent] = useAutoAnimate();
-
-  useEffect(() => {
-    if (expanded) {
-      animateScroll.scrollToBottom({
-        containerId: "comments-container",
-        smooth: true,
-        duration: 300,
-      });
-    }
-  });
 
   useEffect(() => {
     const checkUser = async () => {
@@ -79,9 +70,11 @@ const CommentSection = ({ comments, postId, queryId }) => {
           {!expanded ? (
             <Comment data={comments[comments.length - 1]} />
           ) : (
-            comments.map((comment, index) => (
-              <Comment data={comment} key={index} />
-            ))
+            <ScrollArea className="h-72 w-full">
+              {comments.map((comment, index) => (
+                <Comment data={comment} key={index} />
+              ))}
+            </ScrollArea>
           )}
         </div>
       )}
