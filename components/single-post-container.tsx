@@ -10,7 +10,7 @@ import HeartContainer from "./heart-container";
 import CommentSection from "./comment-section";
 import Link from "next/link";
 
-const PostContainer = ({ data, queryId }) => {
+const SinglePostContainer = ({ data, queryId }) => {
   console.log("POST CONTAINER", data);
 
   const nameShown =
@@ -52,16 +52,14 @@ const PostContainer = ({ data, queryId }) => {
       <div className="flex justify-center w-full">
         {getFileTypeFromUrl(data?.image_post_url) === "image" && (
           <div className="relative w-full h-[360px] sm:h-[490px] md:h-[420px] lg:h-[620px] xl:h-[700px] rounded-lg overflow-hidden bg-[#f5f5f5]">
-            <Link href={`/posts/${data?.id}`}>
-              <Image
-                // A more descriptive alt tag is better for accessibility
-                alt={data?.title || "Post image"}
-                src={data?.image_post_url}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-contain"
-              />
-            </Link>
+            <Image
+              // A more descriptive alt tag is better for accessibility
+              alt={data?.title || "Post image"}
+              src={data?.image_post_url}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-contain"
+            />
           </div>
         )}
 
@@ -110,4 +108,4 @@ const PostContainer = ({ data, queryId }) => {
   );
 };
 
-export default PostContainer;
+export default SinglePostContainer;
