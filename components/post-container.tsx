@@ -52,14 +52,16 @@ const PostContainer = ({ data, queryId }) => {
       <div className="flex justify-center w-full">
         {getFileTypeFromUrl(data?.image_post_url) === "image" && (
           <div className="relative w-full h-[360px] sm:h-[490px] md:h-[420px] lg:h-[620px] xl:h-[700px] rounded-lg overflow-hidden bg-[#f5f5f5]">
-            <Image
-              // A more descriptive alt tag is better for accessibility
-              alt={data?.title || "Post image"}
-              src={data?.image_post_url}
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-contain"
-            />
+            <Link href={`/posts/${data?.id}`}>
+              <Image
+                // A more descriptive alt tag is better for accessibility
+                alt={data?.title || "Post image"}
+                src={data?.image_post_url}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-contain"
+              />
+            </Link>
           </div>
         )}
 

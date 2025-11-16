@@ -484,6 +484,57 @@ export const getPopularTrebds = async () => {
   }
 };
 
+export const getPostById = async (id: number) => {
+  try {
+    const post = await db.post.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        image_post_url: true,
+        price: true,
+        art_type: true,
+        post_description: true,
+        createdAt: true,
+        authorId: true,
+        // fetch post author info
+        author: {
+          select: {
+            id: true,
+            username: true,
+            image_url: true,
+            description: true,
+          },
+        },
+        // fetch comments with author info
+        comments: {
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            comment: true,
+            createdAt: true,
+            author: {
+              select: {
+                id: true,
+                username: true,
+                image_url: true,
+              },
+            },
+          },
+        },
+        likes: {
+          select: { id: true, authorId: true },
+        },
+      },
+    });
+
+    return { data: post };
+  } catch (e) {
+    console.log(e);
+    return { error: "Error fetching post" };
+  }
+};
+
 /*
 "use server";
 
