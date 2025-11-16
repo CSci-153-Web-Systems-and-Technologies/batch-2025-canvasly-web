@@ -11,7 +11,16 @@ const FollowInfo = ({ userId }) => {
   });
 
   if (isLoading) {
-    return <p>LOADING FETCHING FOLLOWERS AND FOLLOWING</p>;
+    return (
+      <div className="flex flex-col sm:flex-row text-xs md:text-xl gap-0 sm:gap-4">
+        <div className="flex flex-row gap-1">
+          <div className="w-15 md:w-40 h-1 md:h-7 rounded-full bg-primary-foreground"></div>
+        </div>
+        <div className="flex flex-row gap-1">
+          <div className="w-15 md:w-40 h-1 md:h-7 rounded-full bg-primary-foreground"></div>
+        </div>
+      </div>
+    );
   }
 
   if (isError) {
