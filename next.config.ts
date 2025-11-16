@@ -1,29 +1,30 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* other config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: "5mb",
     },
   },
-
-  // ✅ ADD THIS ENTIRE 'images' BLOCK
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "res.cloudinary.com", // For Cloudinary
+        hostname: "res.cloudinary.com",
         port: "",
         pathname: "/**",
       },
       {
         protocol: "https",
-        hostname: "oejbpvgrnfcdsqyiuuyn.supabase.co", // Replace with your Supabase hostname
+        hostname: "oejbpvgrnfcdsqyiuuyn.supabase.co",
         port: "",
         pathname: "/storage/v1/object/public/**",
       },
-      // You can add more trusted domains here in the future
+      {
+        protocol: "https",
+        hostname: "via.placeholder.com", // ✅ ADD THIS
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };
