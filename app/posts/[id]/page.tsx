@@ -22,7 +22,7 @@ const ProfilePage = async ({ params }: PageProps) => {
   if (postError || !post) redirect("/not-found");
 
   return (
-    <div className="w-full p-10 flex flex-col items-center justify-center">
+    <div className="w-full p-10 flex flex-col items-center justify-center pt-24 md:pt-36">
       <SinglePostContainer data={post} />
     </div>
   );

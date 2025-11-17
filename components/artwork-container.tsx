@@ -1,6 +1,6 @@
 import React from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
-import { UserRound } from "lucide-react";
+//import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
+//import { UserRound } from "lucide-react";
 
 import Image from "next/image";
 import { getFileTypeFromUrl } from "@/utils";
@@ -11,7 +11,7 @@ const ArtworkContainer = ({ data }) => {
   console.log("POST CONTAINER", data);
 
   return (
-    <div className="w-[160px] sm:w-[140px] md:w-[160px] lg:w-[210px] xl:w-[280px] h-full flex flex-col justify-center gap-2">
+    <div className="flex w-[160px] sm:w-[140px] md:w-[160px] lg:w-[210px] xl:w-[280px] h-full flex-col  gap-2 ">
       <div className="flex justify-center w-full">
         {getFileTypeFromUrl(data?.image_post_url) === "image" && (
           <div className="relative w-full h-[160px] sm:h-[140px] md:h-[160px] lg:h-[210px] xl:h-[280px] rounded-lg overflow-hidden bg-[#dedede]">

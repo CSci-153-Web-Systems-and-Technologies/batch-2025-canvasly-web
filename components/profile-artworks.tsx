@@ -69,21 +69,21 @@ const ProfileArtworks = ({ id }) => {
   }
   if (isSuccess) {
     return (
-      <div className="max-w-7xl w-full grid grid-cols-2 sm:grid-cols-4 items-center justify-center">
+      <div className="max-w-7xl w-full grid grid-cols-2 sm:grid-cols-4 ">
         {data?.pages?.map((page) =>
           page?.data?.map((post, index) =>
             checkLastViewRef(index, page) ? (
               <div
                 key={post?.id}
                 ref={ref}
-                className="w-full flex items-center flex-col justify-center"
+                className="w-full flex  items-center flex-col justify-center mt-3"
               >
                 <ArtworkContainer data={post} queryId={id} />
               </div>
             ) : (
               <div
                 key={post?.id}
-                className="w-full flex items-center flex-col justify-center"
+                className="w-full flex items-center flex-col justify-center mt-3"
               >
                 <ArtworkContainer data={post} />
               </div>

@@ -1,51 +1,64 @@
 "use client";
 
-import React from "react";
-import { navItems } from "@/lib/constants";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { navItems } from "@/lib/constants";
 import { LogoutButton } from "./logout-button";
 
 const AppSideBar = () => {
-  const [menuOpen, setMenuOpen] = useState(true);
-  const toggleMenu = () => {
-    setMenuOpen((prev) => !prev);
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   return (
-    <div className=" ">
-      {menuOpen ? (
-        <Button
-          variant="ghost"
-          className="md:hidden bg-color-background rounded-3xl p-2 hover:bg-[#ededed]"
-          onClick={toggleMenu}
-        >
-          <Menu color="#666666" />
-        </Button>
-      ) : (
-        <div className="flex flex-col border-r md:hidden w-52 relative bg-white border">
-          <Button
-            variant="ghost"
-            className="md:hidden bg-color-background rounded-3xl p-2 hover:bg-[#ededed] flex absolute right-0"
-            onClick={toggleMenu}
-          >
-            <X color="#666666" />
-          </Button>
+    <>
+      {/* Hamburger button fixed at top-right */}
+      <Button
+        variant="ghost"
+        className="md:hidden fixed top-4 right-4 z-[100] rounded-full p-2"
+        onClick={toggleMenu}
+      >
+        <Menu color="#666666" />
+      </Button>
+
+      {/* Sidebar overlay */}
+      <div
+        className={`fixed inset-0 bg-black/30 z-[50] transition-opacity duration-300 ${
+          menuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+        onClick={toggleMenu}
+      />
+
+      {/* Sidebar panel sliding from the right */}
+      <div
+        className={`fixed top-0 right-0 h-screen w-52 bg-white border-l z-[60] transform transition-transform duration-300 ${
+          menuOpen ? "translate-x-0" : "translate-x-full"
+        } md:hidden`}
+      >
+        <nav className="flex flex-col p-4 gap-2 mt-16">
           {navItems.map((item) => (
-            <Link href={item.href} key={item.name}>
-              <Button className="px-2 py-0 h-7" variant="link">
+            <Link key={item.name} href={item.href}>
+              <Button
+                className="w-full text-left justify-start p-4"
+                variant="link"
+              >
                 {item.name}
               </Button>
             </Link>
           ))}
-          <div className="mt-5">
-            <LogoutButton variant="link" compoenentClassName="p-2" />
-          </div>
+        </nav>
+
+        <div className="mt-auto justify-start p-4">
+          <LogoutButton
+            variant="link"
+            compoenentClassName="w-full text-left justify-start p-4"
+          />
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 };
 
