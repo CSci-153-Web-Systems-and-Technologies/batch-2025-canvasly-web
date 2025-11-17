@@ -3,7 +3,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="w-full flex items-center justify-center">
+    <div className="w-full flex items-center justify-center pt-24 ">
       <PostGenerator />
     </div>
   );
