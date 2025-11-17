@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  //output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// nag change sa schema   3:10:10
+model User {
+  id String @id @default(uuid())
+
+  username    String?
+  email       String?
+  image_url   String?
+  image_id    String?
+  description String?
+  posts       Post[]
+  Like        Like[]
+  Comment     Comment[]
+  followers   Follow[]  @relation("Following")
+  following   Follow[]  @relation("Follower")
+
+  @@map("users")
+}
+
+model Post {
+  id               Int       @id @default(autoincrement())
+  image_post_url   String
+  price            Float?
+  art_type         String
+  title            String
+  post_description String?
+  cld_id           String?
+  createdAt        DateTime  @default(now())
+  likes            Like[]
+  comments         Comment[]
+  trends           Trend[]
+  authorId         String
+  author           User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  comment   String?
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  createdAt DateTime @default(now())
+}
+
+model Trend {
+  id     Int    @id @default(autoincrement())
+  name   String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
+}
+
+model Follow {
+  id          Int      @id @default(autoincrement())
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId  String
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId String
+  createdAt   DateTime @default(now())
+}
+
+/**
+ * // This is your Prisma schema file,
+ * // learn more about it in the docs: https://pris.ly/d/prisma-schema
+ * // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+ * // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+ * generator client {
+ * provider = "prisma-client-js"
+ * output   = "../app/generated/prisma"
+ * }
+ * datasource db {
+ * provider  = "postgresql"
+ * url       = env("DATABASE_URL")
+ * directUrl = env("DIRECT_URL")
+ * schemas   = ["public", "auth"]
+ * }
+ * model User {
+ * id            String  @id @db.Uuid
+ * username      String? @unique
+ * email_address String?
+ * image_url     String?
+ * description   String?
+ * posts         Post[]
+ * // Relation to Supabase Auth user
+ * authUser AuthUser @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+ * @@schema("public")
+ * }
+ * model Post {
+ * id        Int     @id @default(autoincrement())
+ * title     String
+ * content   String?
+ * published Boolean @default(false)
+ * authorId  String  @db.Uuid
+ * author    User    @relation(fields: [authorId], references: [id])
+ * @@schema("public")
+ * }
+ * model AuthUser {
+ * id                   String    @id @db.Uuid
+ * email                String?
+ * encrypted_password   String?   @map("encrypted_password")
+ * raw_app_meta_data    Json?
+ * raw_user_meta_data   Json?
+ * created_at           DateTime  @default(now())
+ * updated_at           DateTime  @default(now())
+ * last_sign_in_at      DateTime?
+ * confirmation_sent_at DateTime?
+ * confirmation_token   String?
+ * email_confirmed_at   DateTime?
+ * // Relation back to app user
+ * user User?
+ * @@map("users") // this maps to auth.users
+ * @@schema("auth") // this declares its schema
+ * }
+ */
