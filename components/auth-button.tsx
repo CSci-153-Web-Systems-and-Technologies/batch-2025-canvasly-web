@@ -43,7 +43,7 @@ export async function AuthButton() {
         Hey, {user.email}!
         <LogoutButton />
       </div> */}
-      <div className="p-4 flex items-center relative pr-9 sm:pr-12 md:pr-0 md:p-4">
+      <div className="p-4 md:p-0 flex items-center relative pr-9 sm:pr-12 md:pr-0 ">
         {/* <Hamburger onClickHandler={toggleSidebar} /> */}
         <div className="flex items-center gap-1 sm:gap-4">
           <div className="sm:hidden">
@@ -85,7 +85,7 @@ export async function AuthButton() {
       </div>
     </>
   ) : (
-    <div className="flex gap-2">
+    <div className="flex gap-2 py-4 md:py-0">
       <Button asChild size="sm" variant={"outline"}>
         <Link href="/auth/login">Sign in</Link>
       </Button>
