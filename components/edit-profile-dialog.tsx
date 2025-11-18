@@ -193,7 +193,7 @@ const EditProfileDialog = ({ userId, isLoading, data, isError }) => {
               <Textarea
                 id="description-1"
                 name="description"
-                value={description}
+                value={description ?? ""}
                 onChange={(e) => handleDescriptionChange(e)}
               />
             </div>

@@ -15,20 +15,18 @@ const FollowSuggestions = () => {
 
   useEffect(() => {
     const fetchAllData = async () => {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
+      const { data: sessionData } = await supabase.auth.getSession();
 
-      if (userError || !user) {
-        console.error("Error fetching user:", userError);
+      if (!sessionData?.session) {
+        console.warn("No session yet");
         return;
       }
-      setUserAuth(user);
+
+      setUserAuth(sessionData.session.user);
     };
 
     fetchAllData();
-  }, [supabase]);
+  }, []);
 
   // 2. ADD THIS QUERY: Fetch the real follow info
   // This is the data UserBox needs for its optimistic update.
