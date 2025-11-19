@@ -3,7 +3,8 @@
 //import { DeployButton } from "@/components/deploy-button";
 //import { EnvVarWarning } from "@/components/env-var-warning";
 //import { AuthButton } from "@/components/auth-button";
-import FollowSuggestions from "@/components/follow-suggestions";
+import DiscoverArtists from "@/components/discover-artists";
+//import FollowSuggestions from "@/components/follow-suggestions";
 import { HeroHome } from "@/components/hero-home";
 import Navbar from "@/components/navbar";
 //import PopularTrends from "@/components/popular-trends";
@@ -11,13 +12,13 @@ import Navbar from "@/components/navbar";
 //import { ConnectSupabaseSteps } from "@/components/tutorial/connect-supabase-steps";
 //import { SignUpUserSteps } from "@/components/tutorial/sign-up-user-steps";
 //import { hasEnvVars } from "@/lib/utils";
-import FollowingView from "@/sections/FollowingView";
+//import FollowingView from "@/sections/FollowingView";
 
 //import Link from "next/link";
 //import SearchBar from "@/components/SearchBar";
 //import { useSidebar } from "@/components/ui/sidebar";
 
-export default function Following() {
+export default function Artists() {
   //const { toggleSidebar } = useSidebar();
 
   return (
@@ -26,20 +27,12 @@ export default function Following() {
         <Navbar />
         <div className="flex-1 flex flex-col gap-10 md:gap-20 w-full pb-10 bg-[#f5f5f5] pt-14 md:pt-24">
           <HeroHome
-            srcImage="/hero-page-art3.png"
-            typography="Connect. Share. Inspire."
-            subheading="A new way to build real connections online."
+            srcImage="/hero-page-art2.png"
+            typography="Discover Artists"
+            subheading="Discovering artists and finding new and compelling creative work."
           />
-          <main className="flex-1 flex justify-between gap-4 mx-auto w-full max-w-7xl md:px-4">
-            <div className="w-full max-w-5xl">
-              <FollowingView />
-            </div>
-
-            <div className="items-start justify-center hidden md:flex w-full max-w-sm">
-              <div className="sticky top-32 flex flex-col w-full items-center gap-4">
-                <FollowSuggestions />
-              </div>
-            </div>
+          <main className="flex-1 flex justify-between gap-4 mx-auto w-full md:px-4">
+            <DiscoverArtists />
           </main>
         </div>
         <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
