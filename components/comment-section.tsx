@@ -70,7 +70,7 @@ const CommentSection = ({ comments, postId, queryId }) => {
           {!expanded ? (
             <Comment data={comments[comments.length - 1]} />
           ) : (
-            <ScrollArea className="h-72 w-full">
+            <ScrollArea className="max-h-72 w-full">
               {comments.map((comment, index) => (
                 <Comment data={comment} key={index} />
               ))}

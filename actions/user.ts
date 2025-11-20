@@ -174,6 +174,50 @@ export const getAllFollowersAndFollowingsInfo = async (id) => {
   }
 };
 
+export const getArtists = async ({ userAuth }) => {
+  try {
+    const following = await db.follow.findMany({
+      where: {
+        followerId: userAuth?.id,
+      },
+    });
+
+    const followingIds = following.map((f) => f.followingId);
+
+    const suggestions = await db.user.findMany({
+      where: {
+        AND: [
+          { id: { not: userAuth?.id } }, // not current user
+          { id: { notIn: followingIds } }, // not someone user follows
+          { posts: { some: { image_post_url: { not: "" } } } }, // MUST have at least 1 post
+        ],
+      },
+      select: {
+        id: true,
+        username: true,
+        image_url: true,
+
+        // fetch only the most recent post
+        posts: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: {
+            id: true,
+            image_post_url: true,
+            title: true,
+            createdAt: true,
+          },
+        },
+      },
+    });
+
+    return suggestions;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
 export const getFollowSuggestions = async ({ userAuth }) => {
   try {
     const following = await db.follow.findMany({
@@ -279,6 +323,32 @@ export const getFollowInfo = async (userId: string) => {
   } catch (error) {
     console.error("Error fetching follow info:", error);
     return { following: [], followers: [] };
+  }
+};
+
+export const searchUsers = async (query: string) => {
+  try {
+    const users = await db.user.findMany({
+      where: {
+        username: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+      select: {
+        id: true,
+        username: true,
+        image_url: true,
+        image_id: true,
+        description: true,
+      },
+      take: 20,
+    });
+
+    return { data: users };
+  } catch (e) {
+    console.log(e);
+    return { error: "Error searching users" };
   }
 };
 
