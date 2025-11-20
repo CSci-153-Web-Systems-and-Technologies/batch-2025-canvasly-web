@@ -38,7 +38,7 @@ const ArtworkContainer = ({ data }) => {
         )}
       </div>
       <div className="w-full">
-        <p className="text-base md:text-xl">{data?.title}</p>
+        <p className="text-base md:text-xl truncate">{data?.title}</p>
       </div>
     </div>
   );
