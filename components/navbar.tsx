@@ -7,13 +7,14 @@
 import { hasEnvVars } from "@/lib/utils";
 import { EnvVarWarning } from "./env-var-warning";
 import { AuthButton } from "./auth-button";
-import { Search } from "lucide-react";
+//import { Search } from "lucide-react";
 //import { cn } from "@/lib/utils";
-import { Input } from "./ui/input";
+//import { Input } from "./ui/input";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { navItems } from "@/lib/constants";
+import SearchBar from "./search-bar";
 
 //import { SidebarTrigger } from "./ui/sidebar";
 //import { useSidebar } from "./ui/sidebar";
@@ -48,14 +49,8 @@ const Navbar = () => {
           />
         </Link>
 
-        <div className="flex items-center gap-2 relative w-1/3">
-          <Search color="#7d7d7d" className="absolute ml-3 hidden sm:block" />
-          <Input
-            placeholder="Search works"
-            id="search"
-            className="sm:pl-10"
-          ></Input>
-        </div>
+        <SearchBar />
+
         <div className="flex items-center">
           {!hasEnvVars ? <EnvVarWarning /> : <AuthButton />}
 

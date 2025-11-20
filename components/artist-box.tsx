@@ -122,7 +122,7 @@ const ArtistBox = ({ currentUser, data, type, loggedInUserData }) => {
         </Link>
       </div>
 
-      <div className="flex flex-row items-center justify-between w-full">
+      <div className="flex flex-row items-center justify-between w-full gap-2">
         <Link
           passHref
           href={`/users/${data?.[type]?.id}?person=${data?.[type]?.username}`}
@@ -140,7 +140,7 @@ const ArtistBox = ({ currentUser, data, type, loggedInUserData }) => {
                 </AvatarFallback>
               </Avatar>
             </div>
-            <span className="text-black text-base">
+            <span className="text-black text-base truncate">
               {data?.[type]?.username}
             </span>
           </div>

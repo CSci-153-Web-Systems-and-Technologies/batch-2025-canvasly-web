@@ -326,6 +326,32 @@ export const getFollowInfo = async (userId: string) => {
   }
 };
 
+export const searchUsers = async (query: string) => {
+  try {
+    const users = await db.user.findMany({
+      where: {
+        username: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+      select: {
+        id: true,
+        username: true,
+        image_url: true,
+        image_id: true,
+        description: true,
+      },
+      take: 20,
+    });
+
+    return { data: users };
+  } catch (e) {
+    console.log(e);
+    return { error: "Error searching users" };
+  }
+};
+
 /*
 
 export const updateUserProfile = async (params) => {

@@ -56,7 +56,7 @@ const DiscoverArtists = () => {
 
   return (
     userAuth && (
-      <div className="p-4 relative w-full h-full rounded-lg bg-white flex flex-col gap-7 ">
+      <div className="p-4 lg:p-10 relative w-full h-full rounded-lg bg-white flex flex-col gap-7 ">
         <div className="flex flex-col gap-2 w-full h-full">
           <h2 className="text-3xl lg:text-5xl mb-2 md:mb-4">Artists</h2>
         </div>

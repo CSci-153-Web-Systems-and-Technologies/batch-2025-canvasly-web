@@ -535,6 +535,46 @@ export const getPostById = async (id: number) => {
   }
 };
 
+// SEARCH POSTS BY TITLE
+export const searchPosts = async (query: string) => {
+  try {
+    if (!query || query.trim().length === 0) {
+      return { data: [] };
+    }
+
+    const posts = await db.post.findMany({
+      where: {
+        title: {
+          contains: query,
+          mode: "insensitive", // case-insensitive search
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        image_post_url: true,
+        createdAt: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+            image_url: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 20, // limit for safety
+    });
+
+    return { data: posts };
+  } catch (e) {
+    console.log(e);
+    return { error: "Search failed" };
+  }
+};
+
 /*
 "use server";
 
