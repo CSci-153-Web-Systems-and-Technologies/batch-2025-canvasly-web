@@ -1,14 +1,16 @@
 "use client";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Search } from "lucide-react";
+import { Search, UserRound } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { Input } from "./ui/input";
 import Link from "next/link";
 import { searchPosts } from "@/actions/post";
+import { searchUsers } from "@/actions/user"; // <-- NEW IMPORT
 import Image from "next/image";
 import { Separator } from "./ui/separator";
 import { Skeleton } from "./ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
 const SearchBar = () => {
   const [query, setQuery] = useState("");
@@ -16,9 +18,28 @@ const SearchBar = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [filter, setFilter] = useState("Artwork");
 
-  const dropdownRef = useRef(null); // 👈 dropdown element reference
+  const dropdownRef = useRef(null);
 
-  // 🔍 Live search (debounced)
+  const safeImage = (post) => {
+    const url =
+      post?.image_url ||
+      post?.image_post_url ||
+      post?.image ||
+      post?.thumbnail ||
+      "";
+
+    if (!url || typeof url !== "string" || url.trim() === "") {
+      return "/CanvaslyLogo.png";
+    }
+
+    return url;
+  };
+
+  useEffect(() => {
+    setResults([]);
+  }, [filter]);
+
+  // Search logic based on toggle filter
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
@@ -27,19 +48,27 @@ const SearchBar = () => {
 
     const timeout = setTimeout(async () => {
       setIsSearching(true);
-      const res = await searchPosts(query);
+
+      let res;
+
+      if (filter === "Artwork") {
+        res = await searchPosts(query);
+      } else if (filter === "Users") {
+        res = await searchUsers(query);
+      }
+
       setResults(res?.data || []);
       setIsSearching(false);
     }, 300);
 
     return () => clearTimeout(timeout);
-  }, [query]);
+  }, [query, filter]);
 
-  // 👇 CLOSE DROPDOWN WHEN CLICKING OUTSIDE
+  // clicking outside closes searchbox
   useEffect(() => {
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setQuery(""); // close dropdown
+        setQuery("");
       }
     }
 
@@ -63,67 +92,88 @@ const SearchBar = () => {
       />
 
       <Input
-        placeholder="Search works"
+        placeholder="Search..."
         id="search"
         className="sm:pl-10"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
 
-      {
-        <div
-          className={`p-2 absolute top-full left-0 w-full mt-2 bg-white border rounded-lg shadow-md max-h-72 overflow-y-auto z-[999] transition-opacity ${
-            query
-              ? "opacity-100 pointer-events-auto"
-              : "opacity-0 pointer-events-none"
-          }`}
+      <div
+        className={`p-2 absolute top-full left-0 w-full mt-2 bg-white border rounded-lg shadow-md max-h-72 overflow-y-auto z-[999] transition-opacity ${
+          query
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+      >
+        <ToggleGroup
+          type="single"
+          value={filter}
+          onValueChange={(val) => val && setFilter(val)}
+          className="flex flex-row w-full h-5 gap-2 mb-4 px-1 mt-2"
         >
-          {/* LOADING SKELETON */}
-          {isSearching &&
-            query &&
-            Array(2)
-              .fill(0)
-              .map((_, i) => (
-                <div className="flex flex-col w-full gap-3 mb-2" key={i}>
-                  <div className="flex flex-row w-full gap-2">
-                    <Skeleton className="w-12 h-12 shrink-0" />
-                    <div className="flex flex-col justify-center gap-1.5 w-full truncate">
-                      <Skeleton className="h-3 w-2/5" />
-                      <Skeleton className="h-3 w-10" />
+          <ToggleGroupItem value="Artwork">Artwork</ToggleGroupItem>
+          <ToggleGroupItem value="Users">Users</ToggleGroupItem>
+        </ToggleGroup>
+
+        {isSearching && query && (
+          <>
+            {filter === "Artwork" &&
+              Array(3)
+                .fill(0)
+                .map((_, i) => (
+                  <div
+                    className="flex flex-col w-full gap-3 mb-2 px-1 pt-2"
+                    key={i}
+                  >
+                    <div className="flex flex-row w-full gap-2">
+                      <Skeleton className="w-12 h-12 shrink-0" />
+                      <div className="flex flex-col justify-center gap-1.5 w-full truncate">
+                        <Skeleton className="h-3 w-2/5" />
+                        <Skeleton className="h-3 w-10" />
+                      </div>
                     </div>
+                    <Separator />
                   </div>
-                  <Separator />
-                </div>
-              ))}
+                ))}
 
-          {/* NO RESULTS */}
-          {!isSearching && query && results.length === 0 && (
-            <div className="p-3 text-sm text-gray-400">No results found</div>
-          )}
+            {filter === "Users" &&
+              Array(3)
+                .fill(0)
+                .map((_, i) => (
+                  <div
+                    className="flex flex-col w-full gap-3 mb-2 px-1 pt-2"
+                    key={i}
+                  >
+                    <div className="flex flex-row w-full gap-2">
+                      <Skeleton className="w-9 h-9 shrink-0 rounded-full" />
+                      <div className="flex flex-col justify-center gap-1.5 w-full truncate">
+                        <Skeleton className="h-4 w-1/5" />
+                      </div>
+                    </div>
+                    <Separator />
+                  </div>
+                ))}
+          </>
+        )}
 
-          {/* RESULTS */}
-          {!isSearching && query && results.length > 0 && (
-            <div className="flex flex-col w-full h-full gap-5">
-              <ToggleGroup
-                type="single"
-                value={filter}
-                onValueChange={(val) => val && setFilter(val)}
-                className="flex flex-row w-full md:w-1/3 h-5 gap-2 mt-2.5"
-              >
-                <ToggleGroupItem value="Artwork">Artwork</ToggleGroupItem>
-                <ToggleGroupItem value="Users">Users</ToggleGroupItem>
-              </ToggleGroup>
+        {!isSearching && query && results.length === 0 && (
+          <div className="p-3 text-sm text-gray-400">No results found</div>
+        )}
 
-              {results.map((post) => (
+        {!isSearching && query && results.length > 0 && (
+          <div className="flex flex-col w-full h-full gap-5">
+            {filter === "Artwork" &&
+              results.map((post) => (
                 <div className="w-full h-full flex flex-col" key={post?.id}>
                   <Link
                     href={`/posts/${post?.id}`}
                     className="flex items-center gap-3 p-2 hover:bg-gray-100 transition"
-                    onClick={() => setQuery("")} // close when selecting item
+                    onClick={() => setQuery("")}
                   >
                     <div className="relative w-14 h-14 shrink-0">
                       <Image
-                        src={post?.image_post_url}
+                        src={safeImage(post)}
                         alt={post?.title || "Post Image"}
                         fill
                         className="object-cover"
@@ -135,7 +185,7 @@ const SearchBar = () => {
                         {post?.title}
                       </div>
                       <div className="text-xs text-gray-500 truncate">
-                        by {post?.author.username}
+                        by {post?.author?.username || "Unknown"}
                       </div>
                     </div>
                   </Link>
@@ -143,10 +193,43 @@ const SearchBar = () => {
                   <Separator />
                 </div>
               ))}
-            </div>
-          )}
-        </div>
-      }
+
+            {filter === "Users" &&
+              results.map((user) => (
+                <div className="w-full h-full flex flex-col" key={user?.id}>
+                  <Link
+                    passHref
+                    href={`/users/${user?.id}?person=${user?.username}`}
+                    className="flex items-center gap-3 p-2 hover:bg-gray-100 transition"
+                    onClick={() => setQuery("")}
+                  >
+                    <div>
+                      <Avatar>
+                        <AvatarImage
+                          className="h-9 w-9 rounded-full object-cover"
+                          src={user?.image_url}
+                          alt="@user"
+                        />
+                        <AvatarFallback>
+                          <UserRound
+                            color="#666666"
+                            className="h-9 w-9 rounded-full"
+                          />
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+
+                    <div className="font-medium text-sm truncate">
+                      {user?.username}
+                    </div>
+                  </Link>
+
+                  <Separator />
+                </div>
+              ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
