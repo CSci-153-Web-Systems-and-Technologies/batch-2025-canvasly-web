@@ -42,3 +42,16 @@ export const deleteFile = async (public_id: string) => {
     };
   }
 };
+
+export const deletePostFile = async (public_id: string) => {
+  try {
+    const result = await cld.uploader.destroy(public_id, {
+      resource_type: "image",
+    });
+    console.log("DELETEFILE.TS: Asset deleted successfully:", result);
+    return { success: true, result };
+  } catch (error) {
+    console.error("DELETEFILE.TS: Failed to delete asset:", error);
+    return { success: false, error: "Failed to delete file" };
+  }
+};
