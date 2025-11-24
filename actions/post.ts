@@ -728,6 +728,34 @@ export const deletePostById = async (id: number) => {
   }
 };
 
+export const updateComment = async (commentId: number, newText: string) => {
+  try {
+    const updated = await db.comment.update({
+      where: { id: commentId },
+      data: { comment: newText },
+    });
+
+    return { data: updated };
+  } catch (error) {
+    console.error("UPDATE_COMMENT_ERROR:", error);
+    throw new Error("Failed to update comment");
+  }
+};
+
+export const deleteComment = async (commentId: number) => {
+  try {
+    // Delete the comment by ID
+    const deletedComment = await db.comment.delete({
+      where: { id: commentId },
+    });
+
+    return { data: deletedComment };
+  } catch (error) {
+    console.error("DELETE_COMMENT_ERROR:", error);
+    throw new Error("Failed to delete comment");
+  }
+};
+
 /*
 "use server";
 

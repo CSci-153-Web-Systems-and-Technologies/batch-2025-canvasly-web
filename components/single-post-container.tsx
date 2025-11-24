@@ -10,7 +10,7 @@ import CommentSection from "./comment-section";
 import Link from "next/link";
 
 const SinglePostContainer = ({ data, queryId, authUser }) => {
-  console.log("POST CONTAINER", data);
+  console.log("SINGLE POST CONTAINER", data);
 
   const isOwner = authUser?.id === data?.author?.id;
 
