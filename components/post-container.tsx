@@ -1,7 +1,6 @@
 import React from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
-import { Ellipsis, UserRound, PhilippinePeso } from "lucide-react";
-import { Button } from "./ui/button";
+import { UserRound, PhilippinePeso } from "lucide-react";
 import dayjs from "dayjs";
 import Image from "next/image";
 import { getFileTypeFromUrl } from "@/utils";
@@ -45,16 +44,12 @@ const PostContainer = ({ data, queryId }) => {
             </span>
           </div>
         </div>
-        <Button variant="ghost" className="rounded-full p-2.5">
-          <Ellipsis color="#333333" />
-        </Button>
       </div>
       <div className="flex justify-center w-full">
         {getFileTypeFromUrl(data?.image_post_url) === "image" && (
           <div className="relative w-full h-[360px] sm:h-[490px] md:h-[420px] lg:h-[620px] xl:h-[700px] rounded-lg overflow-hidden bg-[#f5f5f5]">
             <Link href={`/posts/${data?.id}`}>
               <Image
-                // A more descriptive alt tag is better for accessibility
                 alt={data?.title || "Post image"}
                 src={data?.image_post_url}
                 fill

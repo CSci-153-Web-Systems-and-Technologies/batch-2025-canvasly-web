@@ -83,7 +83,7 @@ const SearchBar = () => {
 
   return (
     <div
-      className="relative ml-3 sm:ml-2 md:ml-0 md:mr-2 lg:mr-0 w-full md:w-1/2"
+      className="relative mx-3 sm:ml-2 md:ml-0 md:mr-2 lg:mr-0 w-full md:w-1/2"
       ref={dropdownRef}
     >
       <Search

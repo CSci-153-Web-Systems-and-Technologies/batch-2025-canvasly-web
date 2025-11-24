@@ -2,11 +2,21 @@
 
 import { db } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
-import { uploadFile } from "./uploadFile";
 import { PostInput } from "@/lib/constants";
 import { checkPostForTrends } from "@/utils";
 import { getAllFollowersAndFollowingsInfo } from "./user";
+import { uploadFile, deleteFile } from "./uploadFile";
 //import { useEffect } from "react";
+
+interface UpdatePostParams {
+  id: number;
+  title?: string;
+  post_description?: string;
+  art_type?: string;
+  price?: number | null;
+  image_post_url?: string;
+  prevImageId?: string | null;
+}
 
 const PAGE_SIZE = 4;
 
@@ -535,7 +545,56 @@ export const getPostById = async (id: number) => {
   }
 };
 
-// SEARCH POSTS BY TITLE
+export const getPostByIdWithCLI_ID = async (id: number) => {
+  try {
+    const post = await db.post.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        image_post_url: true,
+        cld_id: true, // <--- add this
+        price: true,
+        art_type: true,
+        post_description: true,
+        createdAt: true,
+        authorId: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+            image_url: true,
+            description: true,
+          },
+        },
+        comments: {
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            comment: true,
+            createdAt: true,
+            author: {
+              select: {
+                id: true,
+                username: true,
+                image_url: true,
+              },
+            },
+          },
+        },
+        likes: {
+          select: { id: true, authorId: true },
+        },
+      },
+    });
+
+    return { data: post };
+  } catch (e) {
+    console.log(e);
+    return { error: "Error fetching post" };
+  }
+};
+
 export const searchPosts = async (query: string) => {
   try {
     if (!query || query.trim().length === 0) {
@@ -572,6 +631,128 @@ export const searchPosts = async (query: string) => {
   } catch (e) {
     console.log(e);
     return { error: "Search failed" };
+  }
+};
+
+export const updatePost = async (params: UpdatePostParams) => {
+  const {
+    id,
+    title,
+    post_description,
+    art_type,
+    price,
+    image_post_url,
+    prevImageId,
+  } = params;
+
+  try {
+    let image_url = image_post_url;
+    let cld_id: string | undefined = prevImageId;
+
+    // Upload new image if provided as base64
+    if (image_post_url && image_post_url.startsWith("data:")) {
+      const uploadRes = await uploadFile({
+        file: image_post_url,
+        folder: `posts/${id}`,
+      });
+      image_url = uploadRes.secure_url;
+      cld_id = uploadRes.public_id;
+
+      if (prevImageId) {
+        await deleteFile(prevImageId); // delete previous image
+      }
+    }
+
+    // Update the post
+    const updatedPost = await db.post.update({
+      where: { id },
+      data: {
+        title,
+        post_description,
+        art_type,
+        price,
+        ...(image_url && { image_post_url: image_url }),
+        ...(cld_id && { cld_id }),
+      },
+    });
+
+    // Update trends
+    if (post_description) {
+      // Delete existing trends for this post
+      await db.trend.deleteMany({
+        where: { postId: id },
+      });
+
+      // Extract trends from updated description
+      const newTrends = checkPostForTrends(post_description);
+
+      if (newTrends.length > 0) {
+        await db.trend.createMany({
+          data: newTrends.map((trend) => ({
+            name: trend,
+            postId: id,
+          })),
+        });
+      }
+    }
+
+    return updatedPost;
+  } catch (error) {
+    console.error("UPDATE_POST_ERROR:", error);
+    throw error;
+  }
+};
+
+export const deletePostById = async (id: number) => {
+  try {
+    // Fetch the post to get the Cloudinary ID
+    const post = await db.post.findUnique({
+      where: { id },
+      select: { cld_id: true },
+    });
+
+    if (!post) return { error: "Post not found" };
+
+    // Delete the Cloudinary image if exists
+    if (post.cld_id) {
+      await deleteFile(post.cld_id);
+    }
+
+    // Delete the post itself; related likes, comments, and trends are deleted automatically via cascade
+    await db.post.delete({ where: { id } });
+
+    return { success: true };
+  } catch (error) {
+    console.error("DELETE_POST_ERROR:", error);
+    return { error: "Failed to delete post" };
+  }
+};
+
+export const updateComment = async (commentId: number, newText: string) => {
+  try {
+    const updated = await db.comment.update({
+      where: { id: commentId },
+      data: { comment: newText },
+    });
+
+    return { data: updated };
+  } catch (error) {
+    console.error("UPDATE_COMMENT_ERROR:", error);
+    throw new Error("Failed to update comment");
+  }
+};
+
+export const deleteComment = async (commentId: number) => {
+  try {
+    // Delete the comment by ID
+    const deletedComment = await db.comment.delete({
+      where: { id: commentId },
+    });
+
+    return { data: deletedComment };
+  } catch (error) {
+    console.error("DELETE_COMMENT_ERROR:", error);
+    throw new Error("Failed to delete comment");
   }
 };
 
