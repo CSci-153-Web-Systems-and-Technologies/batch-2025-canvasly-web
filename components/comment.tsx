@@ -18,7 +18,7 @@ const Comment = ({ data, onEdit, onDelete }) => {
         <Avatar>
           <AvatarImage
             className="object-cover"
-            src={data?.author?.image_url ?? ""}
+            src={data?.author?.image_url || null}
             alt="@poster"
           />
           <AvatarFallback>

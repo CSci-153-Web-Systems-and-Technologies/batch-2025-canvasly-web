@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createPost, updatePost, deletePostById } from "@/actions/post";
+import {
+  createPost,
+  updatePost,
+  deletePostById,
+  getPostById,
+} from "@/actions/post";
 
 export async function POST(req: Request) {
   try {
@@ -62,4 +67,13 @@ export async function DELETE(req: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const { data, error } = await getPostById(Number(params.id));
+  if (error) return new Response(JSON.stringify({ error }), { status: 500 });
+  return new Response(JSON.stringify(data));
 }

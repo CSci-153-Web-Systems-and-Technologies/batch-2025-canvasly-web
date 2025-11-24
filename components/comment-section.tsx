@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import CommentInput from "./comment-input";
 import Comment from "./comment";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
@@ -102,8 +102,18 @@ const CommentSection = ({ comments, postId, queryId }) => {
             onClick={() => setExpanded((prev) => !prev)}
           >
             <div className="flex flex-row justify-center items-center gap-2">
-              <ChevronDown color="#303030" />
-              <span>Show more comments</span>
+              {!expanded ? (
+                <ChevronDown color="#303030" />
+              ) : (
+                <ChevronUp color="#303030" />
+              )}
+
+              {!expanded ? (
+                <span>Show more comments</span>
+              ) : (
+                <span>Show less comments</span>
+              )}
+
               <div className="py-0.5 px-3 flex flex-row items-center justify-center rounded-2xl bg-[#8c8c8c] text-white">
                 {comments?.length}
               </div>
