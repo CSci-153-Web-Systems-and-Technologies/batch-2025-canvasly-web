@@ -1,15 +1,18 @@
 import Navbar from "@/components/navbar";
 
-export default function CreateLayout({
+export default function PurchaseLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <main className="min-h-screen flex flex-col items-center">
+    <div className="min-h-screen flex flex-col justify-center">
       <div className="flex-1 w-full flex flex-col items-center">
         <Navbar />
-        <div className=" flex flex-col w-full ">{children}</div>
+        <div className="w-full text-base mt-24 p-10">
+          <p className="text-3xl lg:text-5xl lg:max-w-xl ">Pending Purchases</p>
+        </div>
+        {children}
         <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
           <p>
             Powered by{" "}
@@ -24,6 +27,6 @@ export default function CreateLayout({
           </p>
         </footer>
       </div>
-    </main>
+    </div>
   );
 }

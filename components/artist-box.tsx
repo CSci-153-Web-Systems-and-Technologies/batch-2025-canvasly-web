@@ -111,7 +111,7 @@ const ArtistBox = ({ currentUser, data, type, loggedInUserData }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="relative w-full h-[160px] sm:h-[140px] md:h-[160px] lg:h-[210px] xl:h-[280px] rounded-lg overflow-hidden bg-[#dedede]">
+      <div className="relative w-full h-[280px] sm:h-[310px] lg:h-[360px] xl:h-[280px] rounded-lg overflow-hidden bg-[#dedede]">
         <Link href={`/posts/${recentPost?.id}`}>
           <Image
             alt={recentPost?.title || "Recent post"}
@@ -126,40 +126,40 @@ const ArtistBox = ({ currentUser, data, type, loggedInUserData }) => {
         <Link
           passHref
           href={`/users/${data?.[type]?.id}?person=${data?.[type]?.username}`}
+          className="flex flex-row items-center gap-3 flex-1 min-w-0"
         >
-          <div className="flex flex-row items-center gap-3">
-            <div>
-              <Avatar>
-                <AvatarImage
-                  className="h-9 w-9 rounded-full object-cover"
-                  src={data?.[type]?.image_url}
-                  alt="@user"
-                />
-                <AvatarFallback>
-                  <UserRound color="#666666" className="h-9 w-9 rounded-full" />
-                </AvatarFallback>
-              </Avatar>
-            </div>
-            <span className="text-black text-base truncate">
-              {data?.[type]?.username}
-            </span>
-          </div>
+          <Avatar>
+            <AvatarImage
+              className="h-9 w-9 rounded-full object-cover"
+              src={data?.[type]?.image_url}
+              alt="@user"
+            />
+            <AvatarFallback>
+              <UserRound color="#666666" className="h-9 w-9 rounded-full" />
+            </AvatarFallback>
+          </Avatar>
+
+          {/* USERNAME FIX: Allow truncate */}
+          <span className="text-black text-sm sm:text-base truncate block min-w-0">
+            {data?.[type]?.username}
+          </span>
         </Link>
-        {/* 6. FIXED: Use the 'isFollowed' derived variable */}
-        <div className="hidden md:block">
+
+        {/* BUTTON FIX: Force fixed space */}
+        <div className="block flex-shrink-0">
           {!isFollowed ? (
             <Button
               onClick={() => mutate({ id: personId, type: "follow" })}
-              disabled={isPending} // Add disabled state
+              disabled={isPending}
             >
               {isPending ? "Loading..." : "Follow"}
             </Button>
           ) : (
             <Button
               className="bg-[#E0DFDB]"
-              variant="outline" // Good to use a different style
+              variant="outline"
               onClick={() => mutate({ id: personId, type: "unfollow" })}
-              disabled={isPending} // Add disabled state
+              disabled={isPending}
             >
               {isPending ? "Loading..." : "Following"}
             </Button>

@@ -204,14 +204,8 @@ export const getMyFeedPosts = async (lastCursor) => {
   }
 };
 
-export const getMyFeedPostsFollowing = async (lastCursor) => {
+export const getMyFeedPostsFollowing = async (lastCursor, user) => {
   try {
-    const supabase = await createClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
     const { following } = await getAllFollowersAndFollowingsInfo(user?.id);
 
     const followingIds = following
