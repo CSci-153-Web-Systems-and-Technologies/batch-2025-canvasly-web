@@ -501,6 +501,7 @@ export const getPostById = async (id: number) => {
         post_description: true,
         createdAt: true,
         authorId: true,
+        purchases: true,
         // fetch post author info
         author: {
           select: {

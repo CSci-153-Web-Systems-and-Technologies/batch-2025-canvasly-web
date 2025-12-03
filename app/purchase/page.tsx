@@ -1,11 +1,13 @@
+import PurchaseCard from "@/components/purchase-card";
 import React from "react";
 
 const PurchasePage = () => {
   return (
-    <div className="flex-1 flex flex-col gap-10 md:gap-20 w-full pb-10 bg-[#f5f5f5] pt-14 md:pt-24">
-      <main className="flex-1 flex justify-between gap-4 mx-auto w-full md:px-4 max-w-7xl bg-background rounded-md">
-        <p>asdsa</p>
-      </main>
+    <div className="w-full pb-1 md:pb-10 md:px-10 bg-[#f5f5f5] flex flex-col items-center justify-center pt-16 md:pt-32">
+      <div className="max-w-7xl mx-auto flex flex-col gap-1 w-full p-4 bg-background mb-1 border rounded-md mt-2 md:mt-0">
+        <p className="text-3xl font-semibold ">Pending Purchases</p>
+      </div>
+      <PurchaseCard></PurchaseCard>
     </div>
   );
 };

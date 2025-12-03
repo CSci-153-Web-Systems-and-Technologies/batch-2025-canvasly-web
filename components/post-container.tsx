@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
-import { UserRound, PhilippinePeso } from "lucide-react";
+import { UserRound, PhilippinePeso, ShoppingCart } from "lucide-react";
 import dayjs from "dayjs";
 import Image from "next/image";
 import { getFileTypeFromUrl } from "@/utils";
@@ -8,6 +8,7 @@ import { getFileTypeFromUrl } from "@/utils";
 import HeartContainer from "./heart-container";
 import CommentSection from "./comment-section";
 import Link from "next/link";
+import { Button } from "./ui/button";
 
 const PostContainer = ({ data, queryId }) => {
   console.log("POST CONTAINER", data);
@@ -36,9 +37,14 @@ const PostContainer = ({ data, queryId }) => {
           </Link>
 
           <div className="flex flex-col">
-            <span className="font-semibold text-sm md:text-base">
-              {nameShown}
-            </span>
+            <Link
+              passHref
+              href={`/users/${data?.author?.id}?person=${data?.author?.username}`}
+            >
+              <span className="font-semibold text-sm md:text-base">
+                {nameShown}
+              </span>
+            </Link>
             <span className="text-xs font-semibold text-[#666666]">
               {dayjs(data?.createdAt).format("DD MMM YYYY")}
             </span>
