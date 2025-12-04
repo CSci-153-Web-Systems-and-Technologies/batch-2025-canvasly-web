@@ -3,7 +3,7 @@ export const navItems = [
   { name: "Following", href: "/following" },
   { name: "Artists", href: "/artists" },
   { name: "Purchase", href: "/purchase" },
-  { name: "Request", href: "/" },
+  { name: "Request", href: "/request" },
 ];
 
 export const pageTabs = [
