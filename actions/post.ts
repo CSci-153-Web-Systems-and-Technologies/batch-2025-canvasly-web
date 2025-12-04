@@ -751,6 +751,15 @@ export const deleteComment = async (commentId: number) => {
   }
 };
 
+export async function getPostAuthorId(postId: number): Promise<string | null> {
+  const post = await db.post.findUnique({
+    where: { id: postId },
+    select: { authorId: true }, // Only fetch the authorId
+  });
+
+  return post?.authorId ?? null; // Return null if post not found
+}
+
 /*
 "use server";
 
