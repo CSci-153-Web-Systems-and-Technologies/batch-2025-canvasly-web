@@ -82,15 +82,50 @@ export async function rejectPurchase(purchaseId: number, sellerId: string) {
   });
 }
 
-export async function getMyRequests(sellerId: string) {
-  return await db.purchase.findMany({
+export async function getMyRequests(
+  sellerId: string,
+  take: number = 10,
+  cursor?: number
+) {
+  // Fetch one extra to check if there's a next page
+  const requests = await db.purchase.findMany({
     where: { sellerId, status: "PENDING" },
-    include: {
-      buyer: true,
-      post: true,
-    },
     orderBy: { createdAt: "desc" },
+    take: take + 1,
+    cursor: cursor ? { id: cursor } : undefined,
+    skip: cursor ? 1 : 0,
+
+    include: {
+      // Fetch buyer info (same as seller info in getMyPurchases)
+      buyer: {
+        select: {
+          id: true,
+          username: true,
+          image_url: true,
+        },
+      },
+
+      // Fetch selected post fields
+      post: {
+        select: {
+          id: true,
+          price: true,
+          title: true,
+          art_type: true,
+          image_post_url: true,
+        },
+      },
+    },
   });
+
+  // Pagination logic
+  let nextCursor: number | null = null;
+  if (requests.length > take) {
+    const nextItem = requests.pop(); // remove extra item
+    nextCursor = nextItem!.id;
+  }
+
+  return { requests, nextCursor };
 }
 
 export async function getMyPurchases(
