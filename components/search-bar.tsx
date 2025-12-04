@@ -110,7 +110,7 @@ const SearchBar = () => {
           type="single"
           value={filter}
           onValueChange={(val) => val && setFilter(val)}
-          className="flex flex-row w-full h-5 gap-2 mb-4 px-1 mt-2"
+          className="flex flex-row w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 h-5 gap-2 mb-4 px-1 mt-2"
         >
           <ToggleGroupItem value="Artwork">Artwork</ToggleGroupItem>
           <ToggleGroupItem value="Users">Users</ToggleGroupItem>
@@ -129,8 +129,8 @@ const SearchBar = () => {
                     <div className="flex flex-row w-full gap-2">
                       <Skeleton className="w-12 h-12 shrink-0" />
                       <div className="flex flex-col justify-center gap-1.5 w-full truncate">
-                        <Skeleton className="h-3 w-2/5" />
-                        <Skeleton className="h-3 w-10" />
+                        <Skeleton className="h-3 w-full md:w-1/2 lg:w-1/5" />
+                        <Skeleton className="h-3 w-2/3 md:w-1/3 lg:w-1/6" />
                       </div>
                     </div>
                     <Separator />
@@ -148,7 +148,7 @@ const SearchBar = () => {
                     <div className="flex flex-row w-full gap-2">
                       <Skeleton className="w-9 h-9 shrink-0 rounded-full" />
                       <div className="flex flex-col justify-center gap-1.5 w-full truncate">
-                        <Skeleton className="h-4 w-1/5" />
+                        <Skeleton className="h-4 w-full sm:w-4/6 md:w-2/6 lg:w-1/5" />
                       </div>
                     </div>
                     <Separator />

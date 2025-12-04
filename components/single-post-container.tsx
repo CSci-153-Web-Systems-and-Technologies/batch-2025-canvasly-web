@@ -20,6 +20,10 @@ const SinglePostContainer = ({ data, authUser, queryId }: any) => {
   const nameShown =
     data?.author?.username || data?.author?.email || "Anonymous";
 
+  const hasPurchased = data?.purchases?.some(
+    (p: any) => p.buyerId === authUser?.id
+  );
+
   // Optimistic mutation for likes
   const likeMutation = useMutation({
     mutationFn: ({ actionType }: { actionType: "like" | "unlike" }) =>
@@ -59,6 +63,74 @@ const SinglePostContainer = ({ data, authUser, queryId }: any) => {
     },
   });
 
+  // Purchase toggle mutation
+  const purchaseMutation = useMutation({
+    mutationFn: async ({ action }: { action: "buy" | "cancel" }) => {
+      const res = await fetch("/api/purchase", {
+        method: "POST",
+        body: JSON.stringify({
+          postId,
+          buyerId: authUser?.id,
+          action,
+        }),
+      });
+
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      return data;
+    },
+    onMutate: async ({ action }) => {
+      await queryClient.cancelQueries([queryId]);
+
+      const prev = queryClient.getQueryData([queryId]);
+
+      queryClient.setQueryData([queryId], (old: any) => {
+        if (!old) return old;
+
+        let newPurchases = [...(old.purchases || [])];
+
+        const exists = newPurchases.some(
+          (p: any) => p.buyerId === authUser?.id
+        );
+
+        if (action === "buy" && !exists) {
+          newPurchases.push({
+            id: Date.now(),
+            postId,
+            buyerId: authUser?.id,
+          });
+        }
+
+        if (action === "cancel" && exists) {
+          newPurchases = newPurchases.filter(
+            (p: any) => p.buyerId !== authUser?.id
+          );
+        }
+
+        return { ...old, purchases: newPurchases };
+      });
+
+      return { prev };
+    },
+    onError: (_err, _v, ctx) => {
+      if (ctx?.prev) queryClient.setQueryData([queryId], ctx.prev);
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries([queryId]);
+    },
+  });
+
+  function handleTogglePurchase() {
+    const hasPurchased = data?.purchases?.some(
+      (p: any) => p.buyerId === authUser?.id
+    );
+
+    purchaseMutation.mutate({
+      action: hasPurchased ? "cancel" : "buy",
+    });
+  }
+
   return (
     <div className="w-[335px] sm:w-[490px] md:w-[420px] lg:w-[620px] xl:w-[700px] h-full flex flex-col justify-center gap-2">
       {/* Header */}
@@ -82,21 +154,35 @@ const SinglePostContainer = ({ data, authUser, queryId }: any) => {
           </Link>
 
           <div className="flex flex-col">
-            <span className="font-semibold text-sm md:text-base">
-              {nameShown}
-            </span>
+            <Link
+              passHref
+              href={`/users/${data?.author?.id}?person=${data?.author?.username}`}
+            >
+              <span className="font-semibold text-sm md:text-base">
+                {nameShown}
+              </span>
+            </Link>
             <span className="text-xs font-semibold text-[#666666]">
               {dayjs(data?.createdAt).format("DD MMM YYYY")}
             </span>
           </div>
         </div>
 
-        {isOwner && (
+        {isOwner ? (
           <Link passHref href={`/edit/${data?.id}`}>
             <Button variant="ghost" className="rounded-full p-2.5">
               <Pencil color="#333333" />
             </Button>
           </Link>
+        ) : (
+          <Button
+            onClick={handleTogglePurchase}
+            disabled={purchaseMutation.isPending}
+            variant={hasPurchased ? "outline" : "default"}
+            className="transition-all"
+          >
+            {hasPurchased ? "Cancel Purchase" : "Purchase Request"}
+          </Button>
         )}
       </div>
 

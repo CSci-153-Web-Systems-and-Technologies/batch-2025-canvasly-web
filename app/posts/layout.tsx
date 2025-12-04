@@ -1,6 +1,6 @@
 import Navbar from "@/components/navbar";
 
-export default function ProtectedLayout({
+export default function PostLayout({
   children,
 }: {
   children: React.ReactNode;
