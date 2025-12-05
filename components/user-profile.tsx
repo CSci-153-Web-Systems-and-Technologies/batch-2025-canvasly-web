@@ -28,7 +28,7 @@ const UserProfile = ({ profileUser, authUser }: UserProfileProps) => {
     profileUser?.id && authUser?.id && profileUser.id === authUser.id;
 
   return (
-    <div className="w-full flex flex-col pt-16 md:pt-28">
+    <div className="w-full flex flex-col pt-16 md:pt-24">
       <div className="w-full flex flex-col items-center">
         <div className="flex flex-col md:items-center w-full p-4 sm:p-8 bg-[#f5f5f5]">
           <div className="flex flex-row gap-2 sm:gap-4 max-w-7xl w-full">
@@ -68,7 +68,7 @@ const UserProfile = ({ profileUser, authUser }: UserProfileProps) => {
               </div>
             </div>
           </div>
-          <div className="mt-10 flex items-center max-w-7xl w-full">
+          <div className="flex items-center max-w-7xl w-full">
             <ToggleGroup
               type="single"
               className="flex flex-wrap items-center gap-3"

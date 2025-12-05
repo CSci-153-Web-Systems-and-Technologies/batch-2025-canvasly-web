@@ -188,7 +188,7 @@ const RequestCard = () => {
                       {new Date(request.createdAt).toLocaleDateString()}
                     </p>
                   </div>
-                  <p>Wants to purchase your post</p>
+                  <p>Wants to purchase your artwork</p>
                 </div>
               </div>
 
