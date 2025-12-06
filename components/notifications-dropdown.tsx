@@ -295,11 +295,8 @@ export default function NotificationsDropdown({
         Array(5)
           .fill(0)
           .map((_, i) => (
-            <div
-              className="flex flex-row items-start gap-2 py-1.5 p-1.5"
-              key={i}
-            >
-              <Skeleton className="h-6 w-6 rounded-full" />
+            <div className="flex flex-row items-start gap-2 p-3" key={i}>
+              <Skeleton className={`${classNameSizeString} rounded-full`} />
               <div className="flex flex-col items-start gap-2 w-full">
                 <Skeleton className="h-2 w-full" />
                 <Skeleton className="h-2 w-4/6" />

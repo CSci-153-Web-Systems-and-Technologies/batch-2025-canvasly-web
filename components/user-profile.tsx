@@ -20,10 +20,6 @@ type UserProfileProps = {
 const UserProfile = ({ profileUser, authUser }: UserProfileProps) => {
   const [selectedTab, setSelectedTab] = useState("Profile");
 
-  const changeToggleValue = (key: string) => {
-    setSelectedTab(key);
-  };
-
   const isOwner =
     profileUser?.id && authUser?.id && profileUser.id === authUser.id;
 
@@ -71,27 +67,26 @@ const UserProfile = ({ profileUser, authUser }: UserProfileProps) => {
           <div className="flex items-center max-w-7xl w-full">
             <ToggleGroup
               type="single"
-              className="flex flex-wrap items-center gap-3"
-              defaultValue={selectedTab}
-              onValueChange={(key) => changeToggleValue(key)}
+              className="flex flex-wrap items-center gap-0 md:gap-3"
+              value={selectedTab} // controlled
+              onValueChange={(key) => {
+                if (key) setSelectedTab(key); // only update if key exists
+              }}
             >
-              {pageTabs.map((item, index) => {
-                const id = String(index + 1);
-                return (
-                  <ToggleGroupItem
-                    className="p-2 text-xs sm:text-base"
-                    value={item.name}
-                    key={id}
-                    size="lg"
-                  >
-                    {item.name}
-                  </ToggleGroupItem>
-                );
-              })}
+              {pageTabs.map((item, index) => (
+                <ToggleGroupItem
+                  className="py-1 text-sm sm:text-base flex-1 text-center"
+                  value={item.name}
+                  key={index}
+                  size="lg"
+                >
+                  {item.name}
+                </ToggleGroupItem>
+              ))}
             </ToggleGroup>
           </div>
         </div>
-        {selectedTab === "Profile" && (
+        {selectedTab === "Artworks" && (
           <div className="flex-1 flex flex-col max-w-7xl p-4 md:p-10 items-center w-full mx-auto">
             <div className="flex flex-col gap-2 items-start w-full ">
               <h2 className="font-bold mb-2 md:mb-4 text-md md:text-3xl">

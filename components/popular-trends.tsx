@@ -14,9 +14,9 @@ const PopularTrends = async () => {
     });
 
     return (
-      <div className="relative w-full h-full rounded-lg bg-white flex flex-col gap-4">
-        <div className="flex flex-col gap-2 w-full h-full bg-primary text-primary-foreground rounded-t-lg">
-          <h1 className="px-4 pt-4 pb-2 text-2xl"># Trending</h1>
+      <div className="relative w-full h-full rounded-lg bg-background flex flex-col gap-4">
+        <div className="flex flex-col gap-2 w-full h-full bg-background rounded-t-lg">
+          <h1 className="px-4 pt-4 pb-2 text-2xl">Popular Trends</h1>
         </div>
 
         <div className="px-4 pb-4 flex flex-col gap-4">
