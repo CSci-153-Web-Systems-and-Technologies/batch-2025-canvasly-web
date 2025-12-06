@@ -18,7 +18,7 @@ type UserProfileProps = {
 };
 
 const UserProfile = ({ profileUser, authUser }: UserProfileProps) => {
-  const [selectedTab, setSelectedTab] = useState("Profile");
+  const [selectedTab, setSelectedTab] = useState("Artworks");
 
   const isOwner =
     profileUser?.id && authUser?.id && profileUser.id === authUser.id;
