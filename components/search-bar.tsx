@@ -110,10 +110,17 @@ const SearchBar = () => {
           type="single"
           value={filter}
           onValueChange={(val) => val && setFilter(val)}
-          className="flex flex-row w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 h-5 gap-2 mb-4 px-1 mt-2"
+          className="flex flex-row w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 h-5 md:gap-2 mb-4 md:px-1 mt-2"
         >
-          <ToggleGroupItem value="Artwork">Artwork</ToggleGroupItem>
-          <ToggleGroupItem value="Users">Users</ToggleGroupItem>
+          <ToggleGroupItem
+            value="Artwork"
+            className="px-2 text-xs md:text-base"
+          >
+            Artwork
+          </ToggleGroupItem>
+          <ToggleGroupItem value="Users" className="px-2 text-xs md:text-base">
+            Users
+          </ToggleGroupItem>
         </ToggleGroup>
 
         {isSearching && query && (

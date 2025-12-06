@@ -83,16 +83,20 @@ const PostContainer = ({ data, queryId }) => {
           queryId={queryId}
         />
 
-        <div className="flex flex-riw justify-center gap-1 md:gap-4 text-base md:text-xl text-[#666666]">
+        <div className="flex flex-row items-center gap-4 text-base md:text-xl text-[#666666]">
+          {/* Always render art type */}
           <p>{data?.art_type}</p>
-          {(data?.price || data?.price > 0) && (
-            <div className="flex flex-row justify-center gap-0">
+
+          {/* Render price if it exists, but don't affect art_type */}
+          {data?.price !== undefined && data?.price !== null && (
+            <div className="flex flex-row items-center gap-1">
               <PhilippinePeso color="#666666" />
-              <p className="flex ">{data?.price}</p>
+              <p className="truncate max-w-20">{data.price}</p>
             </div>
           )}
         </div>
       </div>
+
       <div className="w-full">
         <p className="text-base md:text-xl font-semibold">{data?.title}</p>
       </div>

@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { Menu } from "lucide-react";
 import { navItems } from "@/lib/constants";
 import { LogoutButton } from "./logout-button";
+import Image from "next/image";
 
 const AppSideBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -38,7 +39,16 @@ const AppSideBar = () => {
           menuOpen ? "translate-x-0" : "translate-x-full"
         } md:hidden`}
       >
-        <nav className="flex flex-col p-4 gap-2 mt-16">
+        <Link href={"/"}>
+          <Image
+            src="/CanvaslySideBarLogo.png"
+            alt="logo"
+            width={100}
+            height={50}
+            className="mt-5 ml-4"
+          />
+        </Link>
+        <nav className="flex flex-col py-4 pr-4 pl-2 gap-1 mt-6">
           {navItems.map((item) => (
             <Link key={item.name} href={item.href}>
               <Button
@@ -51,7 +61,7 @@ const AppSideBar = () => {
           ))}
         </nav>
 
-        <div className="mt-auto justify-start p-4">
+        <div className="mt-auto pt-10 justify-start py-4 pr-4 pl-2">
           <LogoutButton
             variant="link"
             compoenentClassName="w-full text-left justify-start p-4"

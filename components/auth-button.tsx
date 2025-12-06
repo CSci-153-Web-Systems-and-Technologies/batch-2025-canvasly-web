@@ -4,7 +4,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import React from "react";
 //import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { Button } from "./ui/button";
 
 //import { CurrentUserAvatar } from "./current-user-avatar";
@@ -12,6 +12,7 @@ import { LogoutButton } from "./logout-button";
 
 import AppSideBar from "./app-side-bar";
 import CurrentUserAvatarProfile from "./current-user-avatar-profile";
+import BellButton from "./bell-button";
 
 //import { User } from "@/app/generated/prisma";
 
@@ -56,12 +57,7 @@ export async function AuthButton() {
           <Link href={`/create`}>
             <Button className="hidden sm:block">Post your artwork</Button>
           </Link>
-          <Button
-            variant="ghost"
-            className="bg-color-background rounded-3xl p-2 hover:bg-[#ededed]"
-          >
-            <Bell color="#628b35" />
-          </Button>
+          <BellButton userId={user?.id} />
 
           <Link
             href={

@@ -183,7 +183,6 @@ const PurchaseCard = () => {
                       {new Date(purchase.createdAt).toLocaleDateString()}
                     </p>
                   </div>
-                  <p>You want to Purchase</p>
                 </div>
               </div>
 
