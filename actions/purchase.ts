@@ -39,6 +39,7 @@ export async function createPurchaseRequest(postId: number, buyerId: string) {
       fromUserId: buyerId, // buyer
       type: NotificationType.PURCHASE_REQUEST,
       purchaseId: purchase.id,
+      postId: postId,
       message: `${
         profileData?.username || "Someone"
       } requested a purchase to your Artwork`,
@@ -101,6 +102,7 @@ export async function acceptPurchase(purchaseId: number, sellerId: string) {
       fromUserId: sellerId,
       type: NotificationType.PURCHASE_ACCEPTED,
       purchaseId: purchase.id,
+      postId: purchase.postId,
       message: `${
         profileData?.username || "Someone"
       } accepted your purchase request`,
@@ -134,6 +136,7 @@ export async function rejectPurchase(purchaseId: number, sellerId: string) {
       fromUserId: sellerId,
       type: NotificationType.PURCHASE_REJECTED,
       purchaseId: purchase.id,
+      postId: purchase.postId,
       message: `${
         profileData?.username || "Someone"
       } rejected your purchase request`,

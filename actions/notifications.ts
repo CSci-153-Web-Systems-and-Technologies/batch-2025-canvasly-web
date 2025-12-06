@@ -7,15 +7,21 @@ import { NotificationType } from "@prisma/client";
 
 // Get all notifications for a specific user
 export async function getNotifications(userId: string) {
-  return db.notification.findMany({
+  const notifications = await db.notification.findMany({
     where: { userId },
     include: {
-      fromUser: true, // optional: the user who triggered the notification
-      post: true, // optional: related post
-      purchase: true, // optional: related purchase
+      fromUser: true,
+      post: true,
+      purchase: true,
     },
     orderBy: { createdAt: "desc" },
   });
+
+  // Convert Date objects to ISO strings
+  return notifications.map((n) => ({
+    ...n,
+    created_at: n.createdAt.toISOString(),
+  }));
 }
 
 // Mark a single notification as read
@@ -52,7 +58,7 @@ export async function createNotification({
 }: {
   userId: string;
   fromUserId?: string;
-  type: NotificationType;
+  type: NotificationType; // <--- type-safe
   postId?: number;
   purchaseId?: number;
   message: string;

@@ -333,6 +333,7 @@ export const updatePostLike = async (params) => {
             userId: post.authorId, // post author
             fromUserId: userId, // user who liked
             type: "LIKE",
+            postId: postId,
             message: `${profileData?.username || "Someone"} liked your post`,
           });
           console.log("✅ Like notification created!");
@@ -399,6 +400,7 @@ export const addComment = async ({
         userId: post.authorId, // post author
         fromUserId: userId, // user who commented
         type: "COMMENT",
+        postId: postId,
         message: `${profileData?.username || "Someone"} commented on your post`,
       });
 
