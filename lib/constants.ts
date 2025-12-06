@@ -7,7 +7,7 @@ export const navItems = [
 ];
 
 export const pageTabs = [
-  { name: "Profile" },
+  { name: "Artworks" },
   { name: "Followers" },
   { name: "Followings" },
 ];

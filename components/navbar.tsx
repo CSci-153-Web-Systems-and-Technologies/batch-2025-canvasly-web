@@ -37,9 +37,7 @@ const Navbar = () => {
     <nav className="w-full flex flex-col justify-center md:pt-4 px-4 border-b-2 border-b-foreground/10 md:border-none h-15 fixed top-0 left-0 right-0 bg-white z-50">
       <div className="w-full flex justify-between items-center text-sm sm:gap-2">
         {/* <div className="flex gap-5 items-center font-semibold"></div>*/}
-        <Link className="md:hidden" href={"/"}>
-          <Image src="/CanvaslyLogo.png" alt="logo" width={30} height={30} />
-        </Link>
+
         <Link className="hidden md:block" href={"/"}>
           <Image
             src="/CanvaslySideBarLogo.png"

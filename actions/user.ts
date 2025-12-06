@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { CreateUserInput } from "@/lib/types/supa-base-webhook";
 import { deleteFile, uploadFile } from "./uploadFile";
 import { createClient } from "@/lib/server";
+import { createNotification } from "./notifications"; // import your notifications functions
 
 export const createUser = async (user: CreateUserInput) => {
   const { id, image_url, username, description, email } = user;
@@ -254,33 +255,58 @@ export const updateFollow = async (params) => {
       return;
     }
 
+    const { data: profileData, error: profileError } = await supabase
+      .from("users")
+      .select("username")
+      .eq("id", user.id) // Use user.id directly
+      .single();
+
+    if (profileError) {
+      console.error("Error fetching user profile:", profileError.message);
+    }
+
     const { id, type } = params;
 
     if (type === "follow") {
+      // Create follow record
       await db.follow.create({
         data: {
           follower: {
-            connect: {
-              id: user?.id,
-            },
+            connect: { id: user.id },
           },
           following: {
-            connect: {
-              id,
-            },
+            connect: { id },
           },
         },
       });
       console.log("user followed");
+
+      // Create notification for the user being followed
+      await createNotification({
+        userId: id, // the user who got followed
+        fromUserId: user.id, // the user who followed
+        type: "FOLLOW",
+        message: `${profileData?.username || "Someone"} started following you!`,
+      });
+      console.log("Follow notification created");
     } else if (type === "unfollow") {
       await db.follow.deleteMany({
         where: {
-          followerId: user?.id,
+          followerId: user.id,
           followingId: id,
         },
       });
-
       console.log("user unfollowed");
+
+      await db.notification.deleteMany({
+        where: {
+          userId: id, // Bob (the one being followed/unfollowed)
+          fromUserId: user.id, // Alice (the one who followed/unfollowed)
+          type: "FOLLOW",
+        },
+      });
+
+      // await db.notification.deleteMany({ where: { userId: id, fromUserId: user.id, type: "FOLLOW" } })
     }
   } catch (e) {
     console.log(e);
@@ -353,6 +379,53 @@ export const searchUsers = async (query: string) => {
 };
 
 /*
+export const updateFollow = async (params) => {
+  try {
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      console.log("NO USER USER.TS ");
+      return;
+    }
+
+    const { id, type } = params;
+
+    if (type === "follow") {
+      await db.follow.create({
+        data: {
+          follower: {
+            connect: {
+              id: user?.id,
+            },
+          },
+          following: {
+            connect: {
+              id,
+            },
+          },
+        },
+      });
+      console.log("user followed");
+    } else if (type === "unfollow") {
+      await db.follow.deleteMany({
+        where: {
+          followerId: user?.id,
+          followingId: id,
+        },
+      });
+
+      console.log("user unfollowed");
+    }
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
 
 export const updateUserProfile = async (params) => {
   const { id, image, prevImageId, description, username } = params;

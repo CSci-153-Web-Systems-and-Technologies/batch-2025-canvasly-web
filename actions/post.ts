@@ -6,6 +6,7 @@ import { PostInput } from "@/lib/constants";
 import { checkPostForTrends } from "@/utils";
 import { getAllFollowersAndFollowingsInfo } from "./user";
 import { uploadFile, deleteFile } from "./uploadFile";
+import { createNotification } from "./notifications";
 //import { useEffect } from "react";
 
 interface UpdatePostParams {
@@ -285,7 +286,6 @@ export const getMyFeedPostsFollowing = async (lastCursor, user) => {
 export const updatePostLike = async (params) => {
   const { postId, actionType: type } = params;
 
-  console.log("POST.TS TAN AWA TYPE", postId, type);
   try {
     const supabase = await createClient();
     const {
@@ -293,101 +293,63 @@ export const updatePostLike = async (params) => {
       error: userError,
     } = await supabase.auth.getUser();
 
-    if (userError) {
-      console.error(
-        "❌ updatePostLike POSTS.TS Supabase userError:",
-        userError.message
-      );
-      throw new Error("Failed to get authenticated user");
-    }
+    if (userError || !user?.id) throw new Error("User not authenticated");
 
-    if (!user?.id) {
-      console.error("⚠️updatePostLike POSTS.TS No authenticated user found");
-      throw new Error("User not authenticated");
-    }
+    const userId = user.id;
 
-    console.log("✅updatePostLike POSTS.TS Authenticated user ID:", user.id);
-
-    const userId = user?.id;
-
-    const post = await db.post.findMany({
-      where: {
-        id: postId,
-      },
-      include: {
-        likes: true,
-      },
+    const post = await db.post.findUnique({
+      where: { id: postId },
+      include: { likes: true, author: true },
     });
 
-    if (!post) {
-      return {
-        error: "updatePostLike POSTS.TS Post not Found!",
-      };
-    }
+    if (!post) return { error: "Post not found" };
 
-    // First, check if the array has at least one item
-    const firstPost = post[0];
-    let like;
+    const existingLike = post.likes.find((like) => like.authorId === userId);
 
-    if (firstPost) {
-      // Now access .likes on the single post object
-      like = firstPost.likes.find((like) => like?.authorId === userId);
-    }
-
-    if (like) {
-      if (type === "like") {
-        return {
-          data: post,
-        };
-      } else {
-        await db.like.delete({
-          where: {
-            id: like.id,
-          },
-        });
-
-        console.log("✅ like deleted!");
+    if (existingLike) {
+      if (type === "unlike") {
+        await db.like.delete({ where: { id: existingLike.id } });
+        console.log("✅ Like deleted!");
       }
     } else {
-      if (type === "unlike") {
-        return {
-          data: post,
-        };
-      } else {
+      if (type === "like") {
         await db.like.create({
           data: {
-            post: {
-              connect: {
-                id: postId,
-              },
-            },
-            author: {
-              connect: {
-                id: userId,
-              },
-            },
+            post: { connect: { id: postId } },
+            author: { connect: { id: userId } },
           },
         });
-        console.log("✅ like created!");
+        console.log("✅ Like created!");
+
+        // Only create notification if the liker is NOT the author
+        if (post.authorId !== userId) {
+          const { data: profileData } = await supabase
+            .from("users")
+            .select("username")
+            .eq("id", user.id) // Use user.id directly
+            .single();
+
+          await createNotification({
+            userId: post.authorId, // post author
+            fromUserId: userId, // user who liked
+            type: "LIKE",
+            postId: postId,
+            message: `${profileData?.username || "Someone"} liked your post`,
+          });
+          console.log("✅ Like notification created!");
+        }
       }
     }
 
     const updatedPost = await db.post.findUnique({
-      where: {
-        id: postId,
-      },
-      include: {
-        likes: true,
-      },
+      where: { id: postId },
+      include: { likes: true },
     });
 
-    console.log("✅ POSTS.TS ", updatedPost);
-    return {
-      data: updatedPost,
-    };
+    return { data: updatedPost };
   } catch (e) {
-    console.log(e);
-    throw new Error("❌ POSTS.TS Failed to update the post likes");
+    console.error("❌ updatePostLike error:", e);
+    throw e;
   }
 };
 
@@ -399,52 +361,56 @@ export const addComment = async ({
   postId: number;
 }) => {
   try {
-    console.log(`⚠️ POSTS.TS ${comment},${postId}`);
     const supabase = await createClient();
     const {
       data: { user },
       error: userError,
     } = await supabase.auth.getUser();
 
-    if (userError) {
-      console.error(
-        "❌ updatePostLike POSTS.TS Supabase userError:",
-        userError.message
-      );
-      throw new Error("Failed to get authenticated user");
-    }
+    if (userError || !user?.id) throw new Error("User not authenticated");
 
-    if (!user?.id) {
-      console.error("⚠️updatePostLike POSTS.TS No authenticated user found");
-      throw new Error("User not authenticated");
-    }
+    const userId = user.id;
 
-    console.log("✅updatePostLike POSTS.TS Authenticated user ID:", user.id);
-
-    const userId = user?.id;
-
+    // Create the comment
     const newComment = await db.comment.create({
       data: {
         comment,
-        post: {
-          connect: {
-            id: postId,
-          },
-        },
-        author: {
-          connect: {
-            id: userId,
-          },
-        },
+        post: { connect: { id: postId } },
+        author: { connect: { id: userId } },
       },
     });
-    console.log("✅ POSTS.TS created comment!", newComment);
-    return {
-      data: newComment,
-    };
+
+    console.log("✅ Comment created:", newComment);
+
+    // Fetch post to get authorId
+    const post = await db.post.findUnique({
+      where: { id: postId },
+      select: { authorId: true },
+    });
+
+    // Only create notification if commenter is NOT the post author
+    if (post?.authorId && post.authorId !== userId) {
+      const { data: profileData } = await supabase
+        .from("users")
+        .select("username")
+        .eq("id", userId)
+        .single();
+
+      await createNotification({
+        userId: post.authorId, // post author
+        fromUserId: userId, // user who commented
+        type: "COMMENT",
+        postId: postId,
+        message: `${profileData?.username || "Someone"} commented on your post`,
+      });
+
+      console.log("✅ Comment notification created!");
+    }
+
+    return { data: newComment };
   } catch (e) {
-    console.log(e);
-    throw new Error("❌POSTS.TS Failed to add comment");
+    console.error("❌ addComment error:", e);
+    throw e;
   }
 };
 

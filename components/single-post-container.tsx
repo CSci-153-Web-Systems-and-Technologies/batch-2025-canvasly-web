@@ -227,7 +227,7 @@ const SinglePostContainer = ({ data, authUser, queryId }: any) => {
           {(data?.price || data?.price > 0) && (
             <div className="flex flex-row items-center gap-1">
               <PhilippinePeso color="#666666" />
-              <p>{data?.price}</p>
+              <p className="truncate max-w-20">{data?.price}</p>
             </div>
           )}
         </div>
