@@ -15,6 +15,28 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { UserRound } from "lucide-react";
 import Link from "next/link";
 
+type Purchase = {
+  id: string;
+  createdAt: string;
+  seller: {
+    id: string;
+    username: string;
+    image_url: string | null;
+  };
+  post: {
+    id: string;
+    title: string;
+    image_post_url: string;
+    price: number;
+    art_type: string;
+  };
+};
+
+type PurchasePage = {
+  purchases: Purchase[];
+  nextCursor?: string | null;
+};
+
 const PurchaseCard = () => {
   const supabase = createClient();
   const [userId, setUserId] = useState<string | null>(null);
@@ -44,23 +66,20 @@ const PurchaseCard = () => {
     isLoading,
     isError,
     error,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<PurchasePage>({
     queryKey: ["purchases", userId],
     enabled: !!userId,
     queryFn: async ({ pageParam = null }) => {
       const url = `/api/purchase?userId=${userId}&take=${take}${
         pageParam ? `&cursor=${pageParam}` : ""
       }`;
-
       const res = await fetch(url);
-
       if (!res.ok) {
         const errorData = await res.json();
         toast.error(errorData?.error || "Failed to fetch purchases");
         throw new Error(errorData?.error || "Failed to fetch purchases");
       }
-
-      return res.json();
+      return res.json() as Promise<PurchasePage>; // <-- cast here
     },
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   });
@@ -87,8 +106,12 @@ const PurchaseCard = () => {
       toast.success("Purchase canceled");
       queryClient.invalidateQueries(["purchases", userId]); // 🔥 refresh list
     },
-    onError: (err: any) => {
-      toast.error(err.message || "Error canceling purchase");
+    onError: (err: unknown) => {
+      if (err instanceof Error) {
+        toast.error(err.message || "Error canceling purchase");
+      } else {
+        toast.error("Error canceling purchase");
+      }
     },
   });
 
@@ -125,10 +148,10 @@ const PurchaseCard = () => {
       </div>
     );
 
-  if (isError) return <div>Error: {(error as any).message}</div>;
+  if (isError) return <div>Error: {error?.message ?? "Unknown error"}</div>;
 
   // No purchases message
-  const allPurchases = data?.pages.flatMap((page: any) => page.purchases) ?? [];
+  const allPurchases = data?.pages.flatMap((page) => page.purchases) ?? [];
 
   if (allPurchases.length === 0) {
     return (
@@ -142,7 +165,7 @@ const PurchaseCard = () => {
     <div className="max-w-7xl mx-auto flex flex-col gap-1 w-full">
       {data?.pages.map((page, i) => (
         <React.Fragment key={i}>
-          {page.purchases.map((purchase: any) => (
+          {page.purchases.map((purchase: Purchase) => (
             <div
               key={purchase.id}
               className="flex flex-col gap-4 border rounded-md p-4 bg-white "
@@ -204,7 +227,13 @@ const PurchaseCard = () => {
                     <h3 className="font-bold text-lg truncate">
                       {purchase.post.title}
                     </h3>
-                    <p className="text-sm">Price: ${purchase.post.price}</p>
+                    <p className="text-sm">
+                      Price:{" "}
+                      {purchase.post.price != null
+                        ? `₱${purchase.post.price}`
+                        : "No amount"}
+                    </p>
+
                     <p className="text-sm">Type: {purchase.post.art_type}</p>
                   </div>
                   <Button

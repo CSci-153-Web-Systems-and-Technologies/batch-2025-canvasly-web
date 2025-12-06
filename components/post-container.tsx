@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
-import { UserRound, PhilippinePeso, ShoppingCart } from "lucide-react";
+import { UserRound, PhilippinePeso } from "lucide-react";
 import dayjs from "dayjs";
 import Image from "next/image";
 import { getFileTypeFromUrl } from "@/utils";
@@ -8,7 +8,7 @@ import { getFileTypeFromUrl } from "@/utils";
 import HeartContainer from "./heart-container";
 import CommentSection from "./comment-section";
 import Link from "next/link";
-import { Button } from "./ui/button";
+//import { Button } from "./ui/button";
 
 const PostContainer = ({ data, queryId }) => {
   console.log("POST CONTAINER", data);

@@ -15,7 +15,34 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { UserRound } from "lucide-react";
 import Link from "next/link";
 
-const RequestCard = () => {
+// Types for API data
+interface User {
+  id: string;
+  username: string;
+  image_url?: string | null;
+}
+
+interface Post {
+  id: string;
+  title: string;
+  image_post_url: string;
+  price?: number | null;
+  art_type: string;
+}
+
+interface Request {
+  id: number;
+  buyer: User;
+  post: Post;
+  createdAt: string;
+}
+
+interface RequestPage {
+  requests: Request[];
+  nextCursor?: string | null;
+}
+
+const RequestCard: React.FC = () => {
   const supabase = createClient();
   const [sellerId, setSellerId] = useState<string | null>(null);
 
@@ -33,7 +60,9 @@ const RequestCard = () => {
 
   const take = 10;
 
-  // Infinite Query for requests
+  const queryClient = useQueryClient();
+
+  // Infinite Query
   const {
     data,
     fetchNextPage,
@@ -42,7 +71,7 @@ const RequestCard = () => {
     isLoading,
     isError,
     error,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<RequestPage, Error>({
     queryKey: ["requests", sellerId],
     enabled: !!sellerId,
     queryFn: async ({ pageParam = null }) => {
@@ -51,33 +80,26 @@ const RequestCard = () => {
       }`;
 
       const res = await fetch(url);
+      const json = await res.json();
 
       if (!res.ok) {
-        const errorData = await res.json();
-        toast.error(errorData?.error || "Failed to fetch requests");
-        throw new Error(errorData?.error || "Failed to fetch requests");
+        toast.error(json?.error || "Failed to fetch requests");
+        throw new Error(json?.error || "Failed to fetch requests");
       }
 
-      return res.json();
+      return json;
     },
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   });
 
-  const queryClient = useQueryClient();
-
-  // Accept mutation
+  // Mutations
   const acceptMutation = useMutation({
     mutationFn: async (purchaseId: number) => {
       const res = await fetch("/api/request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          purchaseId,
-          sellerId,
-          action: "accept",
-        }),
+        body: JSON.stringify({ purchaseId, sellerId, action: "accept" }),
       });
-
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       return data;
@@ -86,22 +108,18 @@ const RequestCard = () => {
       toast.success("Request accepted");
       queryClient.invalidateQueries(["requests", sellerId]);
     },
-    onError: (err: any) => toast.error(err.message),
+    onError: (err: unknown) => {
+      if (err instanceof Error) toast.error(err.message);
+    },
   });
 
-  // Reject mutation
   const rejectMutation = useMutation({
     mutationFn: async (purchaseId: number) => {
       const res = await fetch("/api/request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          purchaseId,
-          sellerId,
-          action: "reject",
-        }),
+        body: JSON.stringify({ purchaseId, sellerId, action: "reject" }),
       });
-
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       return data;
@@ -110,10 +128,12 @@ const RequestCard = () => {
       toast.success("Request rejected");
       queryClient.invalidateQueries(["requests", sellerId]);
     },
-    onError: (err: any) => toast.error(err.message),
+    onError: (err: unknown) => {
+      if (err instanceof Error) toast.error(err.message);
+    },
   });
 
-  // Skeleton loading UI (copied exactly from PurchaseCard)
+  // Skeleton UI
   if (!sellerId || isLoading)
     return (
       <div className="max-w-7xl mx-auto flex flex-col gap-1 w-full">
@@ -140,24 +160,22 @@ const RequestCard = () => {
       </div>
     );
 
-  if (isError) return <div>Error: {(error as any).message}</div>;
+  if (isError) return <div>Error: {error?.message}</div>;
 
-  const allRequests = data?.pages.flatMap((page: any) => page.requests) ?? [];
+  const allRequests = data?.pages.flatMap((page) => page.requests) ?? [];
 
-  // No requests UI
-  if (allRequests.length === 0) {
+  if (allRequests.length === 0)
     return (
       <div className="max-w-7xl mx-auto p-6 text-center text-gray-600">
         <p className="text-lg font-medium">No purchase requests</p>
       </div>
     );
-  }
 
   return (
     <div className="max-w-7xl mx-auto flex flex-col gap-1 w-full">
       {data?.pages.map((page, i) => (
         <React.Fragment key={i}>
-          {page.requests.map((request: any) => (
+          {page.requests.map((request) => (
             <div
               key={request.id}
               className="flex flex-col gap-4 border rounded-md p-4 bg-white "
@@ -171,7 +189,7 @@ const RequestCard = () => {
                   <Avatar>
                     <AvatarImage
                       className="h-9 w-9 rounded-full object-cover"
-                      src={request.buyer.image_url}
+                      src={request.buyer.image_url ?? ""}
                     />
                     <AvatarFallback>
                       <UserRound className="h-9 w-9 text-gray-600" />
@@ -210,7 +228,12 @@ const RequestCard = () => {
                     <h3 className="font-bold text-lg truncate">
                       {request.post.title}
                     </h3>
-                    <p className="text-sm">Price: ${request.post.price}</p>
+                    <p className="text-sm">
+                      Price:{" "}
+                      {request.post.price != null
+                        ? `₱${request.post.price}`
+                        : "No amount"}
+                    </p>
                     <p className="text-sm">Type: {request.post.art_type}</p>
                   </div>
 
