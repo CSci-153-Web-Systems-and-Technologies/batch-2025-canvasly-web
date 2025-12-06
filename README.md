@@ -5,42 +5,42 @@
 
 ### Login Page
 
-![Login Page](https://github.com/pipesSomeAndSSam/AppDev_System123/assets/144916002/54bec289-3504-485a-8cb3-bbbe8026f668)
+![Login Page](https://raw.githubusercontent.com/CSci-153-Web-Systems-and-Technologies/batch-2025-canvasly-web/main/public/Canvasly_login.png)
 
 - This page is for the _login and Sign up function_ for the website.
 
 ### Home Page
 
-![Home Page](https://github.com/pipesSomeAndSSam/AppDev_System123/assets/144916002/4c5a27b2-a7c2-430d-aa3d-77900721196a)
+![Home Page](https://raw.githubusercontent.com/CSci-153-Web-Systems-and-Technologies/batch-2025-canvasly-web/main/public/Canvasly_home.png)
 
 - This page shows all posts of all users
 
 ### Artists Page
 
-![Artists Page](https://github.com/pipesSomeAndSSam/AppDev_System123/assets/144916002/18a11d49-64d9-48aa-b103-2d9207c9513d)
+![Artists Page](https://raw.githubusercontent.com/CSci-153-Web-Systems-and-Technologies/batch-2025-canvasly-web/main/public/Canvasly_aritists.png)
 
 - This page shows all the artists in which the you can follow.
 
 ### Profile Page
 
-![Profile Page](https://github.com/pipesSomeAndSSam/AppDev_System123/assets/144916002/fde55698-c4af-4bdd-8fda-7727135ba280)
+![Profile Page](https://raw.githubusercontent.com/CSci-153-Web-Systems-and-Technologies/batch-2025-canvasly-web/main/public/Canvasly_profile.png)
 
 - This page shows the your profile page.
 
 ### Create Post Page
 
-![Create Post Page ](https://github.com/pipesSomeAndSSam/AppDev_System123/assets/144916002/8e2b2498-50f9-469c-8df3-e0f10e124f2f)
+![Create Post Page ](https://raw.githubusercontent.com/CSci-153-Web-Systems-and-Technologies/batch-2025-canvasly-web/main/public/Canvasly_create.png)
 
 - This page is for uploading your posts.
 
 ### Purchase Request Page
 
-![Purchase Request Page](https://github.com/pipesSomeAndSSam/AppDev_System123/assets/144916002/cbc8a7a7-9638-4bd7-a080-e1b783e99c04)
+![Purchase Request Page](https://raw.githubusercontent.com/CSci-153-Web-Systems-and-Technologies/batch-2025-canvasly-web/main/public/Canvasly_purchase.png)
 
 - This page shows the list of the your purchase requests of artworks of different users.
 
 ### Request Page
 
-![Request Page](https://github.com/pipesSomeAndSSam/AppDev_System123/assets/144916002/cbc8a7a7-9638-4bd7-a080-e1b783e99c04)
+![Request Page](https://raw.githubusercontent.com/CSci-153-Web-Systems-and-Technologies/batch-2025-canvasly-web/main/public/Canvasly_request.png)
 
 - This page shows the list of the requests of purchases from different users sent to you.
