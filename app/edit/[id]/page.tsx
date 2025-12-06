@@ -42,7 +42,7 @@ const Page = async ({ params }: PageProps) => {
   if (authorIdOfPost !== user?.id) redirect("/not-found");
 
   return (
-    <div className="w-full flex items-center justify-center pt-24">
+    <div className="w-full flex items-center justify-center pt-16 md:pt-24">
       <PostEditor post={post} />
     </div>
   );
