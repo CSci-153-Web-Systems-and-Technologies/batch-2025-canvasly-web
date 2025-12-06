@@ -109,7 +109,7 @@ const PostEditor = ({ post }: PostEditorProps) => {
   };
 
   return (
-    <div className="w-full flex flex-col bg-[#f5f5f5] items-center justify-center p-4 sm:p-16 gap-8">
+    <div className="w-full flex flex-col bg-[#f5f5f5] items-center justify-center px-4 py-8 sm:p-16 gap-8">
       <div className="flex flex-col items-center justify-center w-full gap-1 text-lg text-center">
         {isClient && selectedFile && fileType === "image" && (
           <div className="relative flex items-center h-[250px] w-[250px] sm:h-[400px] sm:w-[400px] md:h-[500px] md:w-[500px] mb-8">
