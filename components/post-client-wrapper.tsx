@@ -5,9 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { getPostById } from "@/actions/post";
 import type { User } from "@supabase/supabase-js";
 import { Skeleton } from "./ui/skeleton";
+import { Post } from "@prisma/client";
 
 interface PostClientWrapperProps {
-  post: any; // server-fetched initial data
+  post: Post; // server-fetched initial data
   authUser: User | null;
   queryId?: string; // optional, for optimistic updates
 }

@@ -38,11 +38,9 @@ export async function POST(req: NextRequest) {
       { success: false, error: "Invalid action." },
       { status: 400 }
     );
-  } catch (err: any) {
-    return NextResponse.json(
-      { success: false, error: err.message },
-      { status: 500 }
-    );
+  } catch (err: unknown) {
+    const error = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ success: false, error }, { status: 500 });
   }
 }
 
@@ -70,10 +68,8 @@ export async function GET(req: NextRequest) {
     );
 
     return NextResponse.json({ success: true, purchases, nextCursor });
-  } catch (err: any) {
-    return NextResponse.json(
-      { success: false, error: err.message },
-      { status: 500 }
-    );
+  } catch (err: unknown) {
+    const error = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ success: false, error }, { status: 500 });
   }
 }

@@ -5,18 +5,10 @@ import CurrentUserAvatarProfile from "./current-user-avatar-profile";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createClient } from "@/lib/client";
+//import { createClient } from "@/lib/client";
 import { addComment, updateComment } from "@/actions/post";
-import toast from "react-hot-toast";
 
-const CommentInput = ({
-  setExpanded,
-  postId,
-  queryId,
-  editComment,
-  setEditComment,
-}) => {
-  const supabase = createClient();
+const CommentInput = ({ postId, queryId, editComment, setEditComment }) => {
   const queryClient = useQueryClient();
 
   const [value, setValue] = useState("");
@@ -31,7 +23,7 @@ const CommentInput = ({
   const { mutate: addMutate, isPending: isAdding } = useMutation({
     mutationFn: (variables: { comment: string; postId: number }) =>
       addComment(variables),
-    onSuccess: (response) => {
+    onSuccess: () => {
       queryClient.invalidateQueries(["posts", queryId]);
       setValue("");
     },
@@ -40,7 +32,7 @@ const CommentInput = ({
   const { mutate: editMutate, isPending: isEditing } = useMutation({
     mutationFn: ({ id, text }: { id: number; text: string }) =>
       updateComment(id, text),
-    onSuccess: (response) => {
+    onSuccess: () => {
       queryClient.invalidateQueries(["posts", queryId]);
       setValue("");
       setEditComment(null);

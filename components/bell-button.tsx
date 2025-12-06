@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Bell } from "lucide-react";
 import { Button } from "./ui/button";
 import NotificationsDropdown from "./notifications-dropdown";
+import { Notification } from "@prisma/client";
 
 interface Props {
   userId: string;
@@ -11,7 +12,7 @@ interface Props {
 
 export default function BellButton({ userId }: Props) {
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Fetch notifications from API

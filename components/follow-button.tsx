@@ -2,7 +2,7 @@
 
 //import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { UserRound } from "lucide-react";
+//import { UserRound } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 // Make sure this is the correct import
@@ -13,7 +13,7 @@ import { User } from "@supabase/supabase-js";
 import { Skeleton } from "./ui/skeleton";
 import { useQuery } from "@tanstack/react-query"; // Import useQuery
 
-const FollowButton = ({ id }) => {
+const FollowButton = ({ id }: { id: string }) => {
   const supabase = createClient();
   const [followed, setFollowed] = useState(false);
   const [userAuth, setUserAuth] = useState<User | null>(null);

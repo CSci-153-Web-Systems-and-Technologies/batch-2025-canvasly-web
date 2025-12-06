@@ -11,9 +11,10 @@ import FollowInfo from "@/components/follow-info";
 import ProfileArtworks from "@/components/profile-artworks";
 import FollowButton from "@/components/follow-button";
 import FollowPersonsBody from "./follow-persons-body";
+import { UserType } from "@/types";
 
 type UserProfileProps = {
-  profileUser: any; // Use a more specific type from your DB if available
+  profileUser: UserType; // Use a more specific type from your DB if available
   authUser: User | null;
 };
 
@@ -44,14 +45,7 @@ const UserProfile = ({ profileUser, authUser }: UserProfileProps) => {
                   <span>{profileUser?.username}</span>
                 </span>
 
-                {isOwner && (
-                  <EditProfileDialog
-                    userId={profileUser?.id}
-                    data={{ data: profileUser }}
-                    isLoading={false}
-                    isError={false}
-                  />
-                )}
+                {isOwner && <EditProfileDialog data={{ data: profileUser }} />}
                 {!isOwner && profileUser?.id && (
                   <FollowButton id={profileUser.id} />
                 )}
