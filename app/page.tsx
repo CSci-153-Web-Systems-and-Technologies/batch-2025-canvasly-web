@@ -37,7 +37,7 @@ export default function Home() {
             </div>
 
             <div className="items-start justify-center hidden md:flex w-full max-w-sm">
-              <div className="sticky top-32 flex flex-col w-full items-center gap-4">
+              <div className="sticky top-28 flex flex-col w-full items-center gap-4">
                 <PopularTrends />
                 <FollowSuggestions />
               </div>
