@@ -66,6 +66,20 @@ const ProfileArtworks = ({ id }) => {
     );
   }
   if (isSuccess) {
+    const hasNoArtworks = data?.pages?.every((page) => page.data.length === 0);
+
+    if (hasNoArtworks) {
+      return (
+        <div className="w-full h-full mb-3">
+          <div className="w-full my-2">
+            <div className="bg-[#f5f5f5] p-5 rounded-lg">
+              <p>No artworks</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="max-w-7xl w-full grid grid-cols-2 sm:grid-cols-4 ">
         {data?.pages?.map((page) =>
