@@ -6,6 +6,7 @@ import { UserRound } from "lucide-react";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useSafeNavigate } from "@/utils/safeNavigate";
+import { SafeLink } from "./safe-link";
 
 interface PostAuthorInfoProps {
   author: {
@@ -35,7 +36,7 @@ const PostAuthorInfo: React.FC<PostAuthorInfoProps> = ({
   return (
     <div className="flex flex-row justify-between items-center w-full">
       <div className="flex flex-row justify-center gap-2">
-        <Link href={url} onClick={handleClick} className="cursor-pointer">
+        <SafeLink href={url}>
           <Avatar>
             <AvatarImage
               className="object-cover"
@@ -46,20 +47,18 @@ const PostAuthorInfo: React.FC<PostAuthorInfoProps> = ({
               <UserRound color="#666666" />
             </AvatarFallback>
           </Avatar>
-        </Link>
+        </SafeLink>
 
-        <Link
-          href={url}
-          onClick={handleClick}
-          className="flex flex-col cursor-pointer"
-        >
-          <span className="font-semibold text-sm md:text-base">
-            {nameShown}
-          </span>
+        <div className="flex flex-col items-start justify-start">
+          <SafeLink href={url}>
+            <span className="font-semibold text-sm md:text-base">
+              {nameShown}
+            </span>
+          </SafeLink>
           <span className="text-xs font-semibold text-[#666666]">
             {dayjs(createdAt).format("DD MMM YYYY")}
           </span>
-        </Link>
+        </div>
       </div>
     </div>
   );
