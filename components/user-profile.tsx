@@ -93,7 +93,7 @@ const UserProfile = ({ profileUser, authUser }: UserProfileProps) => {
           </div>
         )}
         {selectedTab === "Followers" && (
-          <div className="flex-1 flex flex-col max-w-7xl mb-20 p-4 md:p-10 items-center w-full mx-auto">
+          <div className="flex-1 flex flex-col max-w-7xl mb-1 p-4 md:p-10 items-center w-full mx-auto">
             <div className="flex flex-col gap-2 items-start w-full ">
               <h2 className="font-bold mb-2 md:mb-4 text-md md:text-3xl">
                 Followers
@@ -105,7 +105,7 @@ const UserProfile = ({ profileUser, authUser }: UserProfileProps) => {
           </div>
         )}
         {selectedTab === "Followings" && (
-          <div className="flex-1 flex flex-col max-w-7xl mb-20 p-4 md:p-10 items-center w-full mx-auto">
+          <div className="flex-1 flex flex-col max-w-7xl mb-1 p-4 md:p-10 items-center w-full mx-auto">
             <div className="flex flex-col gap-2 items-start w-full ">
               <h2 className="font-bold mb-2 md:mb-4 text-md md:text-3xl">
                 Followings
