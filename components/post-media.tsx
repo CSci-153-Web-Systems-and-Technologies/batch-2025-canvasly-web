@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { getFileTypeFromUrl } from "@/utils";
 import { useSafeNavigate } from "@/utils/safeNavigate";
 
@@ -13,10 +14,13 @@ interface PostMediaProps {
 
 const PostMedia: React.FC<PostMediaProps> = ({ postId, title, mediaUrl }) => {
   const { safeNavigate } = useSafeNavigate();
+  const url = `/posts/${postId}`;
   const fileType = getFileTypeFromUrl(mediaUrl);
 
-  const handleNavigate = async () => {
-    await safeNavigate(`/posts/${postId}`);
+  const handleClick = async (e: React.MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    await safeNavigate(url);
   };
 
   if (fileType === "video") {
@@ -27,11 +31,11 @@ const PostMedia: React.FC<PostMediaProps> = ({ postId, title, mediaUrl }) => {
     );
   }
 
-  // Default to image
   return (
-    <div
+    <Link
+      href={url}
+      onClick={handleClick}
       className="relative w-full h-[360px] sm:h-[490px] md:h-[420px] lg:h-[620px] xl:h-[700px] rounded-lg overflow-hidden bg-[#f5f5f5] cursor-pointer"
-      onClick={handleNavigate}
     >
       <Image
         alt={title || "Post image"}
@@ -40,7 +44,7 @@ const PostMedia: React.FC<PostMediaProps> = ({ postId, title, mediaUrl }) => {
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className="object-contain"
       />
-    </div>
+    </Link>
   );
 };
 

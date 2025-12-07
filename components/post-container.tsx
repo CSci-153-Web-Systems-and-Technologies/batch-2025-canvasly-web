@@ -11,7 +11,6 @@ const PostContainer = ({ data, queryId }) => {
   return (
     <div className="w-[335px] sm:w-[490px] md:w-[420px] lg:w-[620px] xl:w-[700px] h-full flex flex-col justify-center gap-2">
       <PostAuthorInfo author={data?.author} createdAt={data?.createdAt} />
-
       <PostMedia
         postId={data?.id}
         title={data?.title}

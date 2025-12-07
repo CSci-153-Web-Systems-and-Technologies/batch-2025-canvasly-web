@@ -4,6 +4,7 @@ import React from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { UserRound } from "lucide-react";
 import dayjs from "dayjs";
+import Link from "next/link";
 import { useSafeNavigate } from "@/utils/safeNavigate";
 
 interface PostAuthorInfoProps {
@@ -22,15 +23,19 @@ const PostAuthorInfo: React.FC<PostAuthorInfoProps> = ({
 }) => {
   const { safeNavigate } = useSafeNavigate();
   const nameShown = author.username || author.email || "Anonymous";
+  const url = `/users/${author.id}?person=${author.username}`;
 
-  const handleNavigate = async () => {
-    await safeNavigate(`/users/${author.id}?person=${author.username}`);
+  const handleClick = async (e: React.MouseEvent) => {
+    // ignore if user wants new tab / cmd / ctrl click
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    await safeNavigate(url);
   };
 
   return (
     <div className="flex flex-row justify-between items-center w-full">
       <div className="flex flex-row justify-center gap-2">
-        <div className="cursor-pointer" onClick={handleNavigate}>
+        <Link href={url} onClick={handleClick} className="cursor-pointer">
           <Avatar>
             <AvatarImage
               className="object-cover"
@@ -41,16 +46,20 @@ const PostAuthorInfo: React.FC<PostAuthorInfoProps> = ({
               <UserRound color="#666666" />
             </AvatarFallback>
           </Avatar>
-        </div>
+        </Link>
 
-        <div className="flex flex-col cursor-pointer" onClick={handleNavigate}>
+        <Link
+          href={url}
+          onClick={handleClick}
+          className="flex flex-col cursor-pointer"
+        >
           <span className="font-semibold text-sm md:text-base">
             {nameShown}
           </span>
           <span className="text-xs font-semibold text-[#666666]">
             {dayjs(createdAt).format("DD MMM YYYY")}
           </span>
-        </div>
+        </Link>
       </div>
     </div>
   );
