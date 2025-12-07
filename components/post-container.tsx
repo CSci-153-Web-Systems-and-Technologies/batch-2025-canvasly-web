@@ -11,8 +11,6 @@ import Link from "next/link";
 //import { Button } from "./ui/button";
 
 const PostContainer = ({ data, queryId }) => {
-  console.log("POST CONTAINER", data);
-
   const nameShown =
     data?.author?.username || data?.author?.email || "Anonymous";
 
