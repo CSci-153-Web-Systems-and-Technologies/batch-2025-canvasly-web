@@ -43,8 +43,6 @@ const Posts = ({ id = "all" }) => {
     }
   }, [hasNextPage, inView, fetchNextPage]);
 
-  console.log(data);
-
   if (isError) {
     return <p>Something went wrong! POSTS.TSX</p>;
   }
