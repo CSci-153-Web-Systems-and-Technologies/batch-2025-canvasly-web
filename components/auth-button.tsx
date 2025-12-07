@@ -9,6 +9,7 @@ import AppSideBar from "./app-side-bar";
 import CurrentUserAvatarProfile from "./current-user-avatar-profile";
 import BellButton from "./bell-button";
 import { SafeLink } from "./safe-link";
+import Link from "next/link";
 
 export async function AuthButton() {
   const supabase = await createClient();
@@ -81,10 +82,10 @@ export async function AuthButton() {
   return (
     <div className="flex gap-2 py-4 md:py-0">
       <Button asChild size="sm" variant={"outline"}>
-        <SafeLink href="/auth/login">Sign in</SafeLink>
+        <Link href="/auth/login">Sign in</Link>
       </Button>
       <Button asChild size="sm" variant={"default"}>
-        <SafeLink href="/auth/sign-up">Sign up</SafeLink>
+        <Link href="/auth/sign-up">Sign up</Link>
       </Button>
     </div>
   );
