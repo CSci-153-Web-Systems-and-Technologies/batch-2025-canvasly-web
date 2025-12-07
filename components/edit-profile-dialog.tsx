@@ -23,8 +23,13 @@ import { User } from "@supabase/supabase-js";
 import { useMutation } from "@tanstack/react-query";
 import { updateUserProfile } from "@/actions/user";
 import { Spinner } from "./ui/spinner";
+import { UserType } from "@/types";
 
-const EditProfileDialog = ({ userId, isLoading, data, isError }) => {
+type EditProfileDialogProps = {
+  data: { data: UserType };
+};
+
+const EditProfileDialog = ({ data }: EditProfileDialogProps) => {
   const supabase = createClient();
   const inputRef = useRef(null);
 
@@ -35,7 +40,7 @@ const EditProfileDialog = ({ userId, isLoading, data, isError }) => {
   const [userAuth, setUserAuth] = useState<User | null>(null);
   //const [userId, setUserId] = useState<string | null>(null);
   const [description, setDescription] = useState<string>("");
-  const [image_url, set_image_url] = useState(null);
+  const [image_url, set_image_url] = useState<string | null>(null);
   const [username, setUsername] = useState<string>("");
 
   const { mutate, isPending } = useMutation({

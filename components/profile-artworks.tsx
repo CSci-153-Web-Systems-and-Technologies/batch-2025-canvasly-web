@@ -3,7 +3,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { getMyArtwork } from "@/actions/post";
-import { Spinner } from "@/components/ui/spinner";
+//import { Spinner } from "@/components/ui/spinner";
 import { useInView } from "react-intersection-observer";
 import ArtworkContainer from "./artwork-container";
 import { Skeleton } from "./ui/skeleton";
@@ -50,8 +50,6 @@ const ProfileArtworks = ({ id }) => {
       fetchNextPage();
     }
   }, [hasNextPage, inView, fetchNextPage]);
-
-  console.log(data);
 
   if (isError) {
     return <p>Something went wrong! POSTS.TSX</p>;

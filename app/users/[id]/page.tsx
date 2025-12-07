@@ -1,10 +1,16 @@
 import UserProfile from "@/components/user-profile";
-import { getUserById } from "@/actions/user"; // Your server action
-import { createClient } from "@/lib/supabase/server"; // Use the SERVER client
+import { getUserById } from "@/actions/user";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-export const generateMetadata = async ({ params }) => {
-  const { data } = await getUserById(params.id);
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export const generateMetadata = async ({ params }: PageProps) => {
+  const { id } = await params; // MUST await
+
+  const { data } = await getUserById(id);
   const username = data?.username || "User";
 
   return {
@@ -13,12 +19,12 @@ export const generateMetadata = async ({ params }) => {
   };
 };
 
-const ProfilePage = async ({ params }) => {
+const ProfilePage = async ({ params }: PageProps) => {
+  const { id } = await params; // MUST await
+
   const supabase = await createClient();
 
-  const { data: profileUser, error: profileError } = await getUserById(
-    params.id
-  );
+  const { data: profileUser, error: profileError } = await getUserById(id);
 
   const {
     data: { user: authUser },

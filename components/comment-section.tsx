@@ -12,8 +12,23 @@ import { Skeleton } from "./ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteComment } from "@/actions/post";
+import { CommentType, PostType } from "@/types";
 
-const CommentSection = ({ comments, postId, queryId }) => {
+interface CommentSectionProps {
+  comments: CommentType[];
+  postId: number;
+  queryId: string;
+}
+
+interface PostsQueryData {
+  pages: { data: PostType[] }[];
+}
+
+const CommentSection: React.FC<CommentSectionProps> = ({
+  comments,
+  postId,
+  queryId,
+}) => {
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -43,41 +58,42 @@ const CommentSection = ({ comments, postId, queryId }) => {
   const { mutate: handleDeleteComment } = useMutation({
     mutationFn: (commentId: number) => deleteComment(commentId),
     onMutate: async (commentId) => {
-      // Optimistically update UI
       await queryClient.cancelQueries(["posts", queryId]);
-      const previousPosts = queryClient.getQueryData(["posts", queryId]);
+      const previousPosts = queryClient.getQueryData<PostsQueryData>([
+        "posts",
+        queryId,
+      ]);
 
-      queryClient.setQueryData(["posts", queryId], (old: any) => {
-        if (!old) return old;
+      queryClient.setQueryData<PostsQueryData | undefined>(
+        ["posts", queryId],
+        (old) => {
+          if (!old) return old;
 
-        return {
-          ...old,
-          pages: old.pages.map((page: any) => ({
-            ...page,
-            data: page.data.map((post: any) =>
-              post.id === postId
-                ? {
-                    ...post,
-                    comments: post.comments.filter(
-                      (c: any) => c.id !== commentId
-                    ),
-                  }
-                : post
-            ),
-          })),
-        };
-      });
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((post) =>
+                post.id === postId
+                  ? {
+                      ...post,
+                      comments: post.comments.filter((c) => c.id !== commentId),
+                    }
+                  : post
+              ),
+            })),
+          };
+        }
+      );
 
       return { previousPosts };
     },
     onError: (err, variables, context) => {
-      // Rollback on error
       if (context?.previousPosts) {
         queryClient.setQueryData(["posts", queryId], context.previousPosts);
       }
     },
     onSettled: () => {
-      // Refetch to ensure sync
       queryClient.invalidateQueries(["posts", queryId]);
     },
   });
@@ -94,7 +110,7 @@ const CommentSection = ({ comments, postId, queryId }) => {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      {comments?.length > 1 && (
+      {comments.length > 1 && (
         <div className="flex flex-col gap-4">
           <Button
             className="p-6"
@@ -107,22 +123,20 @@ const CommentSection = ({ comments, postId, queryId }) => {
               ) : (
                 <ChevronUp color="#303030" />
               )}
-
               {!expanded ? (
                 <span>Show more comments</span>
               ) : (
                 <span>Show less comments</span>
               )}
-
               <div className="py-0.5 px-3 flex flex-row items-center justify-center rounded-2xl bg-[#8c8c8c] text-white">
-                {comments?.length}
+                {comments.length}
               </div>
             </div>
           </Button>
         </div>
       )}
 
-      {comments?.length > 0 && (
+      {comments.length > 0 && (
         <div
           ref={parent}
           id="comments-container"
@@ -137,9 +151,9 @@ const CommentSection = ({ comments, postId, queryId }) => {
           ) : (
             <ScrollArea className="max-h-72 w-full">
               <div className="flex flex-col gap-2 pr-2">
-                {comments.map((comment, index) => (
+                {comments.map((comment) => (
                   <Comment
-                    key={index}
+                    key={comment.id}
                     data={comment}
                     onEdit={(id, text) => setEditComment({ id, text })}
                     onDelete={(id) => handleDeleteComment(id)}

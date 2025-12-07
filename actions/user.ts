@@ -5,6 +5,7 @@ import { CreateUserInput } from "@/lib/types/supa-base-webhook";
 import { deleteFile, uploadFile } from "./uploadFile";
 import { createClient } from "@/lib/server";
 import { createNotification } from "./notifications"; // import your notifications functions
+import { UserType } from "@/types";
 
 export const createUser = async (user: CreateUserInput) => {
   const { id, image_url, username, description, email } = user;
@@ -75,7 +76,9 @@ export const deleteUser = async (user: { id: string }) => {
   }
 };
 
-export const getUserById = async (id: string) => {
+export const getUserById = async (
+  id: string
+): Promise<{ data?: UserType; error?: string }> => {
   try {
     const user = await db.user.findUnique({
       where: { id },
@@ -89,12 +92,10 @@ export const getUserById = async (id: string) => {
       },
     });
 
-    return { data: user };
+    return { data: user ?? undefined };
   } catch (e) {
-    console.log(e);
-    return {
-      error: "Error fetching user",
-    };
+    console.error(e);
+    return { error: "Error fetching user" };
   }
 };
 
