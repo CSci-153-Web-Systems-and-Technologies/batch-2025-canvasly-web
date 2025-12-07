@@ -1,55 +1,59 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { hasEnvVars } from "../utils";
 
-export async function updateSession(request: NextRequest) {
-  // Default response
-  let supabaseResponse = NextResponse.next({ request });
+const PROTECTED_PATHS = [
+  "artists",
+  "create",
+  "edit",
+  "following",
+  "posts",
+  "protected",
+  "purchase",
+  "request",
+  "users",
+];
 
-  // Skip middleware if env vars are missing
-  if (!hasEnvVars) return supabaseResponse;
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next();
 
-  // Create a fresh Supabase server client per request
+  // Create Supabase server client for SSR
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!,
     {
       cookies: {
         getAll() {
-          return request.cookies.getAll();
+          return req.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          // Update request cookies
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-
-          // Update the response cookies
-          supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            res.cookies.set(name, value, options)
           );
         },
       },
     }
   );
 
-  // Get the current user's claims (session info)
+  // Get the current user session
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
-  // If not on public pages and user is missing, redirect to login
-  const protectedPaths = ["/dashboard", "/profile", "/posts"];
-  const isProtected = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
+  // Check if the current request path is protected
+  const isProtected = PROTECTED_PATHS.some((path) =>
+    req.nextUrl.pathname.startsWith("/" + path)
   );
 
+  // If user not logged in and path is protected, redirect to login
   if (!user && isProtected) {
-    const url = request.nextUrl.clone();
+    const url = req.nextUrl.clone();
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
   }
 
-  // Return the response with any updated cookies
-  return supabaseResponse;
+  return res;
 }
+
+// Apply middleware only to protected paths
+export const config = {
+  matcher: PROTECTED_PATHS.map((path) => `/${path}/:path*`),
+};
