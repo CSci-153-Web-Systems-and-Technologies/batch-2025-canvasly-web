@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+
 import PostClientWrapper from "@/components/post-client-wrapper";
 import { createClient } from "@/lib/server";
 import { getPostById } from "@/actions/post";
@@ -8,7 +11,11 @@ interface PageProps {
 }
 
 export const generateMetadata = async ({ params }: PageProps) => {
-  const { data } = await getPostById(Number(params.id));
+  const postId = Number(params.id);
+  if (isNaN(postId)) redirect("/not-found");
+
+  const { data } = await getPostById(postId);
+
   const artworkName = data?.title || "Artwork";
 
   return {
