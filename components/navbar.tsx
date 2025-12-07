@@ -13,6 +13,7 @@ const Navbar = () => {
           alt="logo"
           width={100}
           height={50}
+          className="hidden md:block"
         />
 
         <SearchBar />

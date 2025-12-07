@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { updateFollow } from "@/actions/user";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { Separator } from "./ui/separator";
 
 // 1. Accept the new 'loggedInUserId' prop
 const UserFollowBox = ({
@@ -106,48 +107,50 @@ const UserFollowBox = ({
   });
 
   return (
-    <div className="flex flex-row items-center justify-between w-full p-1 sm:p-4">
-      <Link passHref href={`/users/${person?.id}?person=${person?.username}`}>
-        <div className="flex flex-row items-center gap-3">
-          <Avatar>
-            <AvatarImage
-              className="h-10 w-10 sm:h-14 sm:w-14 rounded-full object-cover"
-              src={person?.image_url}
-              alt="@user"
-            />
-            <AvatarFallback>
-              <UserRound
-                color="#666666"
-                className="h-10 w-10 sm:h-14 sm:w-14  rounded-full"
+    <div className="flex flex-col items-center justify-between w-full p-1 sm:p-4">
+      <div className="flex flex-row items-center justify-between w-full">
+        <Link passHref href={`/users/${person?.id}?person=${person?.username}`}>
+          <div className="flex flex-row items-center gap-3">
+            <Avatar>
+              <AvatarImage
+                className="h-10 w-10 sm:h-14 sm:w-14 rounded-full object-cover"
+                src={person?.image_url}
+                alt="@user"
               />
-            </AvatarFallback>
-          </Avatar>
-          <span className="text-black text-base">{person?.username}</span>
-        </div>
-      </Link>
-
-      {/* This JSX is unchanged, but 'isMe' is now correct */}
-      {loggedInUserId && !isMe && (
-        <>
-          {!isFollowed ? (
-            <Button
-              onClick={() => mutate({ id: personId, type: "follow" })}
-              disabled={isPending}
-            >
-              {isPending ? "Loading..." : "Follow"}
-            </Button>
-          ) : (
-            <Button
-              className="bg-[#E0DFDB]"
-              variant="outline"
-              onClick={() => mutate({ id: personId, type: "unfollow" })}
-              disabled={isPending}
-            >
-              {isPending ? "Loading..." : "Following"}
-            </Button>
-          )}
-        </>
-      )}
+              <AvatarFallback>
+                <UserRound
+                  color="#666666"
+                  className="h-10 w-10 sm:h-14 sm:w-14  rounded-full"
+                />
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-black text-base">{person?.username}</span>
+          </div>
+        </Link>
+        {/* This JSX is unchanged, but 'isMe' is now correct */}
+        {loggedInUserId && !isMe && (
+          <>
+            {!isFollowed ? (
+              <Button
+                onClick={() => mutate({ id: personId, type: "follow" })}
+                disabled={isPending}
+              >
+                {isPending ? "Loading..." : "Follow"}
+              </Button>
+            ) : (
+              <Button
+                className="bg-[#E0DFDB]"
+                variant="outline"
+                onClick={() => mutate({ id: personId, type: "unfollow" })}
+                disabled={isPending}
+              >
+                {isPending ? "Loading..." : "Following"}
+              </Button>
+            )}
+          </>
+        )}
+      </div>
+      <Separator className="mt-2"></Separator>
     </div>
   );
 };

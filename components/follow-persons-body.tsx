@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { getAllFollowersAndFollowingsInfo } from "@/actions/user";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
@@ -56,27 +57,33 @@ const FollowPersonsBody = ({ type, id }) => {
   }
 
   return (
-    <div className="w-full h-14">
+    <div className="w-full h-full">
       <div className="w-full my-2">
         {userData?.[type]?.length === 0 ? (
           <div className="bg-[#f5f5f5] p-5 rounded-lg">
             <p>{`No ${type}`}</p>
           </div>
         ) : (
-          <div>
-            {userData?.[type]?.map((person) => (
-              <UserFollowBox
-                key={
-                  person?.[type === "followers" ? "followerId" : "followingId"]
-                }
-                userObjectKey={type === "followers" ? "follower" : "following"}
-                data={person}
-                loggedInUserFollowInfo={currentUserData}
-                // --- THIS IS THE FIX ---
-                // Pass the authenticated user's ID directly
-                loggedInUserId={userAuth?.id}
-              />
-            ))}
+          <div className="h-full">
+            <ScrollArea className="h-80">
+              {userData?.[type]?.map((person) => (
+                <UserFollowBox
+                  key={
+                    person?.[
+                      type === "followers" ? "followerId" : "followingId"
+                    ]
+                  }
+                  userObjectKey={
+                    type === "followers" ? "follower" : "following"
+                  }
+                  data={person}
+                  loggedInUserFollowInfo={currentUserData}
+                  // --- THIS IS THE FIX ---
+                  // Pass the authenticated user's ID directly
+                  loggedInUserId={userAuth?.id}
+                />
+              ))}
+            </ScrollArea>
           </div>
         )}
       </div>
