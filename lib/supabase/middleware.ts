@@ -13,17 +13,16 @@ const PROTECTED_PATHS = [
   "users",
 ];
 
-export async function middleware(req: NextRequest) {
+export async function updateSession(request: NextRequest) {
   const res = NextResponse.next();
 
-  // Create Supabase server client for SSR
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!,
     {
       cookies: {
         getAll() {
-          return req.cookies.getAll();
+          return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) =>
@@ -34,18 +33,15 @@ export async function middleware(req: NextRequest) {
     }
   );
 
-  // Get the current user session
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
-  // Check if the current request path is protected
   const isProtected = PROTECTED_PATHS.some((path) =>
-    req.nextUrl.pathname.startsWith("/" + path)
+    request.nextUrl.pathname.startsWith("/" + path)
   );
 
-  // If user not logged in and path is protected, redirect to login
   if (!user && isProtected) {
-    const url = req.nextUrl.clone();
+    const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
   }
@@ -53,7 +49,6 @@ export async function middleware(req: NextRequest) {
   return res;
 }
 
-// Apply middleware only to protected paths
 export const config = {
   matcher: PROTECTED_PATHS.map((path) => `/${path}/:path*`),
 };
