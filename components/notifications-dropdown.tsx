@@ -5,7 +5,8 @@ import { NotificationType } from "@prisma/client";
 import { Skeleton } from "./ui/skeleton";
 import UserAvatar from "./user-avatar";
 import { createClient } from "@/lib/client";
-import { useRouter } from "next/navigation";
+import { useSafeNavigate } from "@/utils/safeNavigate";
+import Link from "next/link";
 
 const classNameSizeString = "h-9 w-9";
 
@@ -40,7 +41,7 @@ export default function NotificationsDropdown({
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
-  const router = useRouter();
+  const { safeNavigate } = useSafeNavigate();
 
   useEffect(() => {
     if (userId) fetchNotifications();
@@ -61,80 +62,90 @@ export default function NotificationsDropdown({
     }
   };
 
-  const safeNavigate = async (url: string) => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) {
-      router.push("/auth/login");
-    } else {
-      router.push(url);
-    }
-  };
-
   const renderNotificationContent = (n: Notification) => {
-    const handleClick = () => {
-      if (
-        n.post &&
-        [
-          NotificationType.LIKE,
-          NotificationType.COMMENT,
-          NotificationType.PURCHASE_REQUEST,
-          NotificationType.PURCHASE_ACCEPTED,
-          NotificationType.PURCHASE_REJECTED,
-        ].includes(n.type)
-      ) {
-        safeNavigate(`/posts/${n.post.id}`);
-      } else if (n.fromUser && n.type === NotificationType.FOLLOW) {
-        safeNavigate(`/users/${n.fromUser.id}?person=${n.fromUser.username}`);
-      }
-    };
+    // Determine URL for the notification
+    let url: string | undefined;
+    if (
+      n.post &&
+      [
+        NotificationType.LIKE,
+        NotificationType.COMMENT,
+        NotificationType.PURCHASE_REQUEST,
+        NotificationType.PURCHASE_ACCEPTED,
+        NotificationType.PURCHASE_REJECTED,
+      ].includes(n.type)
+    ) {
+      url = `/posts/${n.post.id}`;
+    } else if (n.fromUser && n.type === NotificationType.FOLLOW) {
+      url = `/users/${n.fromUser.id}?person=${n.fromUser.username}`;
+    }
 
-    return (
-      <div
-        className="flex items-start gap-2 hover:bg-gray-200 p-3 cursor-pointer"
-        onClick={handleClick}
-      >
-        {n.fromUser?.image_url && (
+    if (!url) {
+      // No URL → just render text
+      return (
+        <div className="flex items-start gap-2 p-3">
           <UserAvatar
             classNameSizeString={classNameSizeString}
-            url={n.fromUser.image_url}
+            url={n.fromUser?.image_url}
           />
-        )}
-        <div className="flex flex-col gap-0 w-full">
-          <div className="flex flex-row justify-between">
-            <span className="font-semibold">
-              {n.fromUser?.username || "Someone"}
-            </span>
-            <p className="text-xs text-gray-500">
-              {n.created_at
-                ? new Date(n.created_at).toLocaleDateString()
-                : "Unknown date"}
-            </p>
+          <div className="flex flex-col gap-0 w-full">
+            <div className="flex flex-row justify-between">
+              <span className="font-semibold">
+                {n.fromUser?.username || "Someone"}
+              </span>
+              <p className="text-xs text-gray-500">
+                {n.created_at
+                  ? new Date(n.created_at).toLocaleDateString()
+                  : "Unknown date"}
+              </p>
+            </div>
+            <span>{n.message}</span>
           </div>
-          <span>
-            {n.type === NotificationType.FOLLOW && "started following you"}
-            {n.type === NotificationType.LIKE &&
-              `liked your post: "${n.post?.title}"`}
-            {n.type === NotificationType.COMMENT &&
-              `commented on your post: "${n.post?.title}"`}
-            {n.type === NotificationType.PURCHASE_REQUEST &&
-              `requested to purchase your artwork: "${n.post?.title}"`}
-            {n.type === NotificationType.PURCHASE_ACCEPTED &&
-              `accepted your purchase request for: "${n.post?.title}"`}
-            {n.type === NotificationType.PURCHASE_REJECTED &&
-              `rejected your purchase request for: "${n.post?.title}"`}
-            {![
-              NotificationType.FOLLOW,
-              NotificationType.LIKE,
-              NotificationType.COMMENT,
-              NotificationType.PURCHASE_REQUEST,
-              NotificationType.PURCHASE_ACCEPTED,
-              NotificationType.PURCHASE_REJECTED,
-            ].includes(n.type) && n.message}
-          </span>
         </div>
-      </div>
+      );
+    }
+
+    // With URL → wrap in Link + <a> for safeNavigate
+    return (
+      <Link href={url} passHref>
+        <a
+          className="flex items-start gap-2 hover:bg-gray-200 p-3 cursor-pointer block"
+          onClick={async (e) => {
+            e.preventDefault(); // prevent default navigation
+            await safeNavigate(url!); // navigate with auth check
+          }}
+        >
+          <UserAvatar
+            classNameSizeString={classNameSizeString}
+            url={n.fromUser?.image_url}
+          />
+          <div className="flex flex-col gap-0 w-full">
+            <div className="flex flex-row justify-between">
+              <span className="font-semibold">
+                {n.fromUser?.username || "Someone"}
+              </span>
+              <p className="text-xs text-gray-500">
+                {n.created_at
+                  ? new Date(n.created_at).toLocaleDateString()
+                  : "Unknown date"}
+              </p>
+            </div>
+            <span>
+              {n.type === NotificationType.FOLLOW && "started following you"}
+              {n.type === NotificationType.LIKE &&
+                `liked your post: "${n.post?.title}"`}
+              {n.type === NotificationType.COMMENT &&
+                `commented on your post: "${n.post?.title}"`}
+              {n.type === NotificationType.PURCHASE_REQUEST &&
+                `requested to purchase your artwork: "${n.post?.title}"`}
+              {n.type === NotificationType.PURCHASE_ACCEPTED &&
+                `accepted your purchase request for: "${n.post?.title}"`}
+              {n.type === NotificationType.PURCHASE_REJECTED &&
+                `rejected your purchase request for: "${n.post?.title}"`}
+            </span>
+          </div>
+        </a>
+      </Link>
     );
   };
 
