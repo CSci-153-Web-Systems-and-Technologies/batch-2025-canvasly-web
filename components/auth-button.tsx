@@ -1,28 +1,17 @@
-//"use server";
+// "use server";
 
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import React from "react";
-//import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Upload } from "lucide-react";
 import { Button } from "./ui/button";
-
-//import { CurrentUserAvatar } from "./current-user-avatar";
 import { LogoutButton } from "./logout-button";
-
 import AppSideBar from "./app-side-bar";
 import CurrentUserAvatarProfile from "./current-user-avatar-profile";
 import BellButton from "./bell-button";
-
-//import { User } from "@/app/generated/prisma";
+import { SafeLink } from "./safe-link";
 
 export async function AuthButton() {
   const supabase = await createClient();
-
-  /* // You can also use getUser() which will be slower.
-  const { data } = await supabase.auth.getClaims();
-
-  const user = data?.claims; */
 
   const {
     data: { user },
@@ -38,28 +27,30 @@ export async function AuthButton() {
     console.log(data);
   }
 
-  return user ? (
-    <>
-      {/* <div className="flex items-center gap-4">
-        Hey, {user.email}!
-        <LogoutButton />
-      </div> */}
-      <div className="p-4 md:p-0 flex items-center relative pr-9 sm:pr-12 md:pr-0 ">
-        {/* <Hamburger onClickHandler={toggleSidebar} /> */}
+  // Authenticated view
+  if (user) {
+    return (
+      <div className="p-4 md:p-0 flex items-center relative pr-9 sm:pr-12 md:pr-0">
         <div className="flex items-center gap-1 sm:gap-4">
+          {/* Mobile Post Button */}
           <div className="sm:hidden">
-            <Link href={`/create`}>
+            <SafeLink href={`/create`}>
               <Button className="p-2">
                 <Upload />
               </Button>
-            </Link>
+            </SafeLink>
           </div>
-          <Link href={`/create`}>
+
+          {/* Desktop Post Button */}
+          <SafeLink href={`/create`}>
             <Button className="hidden sm:block">Post your artwork</Button>
-          </Link>
+          </SafeLink>
+
+          {/* Notifications */}
           <BellButton userId={user?.id} />
 
-          <Link
+          {/* User Avatar */}
+          <SafeLink
             href={
               data?.username
                 ? `/users/${user?.id}?person=${data?.username}`
@@ -70,23 +61,30 @@ export async function AuthButton() {
               classNameAvatar={""}
               classNameUseRound={""}
             />
-          </Link>
+          </SafeLink>
+
+          {/* Logout */}
           <div className="hidden md:block">
             <LogoutButton variant="outline" compoenentClassName="" />
           </div>
+
+          {/* Sidebar for mobile */}
           <div className="flex md:hidden absolute right-0 top-4">
             <AppSideBar />
           </div>
         </div>
       </div>
-    </>
-  ) : (
+    );
+  }
+
+  // Unauthenticated view (unchanged)
+  return (
     <div className="flex gap-2 py-4 md:py-0">
       <Button asChild size="sm" variant={"outline"}>
-        <Link href="/auth/login">Sign in</Link>
+        <SafeLink href="/auth/login">Sign in</SafeLink>
       </Button>
       <Button asChild size="sm" variant={"default"}>
-        <Link href="/auth/sign-up">Sign up</Link>
+        <SafeLink href="/auth/sign-up">Sign up</SafeLink>
       </Button>
     </div>
   );
