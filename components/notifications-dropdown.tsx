@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { UserRound } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
+import UserAvatar from "./user-avatar";
 
 const classNameSizeString = "h-9 w-9";
 
@@ -77,21 +78,10 @@ export default function NotificationsDropdown({
             href={`/users/${n.fromUser?.id}?person=${n.fromUser?.username}`}
           >
             <div className="flex items-start gap-2 hover:bg-gray-200 p-3">
-              {n.fromUser?.image_url && (
-                <Avatar className={classNameSizeString}>
-                  <AvatarImage
-                    className="object-cover"
-                    src={n.fromUser.image_url}
-                    alt="@user"
-                  />
-                  <AvatarFallback>
-                    <UserRound
-                      color="#666666"
-                      className={classNameSizeString}
-                    />
-                  </AvatarFallback>
-                </Avatar>
-              )}
+              <UserAvatar
+                classNameSizeString={classNameSizeString}
+                url={n.fromUser?.image_url}
+              />
               <div className="flex flex-col gap-0 w-full">
                 <div className="flex flex-row justify-between">
                   <span className="font-semibold">
@@ -112,21 +102,10 @@ export default function NotificationsDropdown({
         return (
           <Link href={`/posts/${n.post?.id}`}>
             <div className="flex items-start gap-2 hover:bg-gray-200 p-3">
-              {n.fromUser?.image_url && (
-                <Avatar className={classNameSizeString}>
-                  <AvatarImage
-                    className="object-cover"
-                    src={n.fromUser.image_url}
-                    alt="@user"
-                  />
-                  <AvatarFallback>
-                    <UserRound
-                      color="#666666"
-                      className={classNameSizeString}
-                    />
-                  </AvatarFallback>
-                </Avatar>
-              )}
+              <UserAvatar
+                classNameSizeString={classNameSizeString}
+                url={n.fromUser?.image_url}
+              />
               <div className="flex flex-col gap-0 w-full">
                 <div className="flex flex-row justify-between">
                   <span className="font-semibold">
@@ -147,21 +126,10 @@ export default function NotificationsDropdown({
         return (
           <Link href={`/posts/${n.post?.id}`}>
             <div className="flex items-start gap-2 hover:bg-gray-200 p-3">
-              {n.fromUser?.image_url && (
-                <Avatar className={classNameSizeString}>
-                  <AvatarImage
-                    className="object-cover"
-                    src={n.fromUser.image_url}
-                    alt="@user"
-                  />
-                  <AvatarFallback>
-                    <UserRound
-                      color="#666666"
-                      className={classNameSizeString}
-                    />
-                  </AvatarFallback>
-                </Avatar>
-              )}
+              <UserAvatar
+                classNameSizeString={classNameSizeString}
+                url={n.fromUser?.image_url}
+              />
               <div className="flex flex-col gap-0 w-full">
                 <div className="flex flex-row justify-between">
                   <span className="font-semibold">
@@ -182,21 +150,10 @@ export default function NotificationsDropdown({
         return (
           <Link href={`/posts/${n.post?.id}`}>
             <div className="flex items-start gap-2 hover:bg-gray-200 p-3">
-              {n.fromUser?.image_url && (
-                <Avatar className={classNameSizeString}>
-                  <AvatarImage
-                    className="object-cover"
-                    src={n.fromUser.image_url}
-                    alt="@user"
-                  />
-                  <AvatarFallback>
-                    <UserRound
-                      color="#666666"
-                      className={classNameSizeString}
-                    />
-                  </AvatarFallback>
-                </Avatar>
-              )}
+              <UserAvatar
+                classNameSizeString={classNameSizeString}
+                url={n.fromUser?.image_url}
+              />
               <div className="flex flex-col gap-0 w-full">
                 <div className="flex flex-row justify-between">
                   <span className="font-semibold">
@@ -218,21 +175,10 @@ export default function NotificationsDropdown({
         return (
           <Link href={`/posts/${n.post?.id}`}>
             <div className="flex items-start gap-2 hover:bg-gray-200 p-3">
-              {n.fromUser?.image_url && (
-                <Avatar className={classNameSizeString}>
-                  <AvatarImage
-                    className="object-cover"
-                    src={n.fromUser.image_url}
-                    alt="@user"
-                  />
-                  <AvatarFallback>
-                    <UserRound
-                      color="#666666"
-                      className={classNameSizeString}
-                    />
-                  </AvatarFallback>
-                </Avatar>
-              )}
+              <UserAvatar
+                classNameSizeString={classNameSizeString}
+                url={n.fromUser?.image_url}
+              />
               <div className="flex flex-col gap-0 w-full">
                 <div className="flex flex-row justify-between">
                   <span className="font-semibold">
@@ -253,21 +199,10 @@ export default function NotificationsDropdown({
         return (
           <Link href={`/posts/${n.post?.id}`}>
             <div className="flex items-start gap-2 hover:bg-gray-200 p-3">
-              {n.fromUser?.image_url && (
-                <Avatar className={classNameSizeString}>
-                  <AvatarImage
-                    className="object-cover"
-                    src={n.fromUser.image_url}
-                    alt="@user"
-                  />
-                  <AvatarFallback>
-                    <UserRound
-                      color="#666666"
-                      className={classNameSizeString}
-                    />
-                  </AvatarFallback>
-                </Avatar>
-              )}
+              <UserAvatar
+                classNameSizeString={classNameSizeString}
+                url={n.fromUser?.image_url}
+              />
               <div className="flex flex-col gap-0 w-full">
                 <div className="flex flex-row justify-between">
                   <span className="font-semibold">

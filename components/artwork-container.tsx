@@ -8,8 +8,6 @@ import Link from "next/link";
 //import HeartIcon from "./ui/heart-icon";
 
 const ArtworkContainer = ({ data }) => {
-  console.log("POST CONTAINER", data);
-
   return (
     <div className="flex w-[160px] sm:w-[140px] md:w-[160px] lg:w-[210px] xl:w-[280px] h-full flex-col  gap-2 ">
       <div className="flex justify-center w-full">
