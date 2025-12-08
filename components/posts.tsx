@@ -3,7 +3,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { getMyFeedPosts } from "@/actions/post";
-//import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
 import { useInView } from "react-intersection-observer";
 import PostContainer from "./post-container";
 import { Separator } from "./ui/separator";
@@ -44,7 +44,14 @@ const Posts = ({ id = "all" }) => {
   }, [hasNextPage, inView, fetchNextPage]);
 
   if (isError) {
-    return <p>Something went wrong! POSTS.TSX</p>;
+    return (
+      <div className="w-full p-10 flex items-center flex-col justify-center">
+        <div className="w-full flex items-center justify-center flex-row gap-3">
+          <Spinner />
+          <p>Something went wrong! Please Refresh page</p>
+        </div>
+      </div>
+    );
   }
 
   if (isLoading) {
