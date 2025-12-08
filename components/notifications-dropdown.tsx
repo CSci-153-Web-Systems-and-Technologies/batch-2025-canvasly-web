@@ -115,22 +115,24 @@ export default function NotificationsDropdown({
             await safeNavigate(url!); // navigate with auth check
           }}
         >
-          <UserAvatar
-            classNameSizeString={classNameSizeString}
-            url={n.fromUser?.image_url}
-          />
+          <div className="flex-shrink-0">
+            <UserAvatar
+              classNameSizeString={classNameSizeString}
+              url={n.fromUser?.image_url}
+            />
+          </div>
           <div className="flex flex-col gap-0 w-full">
             <div className="flex flex-row justify-between">
-              <span className="font-semibold">
+              <p className="font-semibold break-words break-all line-clamp-1">
                 {n.fromUser?.username || "Someone"}
-              </span>
+              </p>
               <p className="text-xs text-gray-500">
                 {n.created_at
                   ? new Date(n.created_at).toLocaleDateString()
                   : "Unknown date"}
               </p>
             </div>
-            <span>
+            <p className="break-words break-all line-clamp-1 ">
               {n.type === NotificationType.FOLLOW && "started following you"}
               {n.type === NotificationType.LIKE &&
                 `liked your post: "${n.post?.title}"`}
@@ -142,7 +144,7 @@ export default function NotificationsDropdown({
                 `accepted your purchase request for: "${n.post?.title}"`}
               {n.type === NotificationType.PURCHASE_REJECTED &&
                 `rejected your purchase request for: "${n.post?.title}"`}
-            </span>
+            </p>
           </div>
         </a>
       </Link>

@@ -198,7 +198,7 @@ const PurchaseCard = () => {
                       href={`/users/${purchase?.seller.id}?person=${purchase?.seller?.username}`}
                     >
                       {" "}
-                      <p className="font-semibold truncate">
+                      <p className=" font-semibold break-words break-all line-clamp-1 pr-5 ">
                         {purchase.seller.username}
                       </p>
                     </Link>
@@ -224,9 +224,9 @@ const PurchaseCard = () => {
 
                 <div className="flex flex-row justify-between items-end w-full min-w-0">
                   <div className="flex flex-col gap-1">
-                    <h3 className="font-bold text-lg truncate">
+                    <p className=" font-bold text-lg  break-words break-all line-clamp-1 pr-5 ">
                       {purchase.post.title}
-                    </h3>
+                    </p>
                     <p className="text-sm">
                       Price:{" "}
                       {purchase.post.price != null
@@ -234,7 +234,9 @@ const PurchaseCard = () => {
                         : "No amount"}
                     </p>
 
-                    <p className="text-sm">Type: {purchase.post.art_type}</p>
+                    <p className=" text-sm  break-words break-all line-clamp-1 pr-5 ">
+                      Type: {purchase.post.art_type}
+                    </p>
                   </div>
                   <Button
                     variant="outline"

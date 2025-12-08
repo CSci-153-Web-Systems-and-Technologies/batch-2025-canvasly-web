@@ -199,7 +199,7 @@ const RequestCard: React.FC = () => {
 
                 <div className="flex flex-col text-sm w-full">
                   <div className="flex justify-between w-full">
-                    <p className="font-semibold truncate">
+                    <p className=" font-semibold break-words break-all line-clamp-1 pr-5 ">
                       {request.buyer.username}
                     </p>
                     <p className="text-gray-500">
@@ -225,16 +225,18 @@ const RequestCard: React.FC = () => {
 
                 <div className="flex justify-between items-end w-full gap-4">
                   <div className="flex flex-col gap-1 min-w-0">
-                    <h3 className="font-bold text-lg truncate">
+                    <p className=" font-bold text-lg  break-words break-all line-clamp-1 pr-5 ">
                       {request.post.title}
-                    </h3>
+                    </p>
                     <p className="text-sm">
                       Price:{" "}
                       {request.post.price != null
                         ? `₱${request.post.price}`
                         : "No amount"}
                     </p>
-                    <p className="text-sm">Type: {request.post.art_type}</p>
+                    <p className=" text-sm  break-words break-all line-clamp-1 pr-5 ">
+                      Type: {request.post.art_type}
+                    </p>
                   </div>
 
                   {/* Desktop buttons */}
