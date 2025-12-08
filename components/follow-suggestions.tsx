@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getFollowSuggestions, getFollowInfo } from "@/actions/user";
 import { Skeleton } from "./ui/skeleton";
 import UserBox from "./user-box";
+import { Spinner } from "./ui/spinner";
 
 const FollowSuggestions = () => {
   const supabase = createClient();
@@ -64,7 +65,10 @@ const FollowSuggestions = () => {
               </div>
             ))
         ) : isError ? (
-          <p>Error loading suggestions.</p>
+          <div className="flex flex-row w-full gap-3">
+            <Spinner />
+            <p>Error loading suggestions.</p>
+          </div>
         ) : suggestions?.length > 0 ? (
           // Limit to 5 suggestions
           suggestions
