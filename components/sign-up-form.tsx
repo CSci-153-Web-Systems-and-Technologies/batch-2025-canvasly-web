@@ -44,7 +44,7 @@ export function SignUpForm({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
+          emailRedirectTo: "https://canvasly-web.vercel.app/",
         },
       });
       if (error) throw error;
