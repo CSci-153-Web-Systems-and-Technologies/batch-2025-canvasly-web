@@ -128,7 +128,7 @@ const ArtistBox = ({ currentUser, data, type, loggedInUserData }) => {
           href={`/users/${data?.[type]?.id}?person=${data?.[type]?.username}`}
           className="flex flex-row items-center gap-3 flex-1 min-w-0"
         >
-          <Avatar>
+          <Avatar className="flex-shrink-0">
             <AvatarImage
               className="h-9 w-9 rounded-full object-cover"
               src={data?.[type]?.image_url}

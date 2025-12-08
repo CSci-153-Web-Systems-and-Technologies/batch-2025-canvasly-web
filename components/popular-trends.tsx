@@ -23,7 +23,7 @@ const PopularTrends = async () => {
           {data.map((trend, i) => (
             <div className="flex flex-row gap-2 items-center" key={i}>
               <div className="flex flex-col">
-                <span className="font-semibold ">{`#${trend.name}`}</span>
+                <span className="font-semibold break-all break-words line-clamp-1">{`#${trend.name}`}</span>
 
                 <span className="font-semibold text-sm text-[#666666]">
                   {trend?._count?.name}{" "}

@@ -199,7 +199,10 @@ export async function getMyPurchases(
 ) {
   // Fetch one extra record to determine if there's a next page
   const purchases = await db.purchase.findMany({
-    where: { buyerId },
+    where: {
+      buyerId,
+      status: "PENDING", // <-- Only fetch pending purchases
+    },
     orderBy: { createdAt: "desc" },
     take: take + 1,
     cursor: cursor ? { id: cursor } : undefined,
@@ -215,12 +218,11 @@ export async function getMyPurchases(
         },
       },
 
-      // ✅ Select seller username + image_url
       seller: {
         select: {
           id: true,
           username: true,
-          image_url: true, // <-- Added here
+          image_url: true,
         },
       },
     },
