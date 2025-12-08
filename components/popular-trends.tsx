@@ -3,6 +3,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { console } from "inspector";
 
 import React from "react";
+import { Spinner } from "./ui/spinner";
 
 const PopularTrends = async () => {
   const queryClient = new QueryClient();
@@ -38,7 +39,14 @@ const PopularTrends = async () => {
   } catch (e) {
     console.log(e);
 
-    return <div>Error Unable to fetch popular trends {`(error)`}</div>;
+    return (
+      <div className="w-full p-10 flex items-center flex-col justify-center">
+        <div className="w-full flex items-center justify-center flex-row gap-3">
+          <Spinner />
+          <p>Error Unable to fetch popular trends {`(error)`}</p>
+        </div>
+      </div>
+    );
   }
 };
 
