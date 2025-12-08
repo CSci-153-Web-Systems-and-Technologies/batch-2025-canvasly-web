@@ -1,7 +1,26 @@
-# CANVASLY-WEB
+# Canvasly
 
-- **CANVASLY** is an online art community and social platform where artists and art enthusiasts connect, share their creations, and engage with one another. Users can browse artworks, interact through posts, and even request custom commissions or purchase pieces directly from artists, making Canvasly a vibrant space for creativity and collaboration.
-- This project is a requirement for CSci 153 Web Systems and Tech for my BS in Computer Science program.
+**Canvasly** is an online art community and social platform where artists and art enthusiasts connect, share their creations, and engage with one another. Users can browse artworks, interact through posts, and even request a purchase of pieces directly from artists, making Canvasly a vibrant space for creativity and collaboration.
+
+# Features
+
+- **Artwork Sharing & Discovery**: Browse a diverse collection of artworks from different artists. View detailed artwork pages with descriptions, tags, and artist profiles.
+- **Infinite Scrolling**: Same as social media platforms like X or Facebook, users can scroll posts on their timeline.
+- **Artist & User Profiles**: Personalized artist profiles with bios, social links. Follow/unfollow system to keep up with your favorite creators. Display of followers, followings, and user activity.
+- **Posting & Feeds**: Create artwork posts with images, captions, price, and art type. Interact with posts through likes and comments. Tailored feed based on followed artists and recommendations.
+- **Notifications**: Enables users to recieve notifications coming from follows, likes, comments, and purchase requests.
+- **Marketplace**: Users can request art pieces from artists. Artists can accept or decline requests. Purchase artworks directly from creators.
+- **Search Feature**: Users can search artworks or other users using a search filter.
+
+# Tech Stack
+
+- **Frontend**: Next 16, React 19, Typescript
+- **Backend**: Supabase (PostgresSQL, Auth), Prisma 6, Tanstack Query
+- **Styling**: Tailwind CSS with shadcn/ui components
+- **Authentication**: Supabase Auth
+- **Deployment**: Vercel
+
+# Pages
 
 ### Login Page
 
