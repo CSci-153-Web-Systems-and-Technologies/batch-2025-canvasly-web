@@ -132,19 +132,21 @@ export default function NotificationsDropdown({
                   : "Unknown date"}
               </p>
             </div>
-            <p className="break-words line-clamp-2 ">
-              {n.type === NotificationType.FOLLOW && "started following you"}
-              {n.type === NotificationType.LIKE &&
-                `liked your post: "${n.post?.title}"`}
-              {n.type === NotificationType.COMMENT &&
-                `commented on your post: "${n.post?.title}"`}
-              {n.type === NotificationType.PURCHASE_REQUEST &&
-                `requested to purchase your artwork: "${n.post?.title}"`}
-              {n.type === NotificationType.PURCHASE_ACCEPTED &&
-                `accepted your purchase request for: "${n.post?.title}"`}
-              {n.type === NotificationType.PURCHASE_REJECTED &&
-                `rejected your purchase request for: "${n.post?.title}"`}
-            </p>
+            <div className="max-w-56">
+              <p className="break-words line-clamp-2  overflow-hidden ">
+                {n.type === NotificationType.FOLLOW && "started following you"}
+                {n.type === NotificationType.LIKE &&
+                  `liked your post: "${n.post?.title}"`}
+                {n.type === NotificationType.COMMENT &&
+                  `commented on your post: "${n.post?.title}"`}
+                {n.type === NotificationType.PURCHASE_REQUEST &&
+                  `requested to purchase your artwork: "${n.post?.title}"`}
+                {n.type === NotificationType.PURCHASE_ACCEPTED &&
+                  `accepted your purchase request for: "${n.post?.title}"`}
+                {n.type === NotificationType.PURCHASE_REJECTED &&
+                  `rejected your purchase request for: "${n.post?.title}"`}
+              </p>
+            </div>
           </div>
         </a>
       </Link>
