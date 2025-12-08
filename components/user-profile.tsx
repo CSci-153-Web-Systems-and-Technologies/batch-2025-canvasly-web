@@ -28,8 +28,8 @@ const UserProfile = ({ profileUser, authUser }: UserProfileProps) => {
     <div className="w-full flex flex-col pt-16 md:pt-24">
       <div className="w-full flex flex-col items-center">
         <div className="flex flex-col md:items-center w-full p-4 sm:p-8 bg-[#f5f5f5]">
-          <div className="flex flex-row gap-2 sm:gap-4 max-w-7xl w-full">
-            <Avatar className="h-20 w-20 reltive">
+          <div className="flex flex-row gap-2 sm:gap-4 max-w-7xl w-full ">
+            <Avatar className="h-16 w-16 sm:h-20 sm:w-20 reltive">
               <AvatarImage
                 className="object-cover"
                 src={profileUser?.image_url}
@@ -39,10 +39,13 @@ const UserProfile = ({ profileUser, authUser }: UserProfileProps) => {
                 <UserRound color="#666666" className="h-14 w-14" />
               </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col w-full">
+
+            <div className="flex flex-col w-full ">
               <div className="flex flex-row items-center justify-between w-full">
                 <span className="text-md md:text-3xl flex">
-                  <span>{profileUser?.username}</span>
+                  <p className="break-words break-all line-clamp-1 pr-5 sm:pr-32 md:pr-44 lg:pr-52">
+                    {profileUser?.username}
+                  </p>
                 </span>
 
                 {isOwner && <EditProfileDialog data={{ data: profileUser }} />}
@@ -53,11 +56,14 @@ const UserProfile = ({ profileUser, authUser }: UserProfileProps) => {
 
               <FollowInfo userId={profileUser?.id} />
 
-              <div className="text-xs md:text-xl flex text-[#818181] py-8">
-                <span>{profileUser?.description}</span>
+              <div className="text-xs md:text-xl flex text-[#818181] py-8 w-full overflow-hidden">
+                <p className="break-words break-all line-clamp-4 xl:pr-20">
+                  {profileUser?.description}
+                </p>
               </div>
             </div>
           </div>
+
           <div className="flex items-center max-w-7xl w-full">
             <ToggleGroup
               type="single"

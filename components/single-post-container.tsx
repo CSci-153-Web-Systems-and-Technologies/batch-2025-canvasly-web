@@ -167,7 +167,7 @@ const SinglePostContainer: React.FC<SinglePostContainerProps> = ({
             passHref
             href={`/users/${data.author.id}?person=${data.author.username}`}
           >
-            <Avatar>
+            <Avatar className="flex-shrink-0">
               <AvatarImage src={data.author.image_url ?? ""} alt="@user" />
               <AvatarFallback>
                 <UserRound color="#666666" />
@@ -180,9 +180,9 @@ const SinglePostContainer: React.FC<SinglePostContainerProps> = ({
               passHref
               href={`/users/${data.author.id}?person=${data.author.username}`}
             >
-              <span className="font-semibold text-sm md:text-base">
+              <p className="font-semibold text-sm md:text-base break-words break-all line-clamp-1 pr-5 lg:pr-20">
                 {nameShown}
-              </span>
+              </p>
             </Link>
             <span className="text-xs font-semibold text-[#666666]">
               {dayjs(data.createdAt).format("DD MMM YYYY")}
@@ -245,7 +245,9 @@ const SinglePostContainer: React.FC<SinglePostContainerProps> = ({
         />
 
         <div className="flex flex-row justify-center gap-1 md:gap-4 text-base md:text-xl text-[#666666]">
-          <p>{data.art_type}</p>
+          <p className="truncate max-w-28 md:max-w-36 lg:max-w-56">
+            {data?.art_type}
+          </p>
           {data.price != null && (
             <div className="flex flex-row items-center gap-1">
               <PhilippinePeso color="#666666" />
@@ -257,11 +259,15 @@ const SinglePostContainer: React.FC<SinglePostContainerProps> = ({
 
       {/* Title & description */}
       <div className="w-full">
-        <p className="text-base md:text-xl font-semibold">{data.title}</p>
+        <p className="text-base md:text-xl font-semibold truncate max-w-72">
+          {data?.title}
+        </p>
       </div>
 
       <div className="w-full text-sm md:text-base">
-        <p>{data.post_description}</p>
+        <p className="text-[#333333] text-sm md:text-base break-words line-clamp-4">
+          {data?.post_description}
+        </p>
       </div>
 
       {/* Comments */}

@@ -25,8 +25,10 @@ const PostContainer = ({ data, queryId }) => {
           queryId={queryId}
         />
 
-        <div className="flex flex-row items-center gap-4 text-base md:text-xl text-[#666666]">
-          <p>{data?.art_type}</p>
+        <div className="flex flex-row items-center md:gap-4 text-base md:text-xl text-[#666666]">
+          <p className="truncate max-w-28 md:max-w-36 lg:max-w-56">
+            {data?.art_type}
+          </p>
           {data?.price !== undefined && data?.price !== null && (
             <div className="flex flex-row items-center gap-1">
               <PhilippinePeso color="#666666" />
@@ -38,10 +40,14 @@ const PostContainer = ({ data, queryId }) => {
 
       {/* Title & Description */}
       <div className="w-full">
-        <p className="text-base md:text-xl font-semibold">{data?.title}</p>
+        <p className="text-base md:text-xl font-semibold truncate max-w-72">
+          {data?.title}
+        </p>
       </div>
       <div className="w-full text-sm md:text-base">
-        <p>{data?.post_description}</p>
+        <p className="text-[#333333] text-sm md:text-base break-words line-clamp-4">
+          {data?.post_description}
+        </p>
       </div>
 
       {/* Comments */}

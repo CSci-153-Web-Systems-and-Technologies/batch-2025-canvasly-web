@@ -104,19 +104,20 @@ const UserBox = ({ currentUser, data, type, loggedInUserData }) => {
           );
         }}
       >
-        <div>
-          <Avatar>
-            <AvatarImage
-              className="h-9 w-9 rounded-full object-cover"
-              src={data?.[type]?.image_url}
-              alt="@user"
-            />
-            <AvatarFallback>
-              <UserRound color="#666666" className="h-9 w-9 rounded-full" />
-            </AvatarFallback>
-          </Avatar>
-        </div>
-        <span className="text-black text-base">{data?.[type]?.username}</span>
+        <Avatar className="h-9 w-9 flex-shrink-0">
+          <AvatarImage
+            className="h-9 w-9 rounded-full object-cover"
+            src={data?.[type]?.image_url}
+            alt="@user"
+          />
+          <AvatarFallback>
+            <UserRound color="#666666" className="h-9 w-9 rounded-full" />
+          </AvatarFallback>
+        </Avatar>
+
+        <p className=" text-black text-base break-words break-all line-clamp-1 pr-5 ">
+          {data?.[type]?.username}
+        </p>
       </Link>
 
       {!isFollowed ? (

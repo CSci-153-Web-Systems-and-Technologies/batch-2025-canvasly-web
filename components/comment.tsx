@@ -39,15 +39,17 @@ const Comment = ({ data, onEdit, onDelete }) => {
 
       <div className="flex flex-col w-full gap-1 bg-[#f5f5f5] rounded-xl p-3">
         <div className="flex flex-row justify-between items-center w-full font-semibold text-sm md:text-base">
-          <span>{displayName}</span>
-          <span className="text-xs font-normal md:font-semibold text-[#666666]">
+          <p className="break-words break-all line-clamp-1 pr-6">
+            {displayName}
+          </p>
+          <span className="text-xs font-normal md:font-semibold text-[#666666] shrink-0">
             {dayjs(data?.createdAt).format("DD MMM YYYY")}
           </span>
         </div>
 
-        <span className="text-[#333333] text-sm md:text-base">
+        <p className="text-[#333333] text-sm md:text-base break-words break-all line-clamp-4 ">
           {data?.comment}
-        </span>
+        </p>
       </div>
 
       <EllipsisButton
