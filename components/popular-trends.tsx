@@ -40,10 +40,13 @@ const PopularTrends = async () => {
     console.log(e);
 
     return (
-      <div className="w-full p-10 flex items-center flex-col justify-center">
-        <div className="w-full flex items-center justify-center flex-row gap-3">
+      <div className="relative w-full h-full rounded-lg bg-background flex flex-col gap-4 ">
+        <div className="flex flex-col gap-2 w-full h-full bg-background rounded-t-lg">
+          <h1 className="px-4 pt-4 pb-2 text-2xl">Popular Trends</h1>
+        </div>
+        <div className="w-full flex px-4 pb-4 flex-row gap-3">
           <Spinner />
-          <p>Error Unable to fetch popular trends {`(error)`}</p>
+          <p>Error Unable to fetch popular trends</p>
         </div>
       </div>
     );
