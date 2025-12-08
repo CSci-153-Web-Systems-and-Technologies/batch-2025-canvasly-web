@@ -111,7 +111,7 @@ const UserFollowBox = ({
       <div className="flex flex-row items-center justify-between w-full">
         <Link passHref href={`/users/${person?.id}?person=${person?.username}`}>
           <div className="flex flex-row items-center gap-3">
-            <Avatar>
+            <Avatar className=" flex-shrink-0">
               <AvatarImage
                 className="h-10 w-10 sm:h-14 sm:w-14 rounded-full object-cover"
                 src={person?.image_url}
@@ -124,7 +124,9 @@ const UserFollowBox = ({
                 />
               </AvatarFallback>
             </Avatar>
-            <span className="text-black text-base">{person?.username}</span>
+            <p className=" text-black text-base break-words break-all line-clamp-1 pr-5 ">
+              {person?.username}
+            </p>
           </div>
         </Link>
         {/* This JSX is unchanged, but 'isMe' is now correct */}
