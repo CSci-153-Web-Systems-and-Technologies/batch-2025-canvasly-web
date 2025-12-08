@@ -143,8 +143,6 @@ export async function rejectPurchase(purchaseId: number, sellerId: string) {
     });
   }
 
-  await cancelPurchaseRequest(purchase.postId, purchase.buyerId);
-
   return updated;
 }
 
