@@ -132,7 +132,7 @@ export default function NotificationsDropdown({
                   : "Unknown date"}
               </p>
             </div>
-            <p className="break-words break-all line-clamp-1 ">
+            <p className="break-words break-all line-clamp-2 ">
               {n.type === NotificationType.FOLLOW && "started following you"}
               {n.type === NotificationType.LIKE &&
                 `liked your post: "${n.post?.title}"`}
