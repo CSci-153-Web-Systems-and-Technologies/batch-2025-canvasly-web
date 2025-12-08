@@ -149,7 +149,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
               onDelete={(id) => handleDeleteComment(id)}
             />
           ) : (
-            <ScrollArea className="max-h-72 w-full">
+            <ScrollArea className="max-h-96 w-full">
               <div className="flex flex-col gap-2 pr-2">
                 {comments.map((comment) => (
                   <Comment

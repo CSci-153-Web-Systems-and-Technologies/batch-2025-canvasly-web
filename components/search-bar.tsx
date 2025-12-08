@@ -210,7 +210,7 @@ const SearchBar = () => {
                     className="flex items-center gap-3 p-2 hover:bg-gray-100 transition"
                     onClick={() => setQuery("")}
                   >
-                    <div>
+                    <div className="shrink-0">
                       <Avatar>
                         <AvatarImage
                           className="h-9 w-9 rounded-full object-cover"
@@ -226,9 +226,9 @@ const SearchBar = () => {
                       </Avatar>
                     </div>
 
-                    <div className="font-medium text-sm truncate">
+                    <p className="font-medium text-sm truncate max-w-xs">
                       {user?.username}
-                    </div>
+                    </p>
                   </Link>
 
                   <Separator />
